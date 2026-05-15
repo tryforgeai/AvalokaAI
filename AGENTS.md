@@ -47,8 +47,11 @@ Read these before making product, system design, or planning changes:
 15. `docs/experiments/user-feedback-log-template.md`
 16. `docs/experiments/failure-log.md`
 17. `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
-18. `docs/product/quality-checklist.md`
-19. `docs/maintenance/doc-gardening-checklist.md`
+18. `docs/product/2026-05-14-v0-target-personas-zh.md`
+19. `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
+20. `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
+21. `docs/product/quality-checklist.md`
+22. `docs/maintenance/doc-gardening-checklist.md`
 
 ## Operating Rules
 
@@ -59,6 +62,8 @@ Read these before making product, system design, or planning changes:
 - Do not reintroduce the old “Buddhist AI / RAG-first / broad workplace-relationship-emotion” scope.
 - Do not make payment, account, community, large corpus, or full RAG work the first milestone.
 - First milestone remains the 7-day free validation with 5 target users.
+- Personas and candidate-user profiles are recruitment hypotheses, not validation evidence. Real user behavior in the 7-day test decides.
+- Real user notes must be anonymized before entering `docs/`. Raw identities, contacts, screenshots, transcripts, or unredacted emotional records belong only in ignored private directories.
 
 ## Safety Rules
 

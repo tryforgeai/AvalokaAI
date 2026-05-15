@@ -26,6 +26,9 @@ If documents conflict, follow this order:
 ### V0 In Scope
 
 - 5 target users
+- target personas: `docs/product/2026-05-14-v0-target-personas-zh.md`
+- candidate user profiles: `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
+- real user insights, redacted: `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
 - 7-day free test
 - Simple chat or assisted workflow
 - Crisis safety gate

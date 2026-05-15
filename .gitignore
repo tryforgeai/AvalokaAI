@@ -16,3 +16,10 @@ build/
 .venv/
 venv/
 
+# Private research data. Do not commit real user identities, raw interviews,
+# contact info, screenshots, transcripts, or unredacted emotional records.
+private/
+research-private/
+data/private/
+docs/experiments/private/
+
