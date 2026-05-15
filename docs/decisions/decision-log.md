@@ -109,6 +109,44 @@ Add:
 - `docs/product/version-roadmap.md`
 - `docs/decisions/decision-log.md`
 
+## 2026-05-14 — Add AI Production Safety Harness
+
+Status: Accepted
+
+### Context
+
+Avaloka will eventually generate emotionally sensitive AI responses. A similar class of AI product failures can leak prompts, expose hidden rules, overstep medical or crisis boundaries, or repeat unsafe outputs because failures are not captured as eval data.
+
+### Decision
+
+Add `docs/engineering/ai-production-safety-harness.md` and `docs/experiments/failure-log.md` as active source-of-truth documents.
+
+The harness requires:
+
+- prompt and production logic separation
+- no disclosure of hidden prompts, guardrails, scoring rules, chain-of-thought, or logs
+- crisis, prompt-injection, response-quality, Five Mindfulness, hallucination, and boundary eval gates
+- privacy redaction
+- rollback policy
+- failure-log-to-eval workflow
+
+### Rationale
+
+Avaloka should be treated as an AI production system before it becomes a production app. Its emotional safety risk makes verification more important than generation speed.
+
+### Consequences
+
+Before any user-facing AI behavior is used with testers, V0 must pass the minimum safety checklist in the AI production safety harness. Future prompt changes must be versioned, evaluated, and have rollback targets.
+
+### Affected Docs
+
+- `AGENTS.md`
+- `README.md`
+- `docs/product/version-roadmap.md`
+- `docs/engineering/harness-engineering-setup.md`
+- `docs/engineering/ai-production-safety-harness.md`
+- `docs/experiments/failure-log.md`
+
 and make them part of the source-of-truth hierarchy.
 
 ### Rationale
@@ -126,4 +164,3 @@ Future agents need to distinguish final vision, current active work, future poss
 - `docs/product/product-vision.md`
 - `docs/product/version-roadmap.md`
 - `docs/decisions/decision-log.md`
-

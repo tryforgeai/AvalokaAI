@@ -46,9 +46,10 @@ For each meaningful change:
 3. Check product vision, version roadmap, and decision log.
 4. Update source-of-truth docs when decisions change.
 5. Add decision-log entries for meaningful direction changes.
-6. Add or update checklists/tests when behavior changes.
-7. Run verification.
-8. Archive stale docs instead of leaving conflicting plans active.
+6. Apply `docs/engineering/ai-production-safety-harness.md` before user-facing AI behavior is used with testers.
+7. Add or update checklists/tests when behavior changes.
+8. Run verification.
+9. Archive stale docs instead of leaving conflicting plans active.
 
 ## Do Not Do
 
@@ -57,4 +58,3 @@ For each meaningful change:
 - Do not skip validation criteria.
 - Do not implement full MVP features before V0 validates user pull.
 - Do not revive archived Buddhist AI / RAG-first / broad emotional chatbot direction.
-

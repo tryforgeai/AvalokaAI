@@ -39,11 +39,13 @@ Avaloka AI 的长期方向是成为一个私密、可信赖的慈悲智慧情绪
 9. [计划步骤与系统模块对应表](docs/superpowers/plans/2026-05-06-avaloka-ai-plan-module-map-zh.md)
 10. [CEO 漏洞清单与可行性复盘](docs/superpowers/reviews/2026-05-12-avaloka-ai-ceo-review-zh.md)
 11. [Harness Engineering Setup](docs/engineering/harness-engineering-setup.md)
-12. [Harness Engineering 应用计划](docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md)
-13. [7 天免费验证 Runbook](docs/experiments/validation-runbook.md)
-14. [用户反馈记录模板](docs/experiments/user-feedback-log-template.md)
-15. [回应质量 Checklist](docs/product/quality-checklist.md)
-16. [文档园艺 Checklist](docs/maintenance/doc-gardening-checklist.md)
+12. [AI Production Safety Harness](docs/engineering/ai-production-safety-harness.md)
+13. [Harness Engineering 应用计划](docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md)
+14. [7 天免费验证 Runbook](docs/experiments/validation-runbook.md)
+15. [用户反馈记录模板](docs/experiments/user-feedback-log-template.md)
+16. [Failure Log](docs/experiments/failure-log.md)
+17. [回应质量 Checklist](docs/product/quality-checklist.md)
+18. [文档园艺 Checklist](docs/maintenance/doc-gardening-checklist.md)
 
 ## 已归档内容
 

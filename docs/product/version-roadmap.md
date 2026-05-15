@@ -30,8 +30,10 @@ If documents conflict, follow this order:
 - Simple chat or assisted workflow
 - Crisis safety gate
 - Five Mindfulness Guardian
+- AI production safety harness
 - 20 high-quality scenario responses
 - Daily feedback log
+- Failure log
 - Day 7 continued-free-use question
 
 ### V0 Out Of Scope
@@ -56,6 +58,8 @@ V0 passes if:
 - 1/5 is willing to recommend to a similar person
 - 0 serious safety incidents
 - 0 users misunderstand Avaloka as therapy, medical, or crisis support
+- 0 prompt leakage incidents
+- all V0 scenario responses pass the AI production safety harness before use with testers
 
 ## Next Version
 
@@ -76,6 +80,8 @@ V0 passes if:
 - Small wisdom knowledge base
 - Output quality check
 - Five Mindfulness Guardian
+- Prompt registry and evaluation gates
+- Failure-log-to-eval workflow
 - Minimal local memory
 - Golden tests for safety and response quality
 
@@ -99,4 +105,3 @@ These are not active commitments:
 - Paid subscription
 - Multi-user accounts
 - AI-to-human referral network
-

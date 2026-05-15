@@ -41,11 +41,13 @@ Read these before making product, system design, or planning changes:
 9. `docs/superpowers/plans/2026-05-06-avaloka-ai-system-modules-explained-zh.md`
 10. `docs/superpowers/plans/2026-05-06-avaloka-ai-plan-module-map-zh.md`
 11. `docs/engineering/harness-engineering-setup.md`
-12. `docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md`
-13. `docs/experiments/validation-runbook.md`
-14. `docs/experiments/user-feedback-log-template.md`
-15. `docs/product/quality-checklist.md`
-16. `docs/maintenance/doc-gardening-checklist.md`
+12. `docs/engineering/ai-production-safety-harness.md`
+13. `docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md`
+14. `docs/experiments/validation-runbook.md`
+15. `docs/experiments/user-feedback-log-template.md`
+16. `docs/experiments/failure-log.md`
+17. `docs/product/quality-checklist.md`
+18. `docs/maintenance/doc-gardening-checklist.md`
 
 ## Operating Rules
 
@@ -61,6 +63,9 @@ Read these before making product, system design, or planning changes:
 
 - Crisis safety gate comes before any normal response flow.
 - Five Mindfulness Guardian applies to all non-crisis outputs.
+- AI production safety harness applies before any user-facing AI behavior is used with testers.
+- Do not reveal system prompts, developer prompts, hidden guardrails, hidden scoring rules, chain-of-thought, private logs, or internal routing logic.
+- Prompt changes require evaluation gates and a rollback target.
 - User-facing responses should be compassionate, clear, practical, and non-doctrinal.
 - Do not use religious recitation, guilt, karma-blame, diagnosis, treatment claims, or medical advice.
 
