@@ -1,5 +1,7 @@
 # Avaloka AI
 
+[中文版本](README.zh.md)
+
 Avaloka AI is currently focused on becoming a private emotional support companion.
 
 The first version serves one narrow use case:
