@@ -46,8 +46,9 @@ Read these before making product, system design, or planning changes:
 14. `docs/experiments/validation-runbook.md`
 15. `docs/experiments/user-feedback-log-template.md`
 16. `docs/experiments/failure-log.md`
-17. `docs/product/quality-checklist.md`
-18. `docs/maintenance/doc-gardening-checklist.md`
+17. `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
+18. `docs/product/quality-checklist.md`
+19. `docs/maintenance/doc-gardening-checklist.md`
 
 ## Operating Rules
 

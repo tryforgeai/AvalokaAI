@@ -31,7 +31,7 @@ If documents conflict, follow this order:
 - Crisis safety gate
 - Five Mindfulness Guardian
 - AI production safety harness
-- 20 high-quality scenario responses
+- 20 high-quality scenario responses: `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
 - Daily feedback log
 - Failure log
 - Day 7 continued-free-use question

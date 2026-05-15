@@ -44,8 +44,9 @@ Avaloka AI 的长期方向是成为一个私密、可信赖的慈悲智慧情绪
 14. [7 天免费验证 Runbook](docs/experiments/validation-runbook.md)
 15. [用户反馈记录模板](docs/experiments/user-feedback-log-template.md)
 16. [Failure Log](docs/experiments/failure-log.md)
-17. [回应质量 Checklist](docs/product/quality-checklist.md)
-18. [文档园艺 Checklist](docs/maintenance/doc-gardening-checklist.md)
+17. [V0 20 条场景回应](docs/product/2026-05-14-v0-20-scenario-responses-zh.md)
+18. [回应质量 Checklist](docs/product/quality-checklist.md)
+19. [文档园艺 Checklist](docs/maintenance/doc-gardening-checklist.md)
 
 ## 已归档内容
 
