@@ -4,6 +4,43 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-05-16 — V0 First Validation Passed And V1 May Start
+
+Status: Accepted
+
+### Context
+
+Avaloka completed a first 7-day free validation round with 5 target users. The Day 8 validation report shows that the V0 pass criteria were met:
+
+- 5 users recruited
+- 4/5 users used Avaloka for at least 4 days
+- 3/5 users opened Avaloka during real low moments without prompting
+- 3/5 users wanted to continue after Day 7
+- 2/5 users were willing to recommend Avaloka to a similar person
+- 0 serious safety or positioning incidents
+
+### Decision
+
+Mark V0 as passed and move the active roadmap version to V1.
+
+V1 may start, but it must remain narrow: a minimal local chat MVP focused on short, body-grounded, non-judgmental emotional settling for the validated low-moment use case.
+
+### Rationale
+
+V0 produced real usage pull from a subset of target users. The strongest signal was not demand for advice, religious explanation, or a broad chatbot; it was demand for a short, steady, embodied response when the user does not want to burden family or explain herself.
+
+### Consequences
+
+- V1 should optimize for shorter responses, body-grounded settling, safer onboarding, and stronger eval gates.
+- V1 should not expand into payment, full RAG, account systems, community, medical or therapy positioning, or broad emotional chatbot scope.
+- V0 failure patterns must become eval cases: generic advice, chicken-soup reassurance, and asking users to explain too much during low moments.
+
+### Affected Docs
+
+- `docs/product/version-roadmap.md`
+- `docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md`
+- `docs/experiments/failure-log.md`
+
 ## 2026-05-13 — Establish Agent-First Project Governance
 
 Status: Accepted

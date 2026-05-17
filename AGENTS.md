@@ -47,11 +47,13 @@ Read these before making product, system design, or planning changes:
 15. `docs/experiments/user-feedback-log-template.md`
 16. `docs/experiments/failure-log.md`
 17. `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
-18. `docs/product/2026-05-14-v0-target-personas-zh.md`
-19. `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
-20. `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
-21. `docs/product/quality-checklist.md`
-22. `docs/maintenance/doc-gardening-checklist.md`
+18. `docs/product/2026-05-16-v1-response-library-zh.md`
+19. `docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md`
+20. `docs/product/2026-05-14-v0-target-personas-zh.md`
+21. `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
+22. `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
+23. `docs/product/quality-checklist.md`
+24. `docs/maintenance/doc-gardening-checklist.md`
 
 ## Operating Rules
 

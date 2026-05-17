@@ -61,11 +61,13 @@ Read these documents before making product, system design, or planning changes:
 15. [User Feedback Log Template](docs/experiments/user-feedback-log-template.md)
 16. [Failure Log](docs/experiments/failure-log.md)
 17. [V0 20 Scenario Responses](docs/product/2026-05-14-v0-20-scenario-responses-zh.md)
-18. [V0 Target Personas](docs/product/2026-05-14-v0-target-personas-zh.md)
-19. [V0 Test User Candidate Profiles](docs/experiments/2026-05-14-v0-test-user-candidates-zh.md)
-20. [V0 Real User Insights, Redacted](docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md)
-21. [Response Quality Checklist](docs/product/quality-checklist.md)
-22. [Document Gardening Checklist](docs/maintenance/doc-gardening-checklist.md)
+18. [V1 Response Library](docs/product/2026-05-16-v1-response-library-zh.md)
+19. [V0 Day 8 Validation Report](docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md)
+20. [V0 Target Personas](docs/product/2026-05-14-v0-target-personas-zh.md)
+21. [V0 Test User Candidate Profiles](docs/experiments/2026-05-14-v0-test-user-candidates-zh.md)
+22. [V0 Real User Insights, Redacted](docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md)
+23. [Response Quality Checklist](docs/product/quality-checklist.md)
+24. [Document Gardening Checklist](docs/maintenance/doc-gardening-checklist.md)
 
 ## Safety Boundary
 

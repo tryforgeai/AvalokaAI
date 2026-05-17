@@ -45,11 +45,13 @@ Avaloka AI 的长期方向是成为一个私密、可信赖的慈悲智慧情绪
 15. [用户反馈记录模板](docs/experiments/user-feedback-log-template.md)
 16. [Failure Log](docs/experiments/failure-log.md)
 17. [V0 20 条场景回应](docs/product/2026-05-14-v0-20-scenario-responses-zh.md)
-18. [V0 目标用户 Persona](docs/product/2026-05-14-v0-target-personas-zh.md)
-19. [V0 测试用户候选画像](docs/experiments/2026-05-14-v0-test-user-candidates-zh.md)
-20. [V0 真实用户洞察（脱敏版）](docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md)
-21. [回应质量 Checklist](docs/product/quality-checklist.md)
-22. [文档园艺 Checklist](docs/maintenance/doc-gardening-checklist.md)
+18. [V1 回应库](docs/product/2026-05-16-v1-response-library-zh.md)
+19. [V0 Day 8 验证报告](docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md)
+20. [V0 目标用户 Persona](docs/product/2026-05-14-v0-target-personas-zh.md)
+21. [V0 测试用户候选画像](docs/experiments/2026-05-14-v0-test-user-candidates-zh.md)
+22. [V0 真实用户洞察（脱敏版）](docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md)
+23. [回应质量 Checklist](docs/product/quality-checklist.md)
+24. [文档园艺 Checklist](docs/maintenance/doc-gardening-checklist.md)
 
 ## 已归档内容
 

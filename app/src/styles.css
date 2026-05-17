@@ -1,0 +1,284 @@
+:root {
+  color: #efe9dd;
+  background: #151410;
+  font-family: Charter, "Songti SC", "Noto Serif CJK SC", Georgia, serif;
+  line-height: 1.5;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  --ink: #171511;
+  --night: #151410;
+  --panel: rgba(42, 38, 31, 0.78);
+  --panel-strong: rgba(56, 50, 40, 0.92);
+  --paper: #efe9dd;
+  --muted: #b9ad9b;
+  --line: rgba(239, 233, 221, 0.14);
+  --lamp: #d6a85f;
+  --danger: #d98274;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 78% 12%, rgba(214, 168, 95, 0.2), transparent 28rem),
+    linear-gradient(135deg, #11100d 0%, #1f1b16 58%, #151410 100%);
+}
+
+button,
+textarea,
+input,
+select {
+  font: inherit;
+}
+
+.shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22rem;
+  gap: 1px;
+  padding: 1.25rem;
+}
+
+.consent-shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+}
+
+.consent-panel {
+  width: min(42rem, 100%);
+  padding: 3rem;
+  border: 1px solid var(--line);
+  background: rgba(28, 25, 20, 0.86);
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.38);
+}
+
+.brand-mark,
+.toolbar,
+.send-button,
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.brand-mark {
+  color: var(--lamp);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 42rem;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: 0;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.consent-panel p,
+.soft-note {
+  color: var(--muted);
+}
+
+.workspace {
+  min-height: calc(100vh - 2.5rem);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: rgba(18, 17, 14, 0.7);
+  border: 1px solid var(--line);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar h1 {
+  font-size: 1.55rem;
+  margin: 0;
+}
+
+.eyebrow {
+  color: var(--lamp);
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  margin-bottom: 0.25rem;
+}
+
+.icon-button,
+.primary-button,
+.send-button {
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  color: var(--paper);
+  background: var(--panel-strong);
+  cursor: pointer;
+}
+
+.icon-button {
+  width: 2.75rem;
+  justify-content: center;
+}
+
+.primary-button,
+.send-button {
+  padding: 0.8rem 1rem;
+}
+
+.primary-button {
+  background: #efe2c8;
+  color: var(--ink);
+  border-color: transparent;
+}
+
+.chat-panel {
+  overflow: auto;
+  padding: 1.5rem;
+}
+
+.empty-state {
+  min-height: 100%;
+  display: grid;
+  place-content: center;
+  color: var(--muted);
+  text-align: center;
+}
+
+.empty-state p {
+  color: var(--paper);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.message {
+  max-width: 42rem;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.message span {
+  display: block;
+  color: var(--lamp);
+  font-size: 0.78rem;
+  margin-bottom: 0.4rem;
+}
+
+.message p {
+  white-space: pre-line;
+  margin: 0;
+}
+
+.user-message {
+  margin-left: auto;
+  background: rgba(239, 233, 221, 0.08);
+}
+
+.avaloka-message {
+  box-shadow: inset 3px 0 0 var(--lamp);
+}
+
+.crisis-message {
+  box-shadow: inset 3px 0 0 var(--danger);
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+textarea,
+input,
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  color: var(--paper);
+  background: rgba(239, 233, 221, 0.06);
+  padding: 0.8rem;
+  outline: none;
+}
+
+textarea:focus,
+input:focus,
+select:focus {
+  border-color: rgba(214, 168, 95, 0.72);
+}
+
+.feedback-panel {
+  min-height: calc(100vh - 2.5rem);
+  border: 1px solid var(--line);
+  border-left: 0;
+  background: rgba(25, 23, 19, 0.88);
+}
+
+.feedback-card {
+  position: sticky;
+  top: 1.25rem;
+  padding: 1.25rem;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+label {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+strong {
+  color: var(--paper);
+  font-weight: 400;
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+
+  .workspace,
+  .feedback-panel {
+    min-height: auto;
+    border-right: 0;
+    border-left: 0;
+  }
+
+  .composer {
+    grid-template-columns: 1fr;
+  }
+
+  .consent-panel {
+    min-height: 100vh;
+    padding: 2rem 1.25rem;
+    border: 0;
+  }
+}
