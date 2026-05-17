@@ -2,6 +2,7 @@ import { Download, Moon, Send, ShieldCheck, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { crisisFallback } from "./data/responseLibrary";
 import { isCrisisMessage } from "./lib/crisisGate";
+import { buildGuardedResponse } from "./lib/guardedResponse";
 import { selectScenario } from "./lib/responseSelector";
 import {
   clearAvalokaData,
@@ -64,13 +65,17 @@ export default function App() {
     const crisis = isCrisisMessage(text);
     const scenario = selectScenario(text);
     const responseLines = crisis ? crisisFallback : scenario.response;
+    const guardedResponse = buildGuardedResponse(responseLines, { crisis });
     const avalokaMessage: ChatMessage = {
       id: makeId("avaloka"),
       role: "avaloka",
-      text: responseLines.join("\n\n"),
+      text: guardedResponse.text,
       scenarioId: crisis ? "crisis" : scenario.id,
       createdAt: new Date().toISOString(),
       crisis,
+      guardianFallback: guardedResponse.guardianFallback,
+      preceptsSeverity: guardedResponse.precepts?.severity,
+      preceptsViolations: guardedResponse.precepts?.violations.map((violation) => violation.precept),
     };
 
     setMessages((current) => [...current, userMessage, avalokaMessage]);

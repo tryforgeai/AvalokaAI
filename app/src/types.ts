@@ -23,6 +23,9 @@ export interface ChatMessage {
   scenarioId?: string;
   createdAt: string;
   crisis?: boolean;
+  guardianFallback?: boolean;
+  preceptsSeverity?: "pass" | "warn" | "revise" | "block";
+  preceptsViolations?: string[];
 }
 
 export interface FeedbackEntry {

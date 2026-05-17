@@ -12,6 +12,7 @@ node_modules/
 .next/
 dist/
 build/
+coverage/
 
 .venv/
 venv/
@@ -22,4 +23,3 @@ private/
 research-private/
 data/private/
 docs/experiments/private/
-
