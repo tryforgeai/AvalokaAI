@@ -3,25 +3,20 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createOpenAIClient, extractOutputText } from "./openai-client.mjs";
+import { createPromptRuntime } from "./prompt-runtime.mjs";
+import { DEFAULT_MAX_JSON_BODY_BYTES, PayloadTooLargeError, readJson } from "./request-body.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 loadDotEnv(resolve(root, "server/.env"));
 
-const prompt = readFileSync(resolve(root, "prompt/llm-shadow-response-generator-v1.md"), "utf8");
-const baifaPrompt = readFileSync(resolve(root, "prompt/baifa-mapper-v1.md"), "utf8");
-const avalokaV2ResponsePrompt = readFileSync(resolve(root, "prompt/avaloka-v2-orchestrator-response.md"), "utf8");
-const avalokaV2CrisisPrompt = readFileSync(resolve(root, "prompt/avaloka-v2-crisis-classifier.md"), "utf8");
-const avalokaV2GuardianPrompt = readFileSync(resolve(root, "prompt/avaloka-v2-guardian.md"), "utf8");
-const avalokiteshvaraCompassionPlannerPrompt = readFileSync(
-  resolve(root, "prompt/avalokiteshvara-compassion-planner-v1.md"),
-  "utf8",
-);
+const promptRuntime = createPromptRuntime({ root });
 const port = Number(process.env.PORT || 8787);
 const model = process.env.OPENAI_SHADOW_MODEL || "gpt-5.2";
 const openAIRequestTimeoutMs = Number(process.env.OPENAI_REQUEST_TIMEOUT_MS || 20_000);
 const openAIMaxRetries = Number(process.env.OPENAI_MAX_RETRIES || 1);
 const openAIMaxConcurrentRequests = Number(process.env.OPENAI_MAX_CONCURRENT_REQUESTS || 3);
 const openAIMaxRequestsPerMinute = Number(process.env.OPENAI_MAX_REQUESTS_PER_MINUTE || 120);
+const maxJsonBodyBytes = Number(process.env.AVALOKA_MAX_JSON_BODY_BYTES || DEFAULT_MAX_JSON_BODY_BYTES);
 const openAIClient = createOpenAIClient({
   apiKey: process.env.OPENAI_API_KEY,
   model,
@@ -125,146 +120,64 @@ function sendJson(response, status, payload) {
   response.end(JSON.stringify(payload));
 }
 
-async function readJson(request) {
-  const chunks = [];
-
-  for await (const chunk of request) {
-    chunks.push(chunk);
-  }
-
-  return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
-}
-
 function buildInput(payload) {
-  return [
-    {
-      role: "developer",
-      content: prompt,
-    },
-    {
-      role: "user",
-      content: JSON.stringify(
-        {
-          userText: payload.userText,
-          localText: payload.localText,
-          dukkhaTypes: payload.dukkhaTypes || [],
-          dukkhaPatterns: payload.dukkhaPatterns || [],
-          responseMoves: payload.responseMoves || [],
-        },
-        null,
-        2,
-      ),
-    },
-  ];
+  return promptRuntime.buildPromptInput("llm-shadow-response-generator-v1", {
+    userText: payload.userText,
+    localText: payload.localText,
+    dukkhaTypes: payload.dukkhaTypes || [],
+    dukkhaPatterns: payload.dukkhaPatterns || [],
+    responseMoves: payload.responseMoves || [],
+  });
 }
 
 function buildBaifaInput(payload) {
-  return [
-    {
-      role: "developer",
-      content: baifaPrompt,
-    },
-    {
-      role: "user",
-      content: JSON.stringify(
-        {
-          userText: payload.userText,
-          dukkhaTypes: payload.dukkhaTypes || [],
-          dukkhaPatterns: payload.dukkhaPatterns || [],
-          responseMoves: payload.responseMoves || [],
-        },
-        null,
-        2,
-      ),
-    },
-  ];
+  return promptRuntime.buildPromptInput("baifa-mapper-v1", {
+    userText: payload.userText,
+    dukkhaTypes: payload.dukkhaTypes || [],
+    dukkhaPatterns: payload.dukkhaPatterns || [],
+    responseMoves: payload.responseMoves || [],
+  });
 }
 
 function buildCrisisInput(payload) {
-  return [
-    {
-      role: "developer",
-      content: avalokaV2CrisisPrompt,
-    },
-    {
-      role: "user",
-      content: JSON.stringify({ userText: payload.userText }, null, 2),
-    },
-  ];
+  return promptRuntime.buildPromptInput("avaloka-v2-crisis-classifier", {
+    userText: payload.userText,
+  });
 }
 
 function buildAvalokaV2ResponseInput(payload) {
-  return [
-    {
-      role: "developer",
-      content: avalokaV2ResponsePrompt,
-    },
-    {
-      role: "user",
-      content: JSON.stringify(
-        {
-          userText: payload.userText,
-          localText: payload.localText,
-          crisis: payload.crisis,
-          baifa: payload.baifa,
-          compassionPlan: payload.compassionPlan,
-          dukkhaTypes: payload.dukkhaTypes || [],
-          dukkhaPatterns: payload.dukkhaPatterns || [],
-          responseMoves: payload.responseMoves || [],
-          repairGuidance: payload.repairGuidance || "",
-        },
-        null,
-        2,
-      ),
-    },
-  ];
+  return promptRuntime.buildPromptInput("avaloka-v2-orchestrator-response", {
+    userText: payload.userText,
+    localText: payload.localText,
+    crisis: payload.crisis,
+    baifa: payload.baifa,
+    compassionPlan: payload.compassionPlan,
+    dukkhaTypes: payload.dukkhaTypes || [],
+    dukkhaPatterns: payload.dukkhaPatterns || [],
+    responseMoves: payload.responseMoves || [],
+    repairGuidance: payload.repairGuidance || "",
+  });
 }
 
 function buildGuardianInput(payload) {
-  return [
-    {
-      role: "developer",
-      content: avalokaV2GuardianPrompt,
-    },
-    {
-      role: "user",
-      content: JSON.stringify(
-        {
-          userText: payload.userText,
-          candidateText: payload.candidateText,
-          crisis: payload.crisis,
-          baifa: payload.baifa,
-          compassionPlan: payload.compassionPlan,
-        },
-        null,
-        2,
-      ),
-    },
-  ];
+  return promptRuntime.buildPromptInput("avaloka-v2-guardian", {
+    userText: payload.userText,
+    candidateText: payload.candidateText,
+    crisis: payload.crisis,
+    baifa: payload.baifa,
+    compassionPlan: payload.compassionPlan,
+  });
 }
 
 function buildCompassionPlanInput(payload) {
-  return [
-    {
-      role: "developer",
-      content: avalokiteshvaraCompassionPlannerPrompt,
-    },
-    {
-      role: "user",
-      content: JSON.stringify(
-        {
-          userText: payload.userText,
-          crisis: payload.crisis,
-          baifa: payload.baifa,
-          dukkhaTypes: payload.dukkhaTypes || [],
-          dukkhaPatterns: payload.dukkhaPatterns || [],
-          responseMoves: payload.responseMoves || [],
-        },
-        null,
-        2,
-      ),
-    },
-  ];
+  return promptRuntime.buildPromptInput("avalokiteshvara-compassion-planner-v1", {
+    userText: payload.userText,
+    crisis: payload.crisis,
+    baifa: payload.baifa,
+    dukkhaTypes: payload.dukkhaTypes || [],
+    dukkhaPatterns: payload.dukkhaPatterns || [],
+    responseMoves: payload.responseMoves || [],
+  });
 }
 
 async function callOpenAI(payload) {
@@ -649,18 +562,13 @@ function buildHealthPayload() {
       maxConcurrentRequests: openAIMaxConcurrentRequests,
       maxRequestsPerMinute: openAIMaxRequestsPerMinute,
     },
-    promptLoaded: Boolean(prompt.trim()),
-    promptCharacters: prompt.length,
-    baifaPromptLoaded: Boolean(baifaPrompt.trim()),
-    baifaPromptCharacters: baifaPrompt.length,
-    avalokaV2PromptsLoaded: Boolean(
-      avalokaV2ResponsePrompt.trim() &&
-        avalokaV2CrisisPrompt.trim() &&
-        avalokaV2GuardianPrompt.trim() &&
-        avalokiteshvaraCompassionPlannerPrompt.trim(),
-    ),
-    compassionPlannerPromptLoaded: Boolean(avalokiteshvaraCompassionPlannerPrompt.trim()),
-    compassionPlannerPromptCharacters: avalokiteshvaraCompassionPlannerPrompt.length,
+    requestLimits: {
+      maxJsonBodyBytes,
+    },
+    promptRegistry: {
+      schemaVersion: promptRuntime.registry.schemaVersion,
+      activePromptIds: promptRuntime.getActivePromptRecords().map((record) => record.id),
+    },
     endpoints: {
       health: "GET /api/llm-shadow/test",
       shadowTest: "GET /api/llm-shadow/test?run=1&userText=...&localText=...",
@@ -727,7 +635,7 @@ const server = createServer(async (request, response) => {
 
   if (request.method === "POST" && request.url === "/api/baifa-map") {
     try {
-      const payload = await readJson(request);
+      const payload = await readJson(request, { maxBytes: maxJsonBodyBytes });
       if (!payload.userText) {
         sendJson(response, 400, { error: "userText is required." });
         return;
@@ -736,14 +644,14 @@ const server = createServer(async (request, response) => {
       const result = await callOpenAIBaifaMapper(payload);
       sendJson(response, result.status, result.body);
     } catch (error) {
-      sendJson(response, 500, { error: error instanceof Error ? error.message : "Unknown server error." });
+      sendRequestError(response, error);
     }
     return;
   }
 
   if (request.method === "POST" && request.url === "/api/avaloka-v2") {
     try {
-      const payload = await readJson(request);
+      const payload = await readJson(request, { maxBytes: maxJsonBodyBytes });
       if (!payload.userText || !payload.localText) {
         sendJson(response, 400, { error: "userText and localText are required." });
         return;
@@ -752,7 +660,7 @@ const server = createServer(async (request, response) => {
       const result = await callAvalokaV2(payload);
       sendJson(response, result.status, result.body);
     } catch (error) {
-      sendJson(response, 500, { error: error instanceof Error ? error.message : "Unknown server error." });
+      sendRequestError(response, error);
     }
     return;
   }
@@ -763,7 +671,7 @@ const server = createServer(async (request, response) => {
   }
 
   try {
-    const payload = await readJson(request);
+    const payload = await readJson(request, { maxBytes: maxJsonBodyBytes });
     if (!payload.userText || !payload.localText) {
       sendJson(response, 400, { error: "userText and localText are required." });
       return;
@@ -772,9 +680,23 @@ const server = createServer(async (request, response) => {
     const result = await callOpenAI(payload);
     sendJson(response, result.status, result.body);
   } catch (error) {
-    sendJson(response, 500, { error: error instanceof Error ? error.message : "Unknown server error." });
+    sendRequestError(response, error);
   }
 });
+
+function sendRequestError(response, error) {
+  if (error instanceof PayloadTooLargeError) {
+    sendJson(response, error.statusCode, { error: error.message, maxJsonBodyBytes });
+    return;
+  }
+
+  if (error instanceof SyntaxError) {
+    sendJson(response, 400, { error: "Request body must be valid JSON." });
+    return;
+  }
+
+  sendJson(response, 500, { error: error instanceof Error ? error.message : "Unknown server error." });
+}
 
 server.listen(port, "127.0.0.1", () => {
   console.log(`Avaloka LLM shadow server listening on http://127.0.0.1:${port}`);

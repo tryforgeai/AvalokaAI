@@ -10,6 +10,7 @@ const baifaUnwholesomeCasesPath = join(repoRoot, "evals/baifa-unwholesome-cases.
 const avalokaV2CasesPath = join(repoRoot, "evals/avaloka-v2-orchestrator-cases.json");
 const avalokaV2GoldenCasesPath = join(repoRoot, "evals/avaloka-v2-golden-cases.json");
 const avalokiteshvaraCasesPath = join(repoRoot, "evals/avalokiteshvara-compassion-cases.json");
+const promptRegistryPath = join(repoRoot, "prompt/registry.json");
 const baifaPromptPath = join(repoRoot, "prompt/baifa-mapper-v1.md");
 const avalokiteshvaraCompassionOsPath = join(repoRoot, "docs/kb/derived/avalokiteshvara-compassion-os.zh.md");
 const avalokaV2ResponsePromptPath = join(repoRoot, "prompt/avaloka-v2-orchestrator-response.md");
@@ -38,6 +39,7 @@ assert(existsSync(baifaUnwholesomeCasesPath), "Missing evals/baifa-unwholesome-c
 assert(existsSync(avalokaV2CasesPath), "Missing evals/avaloka-v2-orchestrator-cases.json.");
 assert(existsSync(avalokaV2GoldenCasesPath), "Missing evals/avaloka-v2-golden-cases.json.");
 assert(existsSync(avalokiteshvaraCasesPath), "Missing evals/avalokiteshvara-compassion-cases.json.");
+assert(existsSync(promptRegistryPath), "Missing prompt/registry.json.");
 assert(existsSync(baifaPromptPath), "Missing prompt/baifa-mapper-v1.md.");
 assert(existsSync(avalokiteshvaraCompassionOsPath), "Missing docs/kb/derived/avalokiteshvara-compassion-os.zh.md.");
 assert(existsSync(avalokaV2ResponsePromptPath), "Missing prompt/avaloka-v2-orchestrator-response.md.");
@@ -61,6 +63,7 @@ const baifaUnwholesomeCases = existsSync(baifaUnwholesomeCasesPath) ? JSON.parse
 const avalokaV2Cases = existsSync(avalokaV2CasesPath) ? JSON.parse(read(avalokaV2CasesPath)) : [];
 const avalokaV2GoldenCases = existsSync(avalokaV2GoldenCasesPath) ? JSON.parse(read(avalokaV2GoldenCasesPath)) : [];
 const avalokiteshvaraCases = existsSync(avalokiteshvaraCasesPath) ? JSON.parse(read(avalokiteshvaraCasesPath)) : [];
+const promptRegistry = existsSync(promptRegistryPath) ? JSON.parse(read(promptRegistryPath)) : { prompts: [] };
 assert(Array.isArray(baifaCases), "baifa-mapper-cases.json must be an array.");
 assert(baifaCases.length >= 8, "baifa-mapper-cases.json must include at least 8 cases.");
 assert(Array.isArray(baifaUnwholesomeCases), "baifa-unwholesome-cases.json must be an array.");
@@ -71,6 +74,7 @@ assert(Array.isArray(avalokaV2GoldenCases), "avaloka-v2-golden-cases.json must b
 assert(avalokaV2GoldenCases.length >= 20, "avaloka-v2-golden-cases.json must include at least 20 cases.");
 assert(Array.isArray(avalokiteshvaraCases), "avalokiteshvara-compassion-cases.json must be an array.");
 assert(avalokiteshvaraCases.length >= 8, "avalokiteshvara-compassion-cases.json must include at least 8 cases.");
+assert(Array.isArray(promptRegistry.prompts), "prompt/registry.json must include a prompts array.");
 
 const allMindStates = [
   "作意",
@@ -197,7 +201,42 @@ for (const move of compassionMoveIds) {
 for (const term of ["Do not role-play Guanyin", "Return JSON only", "Do not invent new move ids"]) {
   assert(compassionPlannerPrompt.includes(term), `Compassion planner prompt must include "${term}".`);
 }
-assert(shadowServer.includes("avalokiteshvaraCompassionPlannerPrompt"), "Shadow server must load the Compassion OS planner prompt.");
+assert(shadowServer.includes("createPromptRuntime"), "Shadow server must use the prompt runtime.");
+assert(shadowServer.includes("avalokiteshvara-compassion-planner-v1"), "Shadow server must reference the Compassion OS planner prompt id.");
+
+const promptIds = new Set();
+for (const record of promptRegistry.prompts) {
+  assert(record.id, "Every prompt registry record must include id.");
+  assert(!promptIds.has(record.id), `Duplicate prompt registry id: ${record.id}`);
+  promptIds.add(record.id);
+  assert(record.file, `Prompt registry record ${record.id} must include file.`);
+  assert(["active", "draft", "archived"].includes(record.status), `Prompt registry record ${record.id} has invalid status.`);
+  assert(record.purpose, `Prompt registry record ${record.id} must include purpose.`);
+  assert(record.version, `Prompt registry record ${record.id} must include version.`);
+  assert(record.rollback, `Prompt registry record ${record.id} must include rollback.`);
+  assert(Array.isArray(record.usedBy), `Prompt registry record ${record.id} must include usedBy.`);
+  assert(Array.isArray(record.evals), `Prompt registry record ${record.id} must include evals.`);
+  assert(existsSync(join(repoRoot, record.file)), `Prompt registry record ${record.id} points to missing file ${record.file}.`);
+  for (const evalPath of record.evals) {
+    assert(existsSync(join(repoRoot, evalPath)), `Prompt registry record ${record.id} points to missing eval ${evalPath}.`);
+  }
+  if (record.status === "active") {
+    assert(record.usedBy.length > 0, `Active prompt ${record.id} must include at least one usedBy entry.`);
+    assert(record.evals.length > 0, `Active prompt ${record.id} must include at least one eval.`);
+    assert(shadowServer.includes(record.id), `Active prompt ${record.id} must be referenced by the shadow server runtime.`);
+  }
+}
+
+for (const id of [
+  "llm-shadow-response-generator-v1",
+  "baifa-mapper-v1",
+  "avaloka-v2-crisis-classifier",
+  "avalokiteshvara-compassion-planner-v1",
+  "avaloka-v2-orchestrator-response",
+  "avaloka-v2-guardian",
+]) {
+  assert(promptIds.has(id), `prompt/registry.json must include prompt id "${id}".`);
+}
 
 for (const mindState of allMindStates) {
   assert(shadowServer.includes(`"${mindState}"`), `Baifa JSON schema must constrain mindState enum with "${mindState}".`);

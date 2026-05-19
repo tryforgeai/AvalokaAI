@@ -30,7 +30,16 @@ describe("selectScenario", () => {
 });
 
 describe("isCrisisMessage", () => {
-  it("catches ambiguous danger language", () => {
-    expect(isCrisisMessage("我撑不下去了，想消失。")).toBe(true);
+  it("does not hard-gate ambiguous low-moment language that should go to the LLM classifier", () => {
+    expect(isCrisisMessage("我撑不下去了，想消失。")).toBe(false);
+    expect(isCrisisMessage("我不想再这样下去了。")).toBe(false);
+    expect(isCrisisMessage("我控制不住一直哭。")).toBe(false);
+  });
+
+  it("hard-gates explicit self-harm or direct violence language", () => {
+    expect(isCrisisMessage("我不想活了，已经想好怎么结束自己。")).toBe(true);
+    expect(isCrisisMessage("我想自杀。")).toBe(true);
+    expect(isCrisisMessage("我怕我会伤害自己。")).toBe(true);
+    expect(isCrisisMessage("我想杀了他。")).toBe(true);
   });
 });

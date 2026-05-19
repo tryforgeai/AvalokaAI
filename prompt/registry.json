@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "prompts": [
+    {
+      "id": "llm-shadow-response-generator-v1",
+      "file": "prompt/llm-shadow-response-generator-v1.md",
+      "status": "active",
+      "version": "v1",
+      "purpose": "Generate internal shadow candidate responses for developer comparison.",
+      "usedBy": ["server/llm-shadow-server.mjs:POST /api/llm-shadow", "server/llm-shadow-server.mjs:GET /api/llm-shadow/test?run=1"],
+      "evals": ["evals/wisdom-response-cases.json"],
+      "rollback": "Restore the previous committed version of prompt/llm-shadow-response-generator-v1.md."
+    },
+    {
+      "id": "baifa-mapper-v1",
+      "file": "prompt/baifa-mapper-v1.md",
+      "status": "active",
+      "version": "v1",
+      "purpose": "Classify user input into Baifa mind-state candidates and wholesome antidotes.",
+      "usedBy": ["server/llm-shadow-server.mjs:POST /api/baifa-map", "server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
+      "evals": ["evals/baifa-mapper-cases.json", "evals/baifa-unwholesome-cases.json", "evals/avaloka-v2-golden-cases.json"],
+      "rollback": "Restore the previous committed version of prompt/baifa-mapper-v1.md."
+    },
+    {
+      "id": "avaloka-v2-crisis-classifier",
+      "file": "prompt/avaloka-v2-crisis-classifier.md",
+      "status": "active",
+      "version": "v2",
+      "purpose": "Classify whether a user message should use normal, ambiguous safety, or crisis flow.",
+      "usedBy": ["server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
+      "evals": ["evals/avaloka-v2-orchestrator-cases.json", "evals/avaloka-v2-golden-cases.json"],
+      "rollback": "Restore the previous committed version of prompt/avaloka-v2-crisis-classifier.md."
+    },
+    {
+      "id": "avalokiteshvara-compassion-planner-v1",
+      "file": "prompt/avalokiteshvara-compassion-planner-v1.md",
+      "status": "active",
+      "version": "v1",
+      "purpose": "Select internal Compassion OS moves that guide the user-facing reply.",
+      "usedBy": ["server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
+      "evals": ["evals/avalokiteshvara-compassion-cases.json", "evals/avaloka-v2-golden-cases.json"],
+      "rollback": "Restore the previous committed version of prompt/avalokiteshvara-compassion-planner-v1.md."
+    },
+    {
+      "id": "avaloka-v2-orchestrator-response",
+      "file": "prompt/avaloka-v2-orchestrator-response.md",
+      "status": "active",
+      "version": "v2",
+      "purpose": "Generate the user-facing Avaloka V2 response from crisis, Baifa, and Compassion OS context.",
+      "usedBy": ["server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
+      "evals": ["evals/avaloka-v2-orchestrator-cases.json", "evals/avaloka-v2-golden-cases.json", "evals/wisdom-response-cases.json"],
+      "rollback": "Restore the previous committed version of prompt/avaloka-v2-orchestrator-response.md."
+    },
+    {
+      "id": "avaloka-v2-guardian",
+      "file": "prompt/avaloka-v2-guardian.md",
+      "status": "active",
+      "version": "v2",
+      "purpose": "Review candidate Avaloka replies before display and require repair or fallback when unsafe.",
+      "usedBy": ["server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
+      "evals": ["evals/precepts-cases.json", "evals/avaloka-v2-golden-cases.json"],
+      "rollback": "Restore the previous committed version of prompt/avaloka-v2-guardian.md."
+    },
+    {
+      "id": "response-generator-v1",
+      "file": "prompt/response-generator-v1.md",
+      "status": "draft",
+      "version": "v1",
+      "purpose": "Draft artifact for future response generation after guardrails and evals mature.",
+      "usedBy": [],
+      "evals": ["evals/wisdom-response-cases.json"],
+      "rollback": "No runtime rollback needed; draft prompt is not active."
+    }
+  ]
+}
