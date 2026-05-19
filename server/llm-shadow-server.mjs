@@ -11,6 +11,10 @@ const baifaPrompt = readFileSync(resolve(root, "prompt/baifa-mapper-v1.md"), "ut
 const avalokaV2ResponsePrompt = readFileSync(resolve(root, "prompt/avaloka-v2-orchestrator-response.md"), "utf8");
 const avalokaV2CrisisPrompt = readFileSync(resolve(root, "prompt/avaloka-v2-crisis-classifier.md"), "utf8");
 const avalokaV2GuardianPrompt = readFileSync(resolve(root, "prompt/avaloka-v2-guardian.md"), "utf8");
+const avalokiteshvaraCompassionPlannerPrompt = readFileSync(
+  resolve(root, "prompt/avalokiteshvara-compassion-planner-v1.md"),
+  "utf8",
+);
 const port = Number(process.env.PORT || 8787);
 const model = process.env.OPENAI_SHADOW_MODEL || "gpt-5.2";
 const baifaCategories = ["遍行心所", "别境心所", "善心所", "烦恼心所", "随烦恼心所", "不定心所"];
@@ -68,6 +72,16 @@ const baifaMindStates = [
   "伺",
 ];
 const wholesomeMindStates = ["信", "精进", "惭", "愧", "无贪", "无瞋", "无痴", "轻安", "不放逸", "行舍", "不害"];
+const compassionMoveIds = [
+  "hear_the_cry_first",
+  "give_fearlessness_first",
+  "adapt_to_capacity",
+  "do_not_abandon",
+  "compassion_with_boundary",
+  "not_whole_self",
+  "return_from_story_to_step",
+  "protect_before_practice",
+];
 
 function loadDotEnv(path) {
   if (!existsSync(path)) return;
@@ -180,6 +194,7 @@ function buildAvalokaV2ResponseInput(payload) {
           localText: payload.localText,
           crisis: payload.crisis,
           baifa: payload.baifa,
+          compassionPlan: payload.compassionPlan,
           dukkhaTypes: payload.dukkhaTypes || [],
           dukkhaPatterns: payload.dukkhaPatterns || [],
           responseMoves: payload.responseMoves || [],
@@ -206,6 +221,31 @@ function buildGuardianInput(payload) {
           candidateText: payload.candidateText,
           crisis: payload.crisis,
           baifa: payload.baifa,
+          compassionPlan: payload.compassionPlan,
+        },
+        null,
+        2,
+      ),
+    },
+  ];
+}
+
+function buildCompassionPlanInput(payload) {
+  return [
+    {
+      role: "developer",
+      content: avalokiteshvaraCompassionPlannerPrompt,
+    },
+    {
+      role: "user",
+      content: JSON.stringify(
+        {
+          userText: payload.userText,
+          crisis: payload.crisis,
+          baifa: payload.baifa,
+          dukkhaTypes: payload.dukkhaTypes || [],
+          dukkhaPatterns: payload.dukkhaPatterns || [],
+          responseMoves: payload.responseMoves || [],
         },
         null,
         2,
@@ -465,6 +505,60 @@ function guardianSchema() {
   };
 }
 
+function compassionPlanSchema() {
+  return {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      status: { type: "string", enum: ["ready"] },
+      moves: {
+        type: "array",
+        minItems: 1,
+        maxItems: 4,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            id: { type: "string", enum: compassionMoveIds },
+            confidence: { type: "number", minimum: 0, maximum: 1 },
+            reason: { type: "string" },
+          },
+          required: ["id", "confidence", "reason"],
+        },
+      },
+      stance: { type: "string" },
+      avoid: {
+        type: "array",
+        minItems: 1,
+        maxItems: 6,
+        items: { type: "string" },
+      },
+      responseHint: { type: "string" },
+      crisisMode: { type: "boolean" },
+    },
+    required: ["status", "moves", "stance", "avoid", "responseHint", "crisisMode"],
+  };
+}
+
+function defaultCompassionPlan({ crisis, error = "" }) {
+  const crisisMode = crisis?.status === "crisis" || crisis?.status === "ambiguous";
+  return {
+    status: error ? "error" : "ready",
+    moves: [
+      {
+        id: crisisMode ? "protect_before_practice" : "hear_the_cry_first",
+        confidence: 0.5,
+        reason: error || "Default safe Compassion OS plan.",
+      },
+    ],
+    stance: crisisMode ? "crisis_safety_first" : "plain_presence",
+    avoid: ["karma_blame", "doctrine", "medical_claim", "dependency"],
+    responseHint: crisisMode ? "Preserve safety before reflection." : "Use warm, plain, safe support.",
+    crisisMode,
+    model,
+  };
+}
+
 async function callOpenAIBaifaMapper(payload) {
   const result = await callOpenAIJson({
     input: buildBaifaInput(payload),
@@ -479,6 +573,41 @@ async function callOpenAIBaifaMapper(payload) {
       baifa: result.body.json,
       model: result.body.model,
       latencyMs: result.body.latencyMs,
+    },
+  };
+}
+
+async function callCompassionPlanner(payload) {
+  const result = await callOpenAIJson({
+    input: buildCompassionPlanInput(payload),
+    name: "avalokiteshvara_compassion_plan",
+    schema: compassionPlanSchema(),
+    maxOutputTokens: 520,
+  });
+
+  if (result.status !== 200) {
+    return {
+      status: 200,
+      body: {
+        compassionPlan: {
+          ...defaultCompassionPlan({
+            crisis: payload.crisis,
+            error: result.body.error || "Compassion planner unavailable.",
+          }),
+          latencyMs: result.body.latencyMs,
+        },
+      },
+    };
+  }
+
+  return {
+    status: 200,
+    body: {
+      compassionPlan: {
+        ...result.body.json,
+        model: result.body.model,
+        latencyMs: result.body.latencyMs,
+      },
     },
   };
 }
@@ -503,7 +632,7 @@ async function callAvalokaV2(payload) {
     crisis = crisisResult.body.json;
   }
 
-  if (crisis.status === "crisis") {
+  if (crisis.status === "crisis" || crisis.status === "ambiguous") {
     return callAvalokaV2ResponseFlow({
       payload,
       crisis,
@@ -524,11 +653,20 @@ async function callAvalokaV2(payload) {
 }
 
 async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) {
+  const compassionResult = await callCompassionPlanner({
+    ...payload,
+    crisis,
+    baifa,
+  });
+  if (compassionResult.status !== 200) return compassionResult;
+  const compassionPlan = compassionResult.body.compassionPlan;
+
   const responseResult = await callOpenAIText({
     input: buildAvalokaV2ResponseInput({
       ...payload,
       crisis,
       baifa,
+      compassionPlan,
     }),
     maxOutputTokens: 320,
   });
@@ -541,6 +679,7 @@ async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) 
       candidateText,
       crisis,
       baifa,
+      compassionPlan,
     }),
     name: "avaloka_v2_guardian",
     schema: guardianSchema(),
@@ -558,6 +697,7 @@ async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) 
         ...payload,
         crisis,
         baifa,
+        compassionPlan,
         repairGuidance: guardian.notes,
       }),
       maxOutputTokens: 320,
@@ -571,6 +711,7 @@ async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) 
         candidateText,
         crisis,
         baifa,
+        compassionPlan,
       }),
       name: "avaloka_v2_guardian",
       schema: guardianSchema(),
@@ -591,6 +732,7 @@ async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) 
       responseSource: "llm_orchestrator_v2",
       crisis,
       baifa,
+      compassionPlan,
       guardian,
       repairAttempted,
       model,
@@ -610,8 +752,13 @@ function buildHealthPayload() {
     baifaPromptLoaded: Boolean(baifaPrompt.trim()),
     baifaPromptCharacters: baifaPrompt.length,
     avalokaV2PromptsLoaded: Boolean(
-      avalokaV2ResponsePrompt.trim() && avalokaV2CrisisPrompt.trim() && avalokaV2GuardianPrompt.trim(),
+      avalokaV2ResponsePrompt.trim() &&
+        avalokaV2CrisisPrompt.trim() &&
+        avalokaV2GuardianPrompt.trim() &&
+        avalokiteshvaraCompassionPlannerPrompt.trim(),
     ),
+    compassionPlannerPromptLoaded: Boolean(avalokiteshvaraCompassionPlannerPrompt.trim()),
+    compassionPlannerPromptCharacters: avalokiteshvaraCompassionPlannerPrompt.length,
     endpoints: {
       health: "GET /api/llm-shadow/test",
       shadowTest: "GET /api/llm-shadow/test?run=1&userText=...&localText=...",

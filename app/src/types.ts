@@ -85,6 +85,34 @@ export interface LlmGuardianReview {
   notes: string;
 }
 
+export type CompassionMoveId =
+  | "hear_the_cry_first"
+  | "give_fearlessness_first"
+  | "adapt_to_capacity"
+  | "do_not_abandon"
+  | "compassion_with_boundary"
+  | "not_whole_self"
+  | "return_from_story_to_step"
+  | "protect_before_practice";
+
+export interface CompassionMove {
+  id: CompassionMoveId;
+  confidence: number;
+  reason: string;
+}
+
+export interface CompassionPlanResult {
+  status: "idle" | "loading" | "ready" | "skipped" | "error";
+  moves: CompassionMove[];
+  stance: string;
+  avoid: string[];
+  responseHint: string;
+  crisisMode: boolean;
+  model?: string;
+  latencyMs?: number;
+  error?: string;
+}
+
 export interface AvalokaV2Result {
   status: "idle" | "loading" | "ready" | "skipped" | "error";
   candidateText?: string;
@@ -93,6 +121,7 @@ export interface AvalokaV2Result {
   latencyMs?: number;
   crisis?: LlmCrisisClassification;
   baifa?: BaifaMap;
+  compassionPlan?: CompassionPlanResult;
   guardian?: LlmGuardianReview;
   repairAttempted?: boolean;
   error?: string;

@@ -69,6 +69,7 @@ function buildTurns(messages: ChatMessage[], feedback: FeedbackEntry[]) {
       responseSource: nextMessage.responseSource || "local",
       localBaselineText: nextMessage.localBaselineText,
       orchestratorV2: nextMessage.orchestratorV2,
+      compassionPlan: nextMessage.orchestratorV2?.compassionPlan,
       openaiPrimary: nextMessage.openaiPrimary,
       shadow: nextMessage.shadow,
       baifa: nextMessage.baifa,
@@ -115,6 +116,9 @@ function buildSummary(messages: ChatMessage[], feedback: FeedbackEntry[], turns:
     orchestratorV2ReadyCount: turns.filter((turn) => turn.orchestratorV2?.status === "ready").length,
     orchestratorV2ErrorCount: turns.filter((turn) => turn.orchestratorV2?.status === "error").length,
     orchestratorV2RepairCount: turns.filter((turn) => turn.orchestratorV2?.repairAttempted).length,
+    compassionReadyCount: turns.filter((turn) => turn.compassionPlan?.status === "ready").length,
+    compassionErrorCount: turns.filter((turn) => turn.compassionPlan?.status === "error").length,
+    compassionMoveCounts: countBy(turns.flatMap((turn) => turn.compassionPlan?.moves.map((move) => move.id) || [])),
   };
 }
 

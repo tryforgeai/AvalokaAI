@@ -14,6 +14,7 @@ const avalokiteshvaraCompassionOsPath = join(repoRoot, "docs/kb/derived/avalokit
 const avalokaV2ResponsePromptPath = join(repoRoot, "prompt/avaloka-v2-orchestrator-response.md");
 const avalokaV2CrisisPromptPath = join(repoRoot, "prompt/avaloka-v2-crisis-classifier.md");
 const avalokaV2GuardianPromptPath = join(repoRoot, "prompt/avaloka-v2-guardian.md");
+const compassionPlannerPromptPath = join(repoRoot, "prompt/avalokiteshvara-compassion-planner-v1.md");
 const shadowServerPath = join(repoRoot, "server/llm-shadow-server.mjs");
 const dukkhaMapPath = join(repoRoot, "app/src/data/dukkhaMap.ts");
 const dukkhaMapperTestPath = join(repoRoot, "app/src/lib/dukkhaMapper.test.ts");
@@ -40,6 +41,7 @@ assert(existsSync(avalokiteshvaraCompassionOsPath), "Missing docs/kb/derived/ava
 assert(existsSync(avalokaV2ResponsePromptPath), "Missing prompt/avaloka-v2-orchestrator-response.md.");
 assert(existsSync(avalokaV2CrisisPromptPath), "Missing prompt/avaloka-v2-crisis-classifier.md.");
 assert(existsSync(avalokaV2GuardianPromptPath), "Missing prompt/avaloka-v2-guardian.md.");
+assert(existsSync(compassionPlannerPromptPath), "Missing prompt/avalokiteshvara-compassion-planner-v1.md.");
 
 const episodeFiles = readdirSync(podcastDir)
   .filter((file) => /^episode-\d{3}-.+\.zh\.md$/.test(file))
@@ -171,6 +173,26 @@ const avalokiteshvaraCompassionOs = existsSync(avalokiteshvaraCompassionOsPath) 
 for (const term of ["闻声救苦", "施无畏", "随类应化", "Do not role-play Guanyin", "Crisis Response Guidance"]) {
   assert(avalokiteshvaraCompassionOs.includes(term), `avalokiteshvara-compassion-os.zh.md must include "${term}".`);
 }
+
+const compassionPlannerPrompt = existsSync(compassionPlannerPromptPath) ? read(compassionPlannerPromptPath) : "";
+const compassionMoveIds = [
+  "hear_the_cry_first",
+  "give_fearlessness_first",
+  "adapt_to_capacity",
+  "do_not_abandon",
+  "compassion_with_boundary",
+  "not_whole_self",
+  "return_from_story_to_step",
+  "protect_before_practice",
+];
+for (const move of compassionMoveIds) {
+  assert(compassionPlannerPrompt.includes(move), `Compassion planner prompt must include move "${move}".`);
+  assert(shadowServer.includes(`"${move}"`), `Compassion planner JSON schema must constrain move enum with "${move}".`);
+}
+for (const term of ["Do not role-play Guanyin", "Return JSON only", "Do not invent new move ids"]) {
+  assert(compassionPlannerPrompt.includes(term), `Compassion planner prompt must include "${term}".`);
+}
+assert(shadowServer.includes("avalokiteshvaraCompassionPlannerPrompt"), "Shadow server must load the Compassion OS planner prompt.");
 
 for (const mindState of allMindStates) {
   assert(shadowServer.includes(`"${mindState}"`), `Baifa JSON schema must constrain mindState enum with "${mindState}".`);

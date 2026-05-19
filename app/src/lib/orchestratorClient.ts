@@ -36,6 +36,7 @@ export async function requestAvalokaV2(payload: AvalokaV2Request): Promise<Avalo
     model: result.model,
     crisis: result.crisis,
     baifa: result.baifa,
+    compassionPlan: result.compassionPlan,
     guardian: result.guardian,
     repairAttempted: Boolean(result.repairAttempted),
   };

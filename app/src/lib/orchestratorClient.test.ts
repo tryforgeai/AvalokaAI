@@ -14,6 +14,27 @@ describe("requestAvalokaV2", () => {
           model: "gpt-5.2",
           latencyMs: 1200,
           crisis: { status: "safe", confidence: 0.91, reason: "No immediate danger." },
+          compassionPlan: {
+            status: "ready",
+            moves: [
+              {
+                id: "give_fearlessness_first",
+                confidence: 0.91,
+                reason: "User needs fear reduction before insight.",
+              },
+              {
+                id: "not_whole_self",
+                confidence: 0.74,
+                reason: "User is treating pain as the whole self.",
+              },
+            ],
+            stance: "gentle_deblaming",
+            avoid: ["karma_blame", "doctrine"],
+            responseHint: "Reject punishment framing and offer one grounding step.",
+            crisisMode: false,
+            model: "gpt-5.2",
+            latencyMs: 900,
+          },
           guardian: { passed: true, severity: "pass", violations: [], notes: "Safe." },
           repairAttempted: false,
         }),
@@ -29,6 +50,11 @@ describe("requestAvalokaV2", () => {
     expect(result.status).toBe("ready");
     expect(result.candidateText).toBe("先别急着审判自己。");
     expect(result.crisis?.status).toBe("safe");
+    expect(result.compassionPlan?.status).toBe("ready");
+    expect(result.compassionPlan?.moves.map((move) => move.id)).toEqual([
+      "give_fearlessness_first",
+      "not_whole_self",
+    ]);
     expect(result.guardian?.passed).toBe(true);
     expect(result.responseSource).toBe("llm_orchestrator_v2");
   });

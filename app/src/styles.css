@@ -244,6 +244,7 @@ select:focus {
 .debug-card,
 .baseline-card,
 .orchestrator-card,
+.compassion-card,
 .baifa-card,
 .export-card {
   margin: 0 1.25rem 1.25rem;
@@ -255,6 +256,7 @@ select:focus {
 .debug-card h2,
 .baseline-card h2,
 .orchestrator-card h2,
+.compassion-card h2,
 .baifa-card h2,
 .export-card h2 {
   font-size: 0.95rem;
@@ -277,6 +279,7 @@ select:focus {
 }
 
 .baifa-card dl,
+.compassion-card dl,
 .orchestrator-card dl {
   display: grid;
   grid-template-columns: 5rem minmax(0, 1fr);
@@ -286,11 +289,13 @@ select:focus {
 }
 
 .baifa-card dt,
+.compassion-card dt,
 .orchestrator-card dt {
   color: var(--muted);
 }
 
 .baifa-card dd,
+.compassion-card dd,
 .orchestrator-card dd {
   margin: 0;
   overflow-wrap: anywhere;

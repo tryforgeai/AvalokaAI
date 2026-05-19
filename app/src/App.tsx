@@ -21,7 +21,7 @@ import {
   saveFeedback,
   saveMessages,
 } from "./lib/storage";
-import type { BaifaMindState, ChatMessage, FeedbackEntry } from "./types";
+import type { BaifaMindState, ChatMessage, CompassionMove, FeedbackEntry } from "./types";
 
 function makeId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -462,6 +462,41 @@ export default function App() {
           )}
         </div>
 
+        <div className="compassion-card" aria-label="Compassion OS planner panel">
+          <p className="eyebrow">Compassion OS</p>
+          <h2>Developer testing only</h2>
+          {latestDebugMessage?.orchestratorV2?.compassionPlan ? (
+            <div className="compassion-body">
+              <dl>
+                <dt>status</dt>
+                <dd>{latestDebugMessage.orchestratorV2.compassionPlan.status}</dd>
+                <dt>model</dt>
+                <dd>{latestDebugMessage.orchestratorV2.compassionPlan.model || "n/a"}</dd>
+                <dt>latency</dt>
+                <dd>
+                  {latestDebugMessage.orchestratorV2.compassionPlan.latencyMs
+                    ? `${latestDebugMessage.orchestratorV2.compassionPlan.latencyMs}ms`
+                    : "n/a"}
+                </dd>
+                <dt>moves</dt>
+                <dd>{formatCompassionMoves(latestDebugMessage.orchestratorV2.compassionPlan.moves)}</dd>
+                <dt>stance</dt>
+                <dd>{latestDebugMessage.orchestratorV2.compassionPlan.stance || "n/a"}</dd>
+                <dt>avoid</dt>
+                <dd>{formatDebugList(latestDebugMessage.orchestratorV2.compassionPlan.avoid)}</dd>
+              </dl>
+              {latestDebugMessage.orchestratorV2.compassionPlan.responseHint ? (
+                <p className="soft-note">{latestDebugMessage.orchestratorV2.compassionPlan.responseHint}</p>
+              ) : null}
+              {latestDebugMessage.orchestratorV2.compassionPlan.error ? (
+                <p className="soft-note">{latestDebugMessage.orchestratorV2.compassionPlan.error}</p>
+              ) : null}
+            </div>
+          ) : (
+            <p className="soft-note">Send a message to run the Compassion OS planner inside V2.</p>
+          )}
+        </div>
+
         <div className="baifa-card" aria-label="Baifa mapper panel">
           <p className="eyebrow">Baifa Mapper</p>
           <h2>Developer testing only</h2>
@@ -509,6 +544,11 @@ function formatDebugList(items?: string[]): string {
 function formatBaifaStates(states?: BaifaMindState[]): string {
   if (!states || states.length === 0) return "none";
   return states.map((state) => `${state.mindState} ${Math.round(state.confidence * 100)}%`).join(", ");
+}
+
+function formatCompassionMoves(moves?: CompassionMove[]): string {
+  if (!moves || moves.length === 0) return "none";
+  return moves.map((move) => `${move.id} ${Math.round(move.confidence * 100)}%`).join(", ");
 }
 
 function buildShadowGuard(text: string): Pick<NonNullable<ChatMessage["shadow"]>, "guardianFallback" | "preceptsSeverity" | "preceptsViolations"> {

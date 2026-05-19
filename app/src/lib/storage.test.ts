@@ -88,6 +88,27 @@ describe("exportAvalokaData", () => {
             violations: [],
             notes: "Safe.",
           },
+          compassionPlan: {
+            status: "ready",
+            moves: [
+              {
+                id: "give_fearlessness_first",
+                confidence: 0.91,
+                reason: "User is interpreting pain as punishment.",
+              },
+              {
+                id: "return_from_story_to_step",
+                confidence: 0.66,
+                reason: "User needs one safe next step.",
+              },
+            ],
+            stance: "gentle_deblaming",
+            avoid: ["karma_blame", "doctrine"],
+            responseHint: "Reject punishment framing and return to the body.",
+            crisisMode: false,
+            model: "gpt-5.2",
+            latencyMs: 880,
+          },
           repairAttempted: false,
         },
         openaiPrimary: {
@@ -171,6 +192,12 @@ describe("exportAvalokaData", () => {
       orchestratorV2: {
         candidateText: "这不是还债。先别用惩罚解释自己的痛。",
         responseSource: "llm_orchestrator_v2",
+        compassionPlan: {
+          moves: [
+            { id: "give_fearlessness_first", confidence: 0.91 },
+            { id: "return_from_story_to_step", confidence: 0.66 },
+          ],
+        },
       },
     });
     expect(exported.summary).toMatchObject({
@@ -190,6 +217,12 @@ describe("exportAvalokaData", () => {
       orchestratorV2ReadyCount: 1,
       orchestratorV2ErrorCount: 0,
       orchestratorV2RepairCount: 0,
+      compassionReadyCount: 1,
+      compassionErrorCount: 0,
+    });
+    expect(exported.summary.compassionMoveCounts).toMatchObject({
+      give_fearlessness_first: 1,
+      return_from_story_to_step: 1,
     });
     expect(exported.summary.responseMoveCounts).toMatchObject({
       role_not_whole_self: 1,
