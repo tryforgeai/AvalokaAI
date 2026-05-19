@@ -1,0 +1,142 @@
+[
+  {
+    "id": "unwholesome_01_greed_child",
+    "user_input": "如果我当年有孩子，现在一定不会这么孤独。我就是放不下那种人生。",
+    "expected_mind_states": ["贪", "恶作"],
+    "expected_antidotes": ["无贪", "行舍"],
+    "coverage_tags": ["烦恼六:贪", "不定四:恶作"]
+  },
+  {
+    "id": "unwholesome_02_anger_child",
+    "user_input": "我很生气，孩子只顾自己，我越想越恨。",
+    "expected_mind_states": ["瞋", "恨", "恼"],
+    "expected_antidotes": ["无瞋", "不害", "轻安"],
+    "coverage_tags": ["烦恼六:瞋", "随烦恼二十:恨", "随烦恼二十:恼"]
+  },
+  {
+    "id": "unwholesome_03_pride_status",
+    "user_input": "我以前那么体面，现在像个没用的人，我不能接受自己输成这样。",
+    "expected_mind_states": ["慢", "不正知"],
+    "expected_antidotes": ["行舍", "无痴"],
+    "coverage_tags": ["烦恼六:慢", "随烦恼二十:不正知"]
+  },
+  {
+    "id": "unwholesome_04_ignorance_black",
+    "user_input": "我现在什么都看不清，只觉得这一切一定是我命不好。",
+    "expected_mind_states": ["无明", "不正见"],
+    "expected_antidotes": ["无痴", "行舍"],
+    "coverage_tags": ["烦恼六:无明", "烦恼六:不正见"]
+  },
+  {
+    "id": "unwholesome_05_doubt_fault",
+    "user_input": "到底是不是我错了？是不是我以前做错了什么才会这样？",
+    "expected_mind_states": ["疑", "不正见", "寻"],
+    "expected_antidotes": ["无痴", "行舍"],
+    "coverage_tags": ["烦恼六:疑", "不定四:寻"]
+  },
+  {
+    "id": "unwholesome_06_wrong_view_debt",
+    "user_input": "我生病是不是在还债？是不是老天终于来惩罚我了？",
+    "expected_mind_states": ["不正见", "疑"],
+    "expected_antidotes": ["无痴", "不害", "行舍"],
+    "coverage_tags": ["烦恼六:不正见", "烦恼六:疑"]
+  },
+  {
+    "id": "unwholesome_07_fury",
+    "user_input": "我现在气炸了，真的忍不了，我想马上冲过去骂他。",
+    "expected_mind_states": ["忿", "瞋", "害"],
+    "expected_antidotes": ["无瞋", "不害", "不放逸"],
+    "coverage_tags": ["随烦恼二十:忿", "随烦恼二十:害"]
+  },
+  {
+    "id": "unwholesome_08_lingering_hate",
+    "user_input": "这件事过去很多年了，可我就是恨他，一直过不去。",
+    "expected_mind_states": ["恨", "瞋", "伺"],
+    "expected_antidotes": ["无瞋", "行舍"],
+    "coverage_tags": ["随烦恼二十:恨", "不定四:伺"]
+  },
+  {
+    "id": "unwholesome_09_hide_shame",
+    "user_input": "这件事我不敢告诉任何人，我怕别人知道后看不起我。",
+    "expected_mind_states": ["覆", "慢"],
+    "expected_antidotes": ["惭", "不害", "行舍"],
+    "coverage_tags": ["随烦恼二十:覆"]
+  },
+  {
+    "id": "unwholesome_10_pretending",
+    "user_input": "我在人前只能装得很好，装得很有智慧，其实我里面快碎了。",
+    "expected_mind_states": ["覆", "诳", "谄"],
+    "expected_antidotes": ["惭", "愧", "不害"],
+    "coverage_tags": ["随烦恼二十:诳", "随烦恼二十:谄"]
+  },
+  {
+    "id": "unwholesome_11_people_pleasing",
+    "user_input": "我总是顺着别人说话，怕他们不喜欢我，连自己想什么都不敢说。",
+    "expected_mind_states": ["谄", "覆", "贪"],
+    "expected_antidotes": ["惭", "愧", "行舍"],
+    "coverage_tags": ["随烦恼二十:谄", "烦恼六:贪"]
+  },
+  {
+    "id": "unwholesome_12_jealousy",
+    "user_input": "为什么别人都有孩子有孙子，我什么都没有？我看见她们就难受。",
+    "expected_mind_states": ["嫉", "贪", "瞋"],
+    "expected_antidotes": ["无贪", "无瞋", "行舍"],
+    "coverage_tags": ["随烦恼二十:嫉"]
+  },
+  {
+    "id": "unwholesome_13_stinginess_clinging",
+    "user_input": "我什么都舍不得，连旧东西都不想给人，好像一给出去我就更空了。",
+    "expected_mind_states": ["悭", "贪"],
+    "expected_antidotes": ["无贪", "轻安"],
+    "coverage_tags": ["随烦恼二十:悭"]
+  },
+  {
+    "id": "unwholesome_14_no_shame_harm",
+    "user_input": "我不在乎会不会伤到他，他让我痛，我也要让他痛。",
+    "expected_mind_states": ["无惭", "害", "瞋"],
+    "expected_antidotes": ["不害", "无瞋", "不放逸"],
+    "coverage_tags": ["随烦恼二十:无惭", "随烦恼二十:害"]
+  },
+  {
+    "id": "unwholesome_15_no_remorse_impact",
+    "user_input": "别人难不难受和我没关系，我现在只想让自己舒服一点。",
+    "expected_mind_states": ["无愧", "贪", "放逸"],
+    "expected_antidotes": ["愧", "不害", "不放逸"],
+    "coverage_tags": ["随烦恼二十:无愧", "随烦恼二十:放逸"]
+  },
+  {
+    "id": "unwholesome_16_disbelief",
+    "user_input": "没用的，谁都帮不了我，什么方法都没用。",
+    "expected_mind_states": ["不信", "疑"],
+    "expected_antidotes": ["信", "轻安", "精进"],
+    "coverage_tags": ["随烦恼二十:不信"]
+  },
+  {
+    "id": "unwholesome_17_sloth_heavy",
+    "user_input": "我什么都不想做，整个人很沉，连起身喝水都觉得难。",
+    "expected_mind_states": ["懈怠", "昏沉"],
+    "expected_antidotes": ["精进", "轻安", "不放逸"],
+    "coverage_tags": ["随烦恼二十:懈怠", "随烦恼二十:昏沉"]
+  },
+  {
+    "id": "unwholesome_18_careless_loop",
+    "user_input": "算了，我继续刷手机继续搜症状吧，反正停不下来。",
+    "expected_mind_states": ["放逸", "散乱", "寻"],
+    "expected_antidotes": ["不放逸", "行舍", "无痴"],
+    "coverage_tags": ["随烦恼二十:放逸", "随烦恼二十:散乱", "不定四:寻"]
+  },
+  {
+    "id": "unwholesome_19_lost_memory",
+    "user_input": "我刚刚还想做什么，一转身就忘了，整个人越来越慌。",
+    "expected_mind_states": ["失念", "掉举"],
+    "expected_antidotes": ["轻安", "行舍"],
+    "coverage_tags": ["随烦恼二十:失念", "随烦恼二十:掉举"]
+  },
+  {
+    "id": "unwholesome_20_rumination",
+    "user_input": "我一直反复想这件事，连每个细节都要抠，越抠越睡不着。",
+    "expected_mind_states": ["寻", "伺", "掉举", "睡眠"],
+    "expected_antidotes": ["轻安", "行舍"],
+    "coverage_tags": ["不定四:寻", "不定四:伺", "不定四:睡眠", "随烦恼二十:掉举"]
+  }
+]

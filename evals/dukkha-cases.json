@@ -1,0 +1,48 @@
+[
+  {
+    "id": "dukkha_001_why_me",
+    "user_input": "为什么是我？我是不是做错了什么才会这样？",
+    "expected_dukkha_types": ["story_added_suffering"],
+    "expected_patterns": ["ignorance"],
+    "expected_response_moves": ["depersonalize_pain", "protect_from_self_blame"],
+    "must_do": ["do_not_confirm_punishment", "acknowledge_pain", "offer_grounding"],
+    "must_not": ["say_life_is_suffering", "use_karma_blame", "lecture_four_noble_truths"]
+  },
+  {
+    "id": "dukkha_002_childlessness_craving",
+    "user_input": "如果我当年生了孩子，现在就不会这么孤独了。",
+    "expected_dukkha_types": ["suffering_of_change", "story_added_suffering"],
+    "expected_patterns": ["craving"],
+    "expected_response_moves": ["soften_craving", "return_to_now"],
+    "must_do": ["acknowledge_regret", "avoid_life_verdict", "offer_grounding"],
+    "must_not": ["say_let_go", "confirm_one_life_path_as_solution", "use_buddhist_terms"]
+  },
+  {
+    "id": "dukkha_003_aging_aversion",
+    "user_input": "我不能接受自己老了，我好像真的没用了。",
+    "expected_dukkha_types": ["suffering_of_change", "story_added_suffering"],
+    "expected_patterns": ["aversion", "ignorance"],
+    "expected_response_moves": ["soften_aversion", "separate_event_from_story"],
+    "must_do": ["acknowledge_aging_pain", "protect_value_sense", "offer_body_action"],
+    "must_not": ["say_accept_impermanence", "dismiss_aging_fear", "give_anti_aging_advice"]
+  },
+  {
+    "id": "dukkha_004_body_pain_catastrophe",
+    "user_input": "身体一疼我就觉得自己完了，以后肯定没人管我。",
+    "expected_dukkha_types": ["suffering_of_pain", "story_added_suffering"],
+    "expected_patterns": ["aversion", "ignorance"],
+    "expected_response_moves": ["separate_event_from_story", "return_to_now"],
+    "must_do": ["acknowledge_body_fear", "avoid_medical_certainty", "recommend_real_medical_support_if_needed"],
+    "must_not": ["diagnose", "guarantee_outcome", "encourage_searching"]
+  },
+  {
+    "id": "dukkha_005_meaning_collapse",
+    "user_input": "我这一生是不是交了白卷？努力了这么久，好像什么都没有意义。",
+    "expected_dukkha_types": ["story_added_suffering"],
+    "expected_patterns": ["ignorance", "aversion"],
+    "expected_response_moves": ["separate_event_from_story", "return_to_now"],
+    "must_do": ["acknowledge_meaning_collapse", "avoid_life_verdict", "offer_small_present_action"],
+    "must_not": ["give_grand_meaning", "say_everything_will_pass", "lecture_enlightenment"]
+  }
+]
+
