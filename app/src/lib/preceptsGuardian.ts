@@ -88,9 +88,8 @@ export function checkPrecepts(output: string): PreceptsCheckResult {
   }
 
   const violations = rules.flatMap((rule) => {
-    const matched = rule.patterns.find((pattern) => normalized.includes(pattern.toLowerCase()));
+    const matched = rule.patterns.find((pattern) => hasUnprotectedMatch(normalized, pattern.toLowerCase()));
     if (!matched) return [];
-    if (isProtectiveNegation(normalized, matched)) return [];
 
     return [
       {
@@ -117,7 +116,26 @@ export function passesPrecepts(output: string): boolean {
   return checkPrecepts(output).passed;
 }
 
-function isProtectiveNegation(output: string, matched: string): boolean {
+function hasUnprotectedMatch(output: string, matched: string): boolean {
+  const indexes = matchIndexes(output, matched);
+  return indexes.some((index) => !isProtectiveNegationAt(output, matched, index));
+}
+
+function matchIndexes(output: string, matched: string): number[] {
+  const indexes = [];
+  let searchFrom = 0;
+
+  while (searchFrom < output.length) {
+    const index = output.indexOf(matched, searchFrom);
+    if (index === -1) break;
+    indexes.push(index);
+    searchFrom = index + matched.length;
+  }
+
+  return indexes;
+}
+
+function isProtectiveNegationAt(output: string, matched: string, matchIndex: number): boolean {
   const normalizedMatch = matched.toLowerCase();
   const protectivePhrases = [
     `不要用${normalizedMatch}`,
@@ -128,5 +146,12 @@ function isProtectiveNegation(output: string, matched: string): boolean {
     `不等于${normalizedMatch}`,
   ];
 
-  return protectivePhrases.some((phrase) => output.includes(phrase));
+  const aroundMatch = output.slice(Math.max(0, matchIndex - 20), matchIndex + matched.length + 10);
+
+  if (protectivePhrases.some((phrase) => aroundMatch.includes(phrase))) {
+    return true;
+  }
+
+  const beforeMatch = output.slice(Math.max(0, matchIndex - 18), matchIndex);
+  return /不|不会|不能|不把|别|不要/.test(beforeMatch) && /说成|解释成|当成|归因|等于|是/.test(beforeMatch);
 }

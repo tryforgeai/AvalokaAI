@@ -1,9 +1,16 @@
-import { Download, Moon, Send, ShieldCheck, Trash2 } from "lucide-react";
+import { Copy, Download, Moon, Send, ShieldCheck, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { crisisFallback } from "./data/responseLibrary";
+import { requestBaifaMap } from "./lib/baifaClient";
 import { isCrisisMessage } from "./lib/crisisGate";
+import { mapDukkha } from "./lib/dukkhaMapper";
+import { buildDukkhaResponse } from "./lib/dukkhaResponse";
 import { buildGuardedResponse } from "./lib/guardedResponse";
+import { requestAvalokaV2 } from "./lib/orchestratorClient";
+import { buildPrimaryDevResponse } from "./lib/primaryResponse";
 import { selectScenario } from "./lib/responseSelector";
+import { requestLlmShadow } from "./lib/shadowClient";
+import { getVisibleBaifaResult } from "./lib/visibleDebug";
 import {
   clearAvalokaData,
   exportAvalokaData,
@@ -14,7 +21,7 @@ import {
   saveFeedback,
   saveMessages,
 } from "./lib/storage";
-import type { ChatMessage, FeedbackEntry } from "./types";
+import type { BaifaMindState, ChatMessage, FeedbackEntry } from "./types";
 
 function makeId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -26,6 +33,8 @@ export default function App() {
   const [feedback, setFeedback] = useState<FeedbackEntry[]>([]);
   const [input, setInput] = useState("");
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
+  const [exportText, setExportText] = useState("");
+  const [exportStatus, setExportStatus] = useState("");
 
   useEffect(() => {
     setConsented(hasConsent());
@@ -45,6 +54,8 @@ export default function App() {
     () => [...messages].reverse().find((message) => message.role === "avaloka"),
     [messages],
   );
+  const latestDebugMessage = latestAvalokaMessage;
+  const latestVisibleBaifa = getVisibleBaifaResult(latestDebugMessage);
 
   function acceptConsent() {
     saveConsent();
@@ -64,23 +75,128 @@ export default function App() {
 
     const crisis = isCrisisMessage(text);
     const scenario = selectScenario(text);
-    const responseLines = crisis ? crisisFallback : scenario.response;
+    const dukkha = crisis ? undefined : mapDukkha(text);
+    const dukkhaResponse = dukkha ? buildDukkhaResponse(dukkha, text) : undefined;
+    const responseLines = crisis ? crisisFallback : dukkhaResponse || scenario.response;
     const guardedResponse = buildGuardedResponse(responseLines, { crisis });
     const avalokaMessage: ChatMessage = {
       id: makeId("avaloka"),
       role: "avaloka",
       text: guardedResponse.text,
-      scenarioId: crisis ? "crisis" : scenario.id,
+      scenarioId: crisis ? "crisis" : dukkhaResponse ? `dukkha:${dukkha?.responseMoves[0]}` : scenario.id,
       createdAt: new Date().toISOString(),
       crisis,
       guardianFallback: guardedResponse.guardianFallback,
       preceptsSeverity: guardedResponse.precepts?.severity,
       preceptsViolations: guardedResponse.precepts?.violations.map((violation) => violation.precept),
+      dukkhaTypes: dukkha?.dukkhaTypes,
+      dukkhaPatterns: dukkha?.patterns,
+      responseMoves: dukkha?.responseMoves,
+      responseSource: "local",
+      localBaselineText: guardedResponse.text,
+      orchestratorV2: { status: "loading" },
+      shadow: crisis ? { status: "skipped", error: "Crisis messages do not run LLM shadow." } : { status: "loading" },
+      baifa: crisis ? { status: "skipped", error: "Crisis messages do not run Baifa mapper." } : { status: "loading" },
     };
 
     setMessages((current) => [...current, userMessage, avalokaMessage]);
     setActiveMessageId(avalokaMessage.id);
     setInput("");
+
+    requestAvalokaV2({
+      userText: text,
+      localText: guardedResponse.text,
+      localCrisis: crisis,
+      dukkhaTypes: dukkha?.dukkhaTypes,
+      dukkhaPatterns: dukkha?.patterns,
+      responseMoves: dukkha?.responseMoves,
+    }).then((orchestratorV2) => {
+      setMessages((current) =>
+        current.map((message) => {
+          if (message.id !== avalokaMessage.id) return message;
+          if (orchestratorV2.status !== "ready" || !orchestratorV2.candidateText) {
+            return { ...message, orchestratorV2 };
+          }
+
+          return {
+            ...message,
+            text: orchestratorV2.candidateText,
+            responseSource: "llm_orchestrator_v2",
+            orchestratorV2,
+            baifa:
+              orchestratorV2.baifa && orchestratorV2.model
+                ? {
+                    status: "ready",
+                    baifa: orchestratorV2.baifa,
+                    model: orchestratorV2.model,
+                    latencyMs: orchestratorV2.latencyMs,
+                  }
+                : message.baifa,
+          };
+        }),
+      );
+    });
+
+    if (!crisis) {
+      requestBaifaMap({
+        userText: text,
+        dukkhaTypes: dukkha?.dukkhaTypes,
+        dukkhaPatterns: dukkha?.patterns,
+        responseMoves: dukkha?.responseMoves,
+      }).then((baifa) => {
+        setMessages((current) =>
+          current.map((message) => (message.id === avalokaMessage.id ? { ...message, baifa } : message)),
+        );
+      });
+
+      requestLlmShadow({
+        userText: text,
+        localText: guardedResponse.text,
+        dukkhaTypes: dukkha?.dukkhaTypes,
+        dukkhaPatterns: dukkha?.patterns,
+        responseMoves: dukkha?.responseMoves,
+      }).then((shadow) => {
+        const checkedShadow = shadow.candidateText
+          ? {
+              ...shadow,
+              ...buildShadowGuard(shadow.candidateText),
+            }
+          : shadow;
+
+        setMessages((current) =>
+          current.map((message) => {
+            if (message.id !== avalokaMessage.id) return message;
+
+            if (shadow.status !== "ready" || !shadow.candidateText) {
+              return { ...message, shadow: checkedShadow };
+            }
+
+            if (message.responseSource === "llm_orchestrator_v2") {
+              return { ...message, shadow: checkedShadow };
+            }
+
+            const primary = buildPrimaryDevResponse({
+              localText: guardedResponse.text,
+              openaiCandidateText: shadow.candidateText,
+              openaiModel: shadow.model,
+              openaiLatencyMs: shadow.latencyMs,
+            });
+
+            return {
+              ...message,
+              text: primary.text,
+              responseSource: primary.responseSource,
+              localBaselineText: primary.localBaselineText,
+              openaiPrimary: primary.openaiPrimary,
+              guardianFallback: primary.guardianFallback,
+              preceptsSeverity: primary.preceptsSeverity,
+              preceptsViolations: primary.preceptsViolations,
+              shadow: checkedShadow,
+            };
+          }),
+        );
+      });
+    }
   }
 
   function submitFeedback(event: React.FormEvent<HTMLFormElement>) {
@@ -113,6 +229,20 @@ export default function App() {
     link.download = `avaloka-v1-feedback-${new Date().toISOString().slice(0, 10)}.json`;
     link.click();
     URL.revokeObjectURL(url);
+    setExportText(exportAvalokaData());
+    setExportStatus("如果浏览器没有下载文件，可以复制下面的 JSON。");
+  }
+
+  async function copyExportData() {
+    const data = exportAvalokaData();
+    setExportText(data);
+
+    try {
+      await navigator.clipboard.writeText(data);
+      setExportStatus("已复制导出 JSON。");
+    } catch {
+      setExportStatus("当前浏览器不能自动复制，请手动复制下面的 JSON。");
+    }
   }
 
   function clearData() {
@@ -120,6 +250,8 @@ export default function App() {
     setMessages([]);
     setFeedback([]);
     setActiveMessageId(null);
+    setExportText("");
+    setExportStatus("");
   }
 
   if (!consented) {
@@ -158,6 +290,9 @@ export default function App() {
           <div className="toolbar">
             <button className="icon-button" onClick={downloadData} title="导出记录">
               <Download size={18} />
+            </button>
+            <button className="icon-button" onClick={copyExportData} title="复制导出 JSON">
+              <Copy size={18} />
             </button>
             <button className="icon-button" onClick={clearData} title="清空本地记录">
               <Trash2 size={18} />
@@ -252,7 +387,136 @@ export default function App() {
             </p>
           )}
         </div>
+
+        <div className="debug-card" aria-label="Internal debug panel">
+          <p className="eyebrow">Internal Debug</p>
+          <h2>Local testing only</h2>
+          {latestDebugMessage ? (
+            <dl>
+              <dt>scenarioId</dt>
+              <dd>{latestDebugMessage.scenarioId || "none"}</dd>
+              <dt>dukkhaTypes</dt>
+              <dd>{formatDebugList(latestDebugMessage.dukkhaTypes)}</dd>
+              <dt>patterns</dt>
+              <dd>{formatDebugList(latestDebugMessage.dukkhaPatterns)}</dd>
+              <dt>responseMoves</dt>
+              <dd>{formatDebugList(latestDebugMessage.responseMoves)}</dd>
+              <dt>guardian</dt>
+              <dd>
+                {latestDebugMessage.guardianFallback ? "fallback" : "pass"} /{" "}
+                {latestDebugMessage.preceptsSeverity || "n/a"}
+              </dd>
+              <dt>source</dt>
+              <dd>{latestDebugMessage.responseSource || "local"}</dd>
+            </dl>
+          ) : (
+            <p className="soft-note">No Avaloka message yet.</p>
+          )}
+        </div>
+
+        <div className="baseline-card" aria-label="Local baseline panel">
+          <p className="eyebrow">Local Baseline</p>
+          <h2>Developer testing only</h2>
+          {latestDebugMessage?.localBaselineText ? (
+            <p className="baseline-text">{latestDebugMessage.localBaselineText}</p>
+          ) : (
+            <p className="soft-note">No local baseline yet.</p>
+          )}
+        </div>
+
+        <div className="orchestrator-card" aria-label="LLM orchestrator V2 panel">
+          <p className="eyebrow">LLM Orchestrator V2</p>
+          <h2>Developer testing only</h2>
+          {latestDebugMessage?.orchestratorV2 ? (
+            <div className="orchestrator-body">
+              <dl>
+                <dt>status</dt>
+                <dd>{latestDebugMessage.orchestratorV2.status}</dd>
+                <dt>model</dt>
+                <dd>{latestDebugMessage.orchestratorV2.model || "n/a"}</dd>
+                <dt>latency</dt>
+                <dd>
+                  {latestDebugMessage.orchestratorV2.latencyMs
+                    ? `${latestDebugMessage.orchestratorV2.latencyMs}ms`
+                    : "n/a"}
+                </dd>
+                <dt>crisis</dt>
+                <dd>{latestDebugMessage.orchestratorV2.crisis?.status || "n/a"}</dd>
+                <dt>guardian</dt>
+                <dd>
+                  {latestDebugMessage.orchestratorV2.guardian?.passed ? "pass" : "fallback"} /{" "}
+                  {latestDebugMessage.orchestratorV2.guardian?.severity || "n/a"}
+                </dd>
+                <dt>repair</dt>
+                <dd>{latestDebugMessage.orchestratorV2.repairAttempted ? "yes" : "no"}</dd>
+              </dl>
+              {latestDebugMessage.orchestratorV2.error ? (
+                <p className="soft-note">{latestDebugMessage.orchestratorV2.error}</p>
+              ) : null}
+              {latestDebugMessage.orchestratorV2.candidateText ? (
+                <p className="orchestrator-text">{latestDebugMessage.orchestratorV2.candidateText}</p>
+              ) : null}
+            </div>
+          ) : (
+            <p className="soft-note">Send a non-crisis message to run V2 orchestration.</p>
+          )}
+        </div>
+
+        <div className="baifa-card" aria-label="Baifa mapper panel">
+          <p className="eyebrow">Baifa Mapper</p>
+          <h2>Developer testing only</h2>
+          {latestVisibleBaifa ? (
+            <div className="baifa-body">
+              <dl>
+                <dt>status</dt>
+                <dd>{latestVisibleBaifa.status}</dd>
+                <dt>model</dt>
+                <dd>{latestVisibleBaifa.model || "n/a"}</dd>
+                <dt>latency</dt>
+                <dd>{latestVisibleBaifa.latencyMs ? `${latestVisibleBaifa.latencyMs}ms` : "n/a"}</dd>
+                <dt>states</dt>
+                <dd>{formatBaifaStates(latestVisibleBaifa.baifa?.primaryMindStates)}</dd>
+                <dt>antidotes</dt>
+                <dd>{formatDebugList(latestVisibleBaifa.baifa?.wholesomeAntidotes)}</dd>
+                <dt>moves</dt>
+                <dd>{formatDebugList(latestVisibleBaifa.baifa?.recommendedResponseMoves)}</dd>
+              </dl>
+              {latestVisibleBaifa.error ? <p className="soft-note">{latestVisibleBaifa.error}</p> : null}
+            </div>
+          ) : (
+            <p className="soft-note">Send a non-crisis message to run Baifa mapper shadow mode.</p>
+          )}
+        </div>
+
+        {exportText ? (
+          <div className="export-card" aria-label="Export JSON fallback">
+            <p className="eyebrow">Export JSON</p>
+            <h2>导出备用</h2>
+            <p className="soft-note">{exportStatus}</p>
+            <textarea readOnly value={exportText} rows={8} aria-label="Exported Avaloka JSON" />
+          </div>
+        ) : null}
       </aside>
     </main>
   );
+}
+
+function formatDebugList(items?: string[]): string {
+  if (!items || items.length === 0) return "none";
+  return items.join(", ");
+}
+
+function formatBaifaStates(states?: BaifaMindState[]): string {
+  if (!states || states.length === 0) return "none";
+  return states.map((state) => `${state.mindState} ${Math.round(state.confidence * 100)}%`).join(", ");
+}
+
+function buildShadowGuard(text: string): Pick<NonNullable<ChatMessage["shadow"]>, "guardianFallback" | "preceptsSeverity" | "preceptsViolations"> {
+  const guarded = buildGuardedResponse([text]);
+
+  return {
+    guardianFallback: guarded.guardianFallback,
+    preceptsSeverity: guarded.precepts?.severity,
+    preceptsViolations: guarded.precepts?.violations.map((violation) => violation.precept) || [],
+  };
 }
