@@ -43,22 +43,24 @@ Read these before making product, system design, or planning changes:
 11. `docs/engineering/harness-engineering-setup.md`
 12. `docs/engineering/ai-production-safety-harness.md`
 13. `docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md`
-14. `docs/experiments/validation-runbook.md`
-15. `docs/experiments/user-feedback-log-template.md`
-16. `docs/experiments/failure-log.md`
-17. `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
-18. `docs/product/2026-05-16-v1-response-library-zh.md`
-19. `docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md`
-20. `docs/product/2026-05-14-v0-target-personas-zh.md`
-21. `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
-22. `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
-23. `docs/product/quality-checklist.md`
-24. `docs/maintenance/doc-gardening-checklist.md`
+14. `docs/engineering/agentic-coding-workflow-for-avaloka.md`
+15. `docs/experiments/validation-runbook.md`
+16. `docs/experiments/user-feedback-log-template.md`
+17. `docs/experiments/failure-log.md`
+18. `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
+19. `docs/product/2026-05-16-v1-response-library-zh.md`
+20. `docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md`
+21. `docs/product/2026-05-14-v0-target-personas-zh.md`
+22. `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
+23. `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
+24. `docs/product/quality-checklist.md`
+25. `docs/maintenance/doc-gardening-checklist.md`
 
 ## Operating Rules
 
 - Treat `docs/` as the source of truth.
 - Treat `archive/` as historical reference only.
+- Follow `docs/engineering/agentic-coding-workflow-for-avaloka.md` for non-trivial agentic development work.
 - Follow version authority before changing roadmap, scope, or architecture.
 - If a plan conflicts with the current validation direction, update the plan before implementation.
 - Do not reintroduce the old “Buddhist AI / RAG-first / broad workplace-relationship-emotion” scope.
@@ -85,5 +87,10 @@ For any non-trivial change:
 2. State what source-of-truth document the change touches.
 3. Update docs before or alongside implementation.
 4. Add or update tests/checklists when behavior changes.
-5. Run verification appropriate to the change.
-6. If an agent gets stuck, improve the repo docs, harness, tests, or guardrails rather than patching around missing context.
+5. Run full verification before reporting completion:
+   - `cd app && npm run content:check`
+   - `cd app && npm test`
+   - `cd app && npm run coverage`
+   - `cd app && npm run build`
+6. Coverage must not be below 80% for statements, branches, functions, or lines for the configured unit-test surface (`app/src/data` and `app/src/lib`). UI changes still require browser/manual QA when relevant. If coverage fails, add meaningful tests or explicitly report the blocker; do not claim the change is complete.
+7. If an agent gets stuck, improve the repo docs, harness, tests, or guardrails rather than patching around missing context.
