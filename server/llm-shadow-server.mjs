@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createOpenAIClient, extractOutputText } from "./openai-client.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 loadDotEnv(resolve(root, "server/.env"));
@@ -17,6 +18,18 @@ const avalokiteshvaraCompassionPlannerPrompt = readFileSync(
 );
 const port = Number(process.env.PORT || 8787);
 const model = process.env.OPENAI_SHADOW_MODEL || "gpt-5.2";
+const openAIRequestTimeoutMs = Number(process.env.OPENAI_REQUEST_TIMEOUT_MS || 20_000);
+const openAIMaxRetries = Number(process.env.OPENAI_MAX_RETRIES || 1);
+const openAIMaxConcurrentRequests = Number(process.env.OPENAI_MAX_CONCURRENT_REQUESTS || 3);
+const openAIMaxRequestsPerMinute = Number(process.env.OPENAI_MAX_REQUESTS_PER_MINUTE || 120);
+const openAIClient = createOpenAIClient({
+  apiKey: process.env.OPENAI_API_KEY,
+  model,
+  timeoutMs: openAIRequestTimeoutMs,
+  maxRetries: openAIMaxRetries,
+  maxConcurrentRequests: openAIMaxConcurrentRequests,
+  maxRequestsPerMinute: openAIMaxRequestsPerMinute,
+});
 const baifaCategories = ["遍行心所", "别境心所", "善心所", "烦恼心所", "随烦恼心所", "不定心所"];
 const baifaMindStates = [
   "作意",
@@ -254,184 +267,42 @@ function buildCompassionPlanInput(payload) {
   ];
 }
 
-function extractOutputText(data) {
-  if (typeof data.output_text === "string" && data.output_text.trim()) {
-    return data.output_text.trim();
-  }
-
-  const textParts = [];
-  for (const item of data.output || []) {
-    for (const content of item.content || []) {
-      if (typeof content.text === "string") {
-        textParts.push(content.text);
-      }
-    }
-  }
-
-  return textParts.join("\n").trim();
-}
-
 async function callOpenAI(payload) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return {
-      status: 503,
-      body: {
-        error: "OPENAI_API_KEY is not set. Copy server/.env.example to server/.env and run the server with that env loaded.",
-      },
-    };
-  }
-
-  const startedAt = Date.now();
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model,
-      input: buildInput(payload),
-      max_output_tokens: 320,
-      text: {
-        verbosity: "low",
-      },
-    }),
+  const result = await openAIClient.requestResponses({
+    input: buildInput(payload),
+    maxOutputTokens: 320,
+    text: { verbosity: "low" },
+    errorLabel: "OpenAI request failed.",
   });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    return {
-      status: response.status,
-      body: {
-        error: data?.error?.message || "OpenAI request failed.",
-        model,
-      },
-    };
-  }
+  if (result.status !== 200) return result;
 
   return {
     status: 200,
     body: {
-      candidateText: extractOutputText(data),
-      model,
-      latencyMs: Date.now() - startedAt,
+      candidateText: extractOutputText(result.body.data),
+      model: result.body.model,
+      latencyMs: result.body.latencyMs,
+      attempts: result.body.attempts,
     },
   };
 }
 
 async function callOpenAIText({ input, maxOutputTokens = 320 }) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return {
-      status: 503,
-      body: {
-        error: "OPENAI_API_KEY is not set. Copy server/.env.example to server/.env and run the server with that env loaded.",
-      },
-    };
-  }
-
-  const startedAt = Date.now();
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model,
-      input,
-      max_output_tokens: maxOutputTokens,
-      text: {
-        verbosity: "low",
-      },
-    }),
+  return openAIClient.requestText({
+    input,
+    maxOutputTokens,
+    errorLabel: "OpenAI text request failed.",
   });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    return {
-      status: response.status,
-      body: {
-        error: data?.error?.message || "OpenAI text request failed.",
-        model,
-      },
-    };
-  }
-
-  return {
-    status: 200,
-    body: {
-      text: extractOutputText(data),
-      model,
-      latencyMs: Date.now() - startedAt,
-    },
-  };
 }
 
 async function callOpenAIJson({ input, schema, name, maxOutputTokens = 520 }) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return {
-      status: 503,
-      body: {
-        error: "OPENAI_API_KEY is not set. Copy server/.env.example to server/.env and run the server with that env loaded.",
-      },
-    };
-  }
-
-  const startedAt = Date.now();
-  const response = await fetch("https://api.openai.com/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model,
-      input,
-      max_output_tokens: maxOutputTokens,
-      text: {
-        verbosity: "low",
-        format: {
-          type: "json_schema",
-          name,
-          strict: true,
-          schema,
-        },
-      },
-    }),
+  return openAIClient.requestJson({
+    input,
+    schema,
+    name,
+    maxOutputTokens,
+    errorLabel: "OpenAI JSON request failed.",
   });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    return {
-      status: response.status,
-      body: {
-        error: data?.error?.message || "OpenAI JSON request failed.",
-        model,
-      },
-    };
-  }
-
-  try {
-    return {
-      status: 200,
-      body: {
-        json: JSON.parse(extractOutputText(data)),
-        model,
-        latencyMs: Date.now() - startedAt,
-      },
-    };
-  } catch {
-    return {
-      status: 502,
-      body: {
-        error: "OpenAI JSON request returned invalid JSON.",
-        model,
-      },
-    };
-  }
 }
 
 function baifaSchema() {
@@ -772,6 +643,12 @@ function buildHealthPayload() {
     service: "avaloka-llm-shadow",
     model,
     openaiKeyConfigured: Boolean(process.env.OPENAI_API_KEY),
+    openaiRuntime: {
+      requestTimeoutMs: openAIRequestTimeoutMs,
+      maxRetries: openAIMaxRetries,
+      maxConcurrentRequests: openAIMaxConcurrentRequests,
+      maxRequestsPerMinute: openAIMaxRequestsPerMinute,
+    },
     promptLoaded: Boolean(prompt.trim()),
     promptCharacters: prompt.length,
     baifaPromptLoaded: Boolean(baifaPrompt.trim()),

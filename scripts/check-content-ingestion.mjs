@@ -8,6 +8,7 @@ const wisdomCasesPath = join(repoRoot, "evals/wisdom-response-cases.json");
 const baifaCasesPath = join(repoRoot, "evals/baifa-mapper-cases.json");
 const baifaUnwholesomeCasesPath = join(repoRoot, "evals/baifa-unwholesome-cases.json");
 const avalokaV2CasesPath = join(repoRoot, "evals/avaloka-v2-orchestrator-cases.json");
+const avalokaV2GoldenCasesPath = join(repoRoot, "evals/avaloka-v2-golden-cases.json");
 const avalokiteshvaraCasesPath = join(repoRoot, "evals/avalokiteshvara-compassion-cases.json");
 const baifaPromptPath = join(repoRoot, "prompt/baifa-mapper-v1.md");
 const avalokiteshvaraCompassionOsPath = join(repoRoot, "docs/kb/derived/avalokiteshvara-compassion-os.zh.md");
@@ -35,6 +36,7 @@ assert(existsSync(wisdomCasesPath), "Missing evals/wisdom-response-cases.json.")
 assert(existsSync(baifaCasesPath), "Missing evals/baifa-mapper-cases.json.");
 assert(existsSync(baifaUnwholesomeCasesPath), "Missing evals/baifa-unwholesome-cases.json.");
 assert(existsSync(avalokaV2CasesPath), "Missing evals/avaloka-v2-orchestrator-cases.json.");
+assert(existsSync(avalokaV2GoldenCasesPath), "Missing evals/avaloka-v2-golden-cases.json.");
 assert(existsSync(avalokiteshvaraCasesPath), "Missing evals/avalokiteshvara-compassion-cases.json.");
 assert(existsSync(baifaPromptPath), "Missing prompt/baifa-mapper-v1.md.");
 assert(existsSync(avalokiteshvaraCompassionOsPath), "Missing docs/kb/derived/avalokiteshvara-compassion-os.zh.md.");
@@ -57,6 +59,7 @@ const shadowServer = existsSync(shadowServerPath) ? read(shadowServerPath) : "";
 const baifaCases = existsSync(baifaCasesPath) ? JSON.parse(read(baifaCasesPath)) : [];
 const baifaUnwholesomeCases = existsSync(baifaUnwholesomeCasesPath) ? JSON.parse(read(baifaUnwholesomeCasesPath)) : [];
 const avalokaV2Cases = existsSync(avalokaV2CasesPath) ? JSON.parse(read(avalokaV2CasesPath)) : [];
+const avalokaV2GoldenCases = existsSync(avalokaV2GoldenCasesPath) ? JSON.parse(read(avalokaV2GoldenCasesPath)) : [];
 const avalokiteshvaraCases = existsSync(avalokiteshvaraCasesPath) ? JSON.parse(read(avalokiteshvaraCasesPath)) : [];
 assert(Array.isArray(baifaCases), "baifa-mapper-cases.json must be an array.");
 assert(baifaCases.length >= 8, "baifa-mapper-cases.json must include at least 8 cases.");
@@ -64,6 +67,8 @@ assert(Array.isArray(baifaUnwholesomeCases), "baifa-unwholesome-cases.json must 
 assert(baifaUnwholesomeCases.length >= 20, "baifa-unwholesome-cases.json must include at least 20 cases.");
 assert(Array.isArray(avalokaV2Cases), "avaloka-v2-orchestrator-cases.json must be an array.");
 assert(avalokaV2Cases.length >= 8, "avaloka-v2-orchestrator-cases.json must include at least 8 cases.");
+assert(Array.isArray(avalokaV2GoldenCases), "avaloka-v2-golden-cases.json must be an array.");
+assert(avalokaV2GoldenCases.length >= 20, "avaloka-v2-golden-cases.json must include at least 20 cases.");
 assert(Array.isArray(avalokiteshvaraCases), "avalokiteshvara-compassion-cases.json must be an array.");
 assert(avalokiteshvaraCases.length >= 8, "avalokiteshvara-compassion-cases.json must include at least 8 cases.");
 
@@ -291,6 +296,45 @@ for (const status of ["safe", "ambiguous", "crisis"]) {
   assert(v2ExpectedStatuses.has(status), `Avaloka V2 evals must include expected_crisis "${status}".`);
 }
 
+const severityOrder = ["pass", "warn", "revise", "block"];
+const goldenExpectedStatuses = new Set();
+const goldenMoveCoverage = new Set();
+const goldenCaseIds = new Set();
+for (const testCase of avalokaV2GoldenCases) {
+  assert(testCase.id, "Every Avaloka V2 golden case must have an id.");
+  assert(!goldenCaseIds.has(testCase.id), `Duplicate Avaloka V2 golden case id: ${testCase.id}`);
+  goldenCaseIds.add(testCase.id);
+  assert(testCase.user_input, `Avaloka V2 golden case ${testCase.id} is missing user_input.`);
+  assert(
+    ["safe", "ambiguous", "crisis"].includes(testCase.expected_crisis),
+    `Avaloka V2 golden case ${testCase.id} has invalid expected_crisis.`,
+  );
+  assert(Array.isArray(testCase.expected_mind_states), `Avaloka V2 golden case ${testCase.id} must include expected_mind_states.`);
+  assert(
+    Array.isArray(testCase.expected_compassion_moves),
+    `Avaloka V2 golden case ${testCase.id} must include expected_compassion_moves.`,
+  );
+  assert(Array.isArray(testCase.forbidden_terms), `Avaloka V2 golden case ${testCase.id} must include forbidden_terms.`);
+  assert(
+    severityOrder.includes(testCase.max_guardian_severity),
+    `Avaloka V2 golden case ${testCase.id} has invalid max_guardian_severity.`,
+  );
+  for (const mindState of testCase.expected_mind_states) {
+    assert(allMindStates.includes(mindState), `Avaloka V2 golden case ${testCase.id} uses unknown mind state "${mindState}".`);
+  }
+  for (const move of testCase.expected_compassion_moves) {
+    assert(compassionMoveIds.includes(move), `Avaloka V2 golden case ${testCase.id} uses unknown compassion move "${move}".`);
+    goldenMoveCoverage.add(move);
+  }
+  goldenExpectedStatuses.add(testCase.expected_crisis);
+}
+for (const status of ["safe", "ambiguous", "crisis"]) {
+  assert(goldenExpectedStatuses.has(status), `Avaloka V2 golden cases must include expected_crisis "${status}".`);
+}
+for (const move of ["give_fearlessness_first", "compassion_with_boundary", "protect_before_practice", "not_whole_self"]) {
+  assert(goldenMoveCoverage.has(move), `Avaloka V2 golden cases must cover compassion move "${move}".`);
+}
+
 const avalokiteshvaraMoveCoverage = new Set();
 for (const testCase of avalokiteshvaraCases) {
   assert(testCase.id, "Every Avalokiteshvara compassion eval case must have an id.");
@@ -365,5 +409,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases.`,
+  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases.`,
 );

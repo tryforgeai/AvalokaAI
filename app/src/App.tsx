@@ -1,15 +1,13 @@
 import { Copy, Download, Moon, Send, ShieldCheck, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { crisisFallback } from "./data/responseLibrary";
-import { requestBaifaMap } from "./lib/baifaClient";
 import { isCrisisMessage } from "./lib/crisisGate";
 import { mapDukkha } from "./lib/dukkhaMapper";
 import { buildDukkhaResponse } from "./lib/dukkhaResponse";
 import { buildGuardedResponse } from "./lib/guardedResponse";
+import { applyAvalokaV2Result, createInitialLlmDebugState } from "./lib/llmPipeline";
 import { requestAvalokaV2 } from "./lib/orchestratorClient";
-import { buildPrimaryDevResponse } from "./lib/primaryResponse";
 import { selectScenario } from "./lib/responseSelector";
-import { requestLlmShadow } from "./lib/shadowClient";
 import { getVisibleBaifaResult } from "./lib/visibleDebug";
 import {
   clearAvalokaData,
@@ -94,9 +92,7 @@ export default function App() {
       responseMoves: dukkha?.responseMoves,
       responseSource: "local",
       localBaselineText: guardedResponse.text,
-      orchestratorV2: { status: "loading" },
-      shadow: crisis ? { status: "skipped", error: "Crisis messages do not run LLM shadow." } : { status: "loading" },
-      baifa: crisis ? { status: "skipped", error: "Crisis messages do not run Baifa mapper." } : { status: "loading" },
+      ...createInitialLlmDebugState(crisis),
     };
 
     setMessages((current) => [...current, userMessage, avalokaMessage]);
@@ -112,91 +108,11 @@ export default function App() {
       responseMoves: dukkha?.responseMoves,
     }).then((orchestratorV2) => {
       setMessages((current) =>
-        current.map((message) => {
-          if (message.id !== avalokaMessage.id) return message;
-          if (orchestratorV2.status !== "ready" || !orchestratorV2.candidateText) {
-            return { ...message, orchestratorV2 };
-          }
-
-          return {
-            ...message,
-            text: orchestratorV2.candidateText,
-            responseSource: "llm_orchestrator_v2",
-            orchestratorV2,
-            baifa:
-              orchestratorV2.baifa && orchestratorV2.model
-                ? {
-                    status: "ready",
-                    baifa: orchestratorV2.baifa,
-                    model: orchestratorV2.model,
-                    latencyMs: orchestratorV2.latencyMs,
-                  }
-                : message.baifa,
-          };
-        }),
+        current.map((message) =>
+          message.id === avalokaMessage.id ? applyAvalokaV2Result(message, orchestratorV2) : message,
+        ),
       );
     });
-
-    if (!crisis) {
-      requestBaifaMap({
-        userText: text,
-        dukkhaTypes: dukkha?.dukkhaTypes,
-        dukkhaPatterns: dukkha?.patterns,
-        responseMoves: dukkha?.responseMoves,
-      }).then((baifa) => {
-        setMessages((current) =>
-          current.map((message) => (message.id === avalokaMessage.id ? { ...message, baifa } : message)),
-        );
-      });
-
-      requestLlmShadow({
-        userText: text,
-        localText: guardedResponse.text,
-        dukkhaTypes: dukkha?.dukkhaTypes,
-        dukkhaPatterns: dukkha?.patterns,
-        responseMoves: dukkha?.responseMoves,
-      }).then((shadow) => {
-        const checkedShadow = shadow.candidateText
-          ? {
-              ...shadow,
-              ...buildShadowGuard(shadow.candidateText),
-            }
-          : shadow;
-
-        setMessages((current) =>
-          current.map((message) => {
-            if (message.id !== avalokaMessage.id) return message;
-
-            if (shadow.status !== "ready" || !shadow.candidateText) {
-              return { ...message, shadow: checkedShadow };
-            }
-
-            if (message.responseSource === "llm_orchestrator_v2") {
-              return { ...message, shadow: checkedShadow };
-            }
-
-            const primary = buildPrimaryDevResponse({
-              localText: guardedResponse.text,
-              openaiCandidateText: shadow.candidateText,
-              openaiModel: shadow.model,
-              openaiLatencyMs: shadow.latencyMs,
-            });
-
-            return {
-              ...message,
-              text: primary.text,
-              responseSource: primary.responseSource,
-              localBaselineText: primary.localBaselineText,
-              openaiPrimary: primary.openaiPrimary,
-              guardianFallback: primary.guardianFallback,
-              preceptsSeverity: primary.preceptsSeverity,
-              preceptsViolations: primary.preceptsViolations,
-              shadow: checkedShadow,
-            };
-          }),
-        );
-      });
-    }
   }
 
   function submitFeedback(event: React.FormEvent<HTMLFormElement>) {
@@ -519,7 +435,7 @@ export default function App() {
               {latestVisibleBaifa.error ? <p className="soft-note">{latestVisibleBaifa.error}</p> : null}
             </div>
           ) : (
-            <p className="soft-note">Send a non-crisis message to run Baifa mapper shadow mode.</p>
+            <p className="soft-note">Send a non-crisis message to see Baifa from V2 orchestration.</p>
           )}
         </div>
 
@@ -549,14 +465,4 @@ function formatBaifaStates(states?: BaifaMindState[]): string {
 function formatCompassionMoves(moves?: CompassionMove[]): string {
   if (!moves || moves.length === 0) return "none";
   return moves.map((move) => `${move.id} ${Math.round(move.confidence * 100)}%`).join(", ");
-}
-
-function buildShadowGuard(text: string): Pick<NonNullable<ChatMessage["shadow"]>, "guardianFallback" | "preceptsSeverity" | "preceptsViolations"> {
-  const guarded = buildGuardedResponse([text]);
-
-  return {
-    guardianFallback: guarded.guardianFallback,
-    preceptsSeverity: guarded.precepts?.severity,
-    preceptsViolations: guarded.precepts?.violations.map((violation) => violation.precept) || [],
-  };
 }
