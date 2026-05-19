@@ -632,7 +632,7 @@ async function callAvalokaV2(payload) {
     crisis = crisisResult.body.json;
   }
 
-  if (crisis.status === "crisis" || crisis.status === "ambiguous") {
+  if (crisis.status === "crisis") {
     return callAvalokaV2ResponseFlow({
       payload,
       crisis,
@@ -722,7 +722,7 @@ async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) 
   }
 
   if (!guardian.passed || guardian.severity === "block") {
-    candidateText = payload.localText;
+    candidateText = buildSafeFallbackText({ payload, crisis });
   }
 
   return {
@@ -739,6 +739,31 @@ async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) 
       latencyMs: Date.now() - startedAt,
     },
   };
+}
+
+function buildSafeFallbackText({ payload, crisis }) {
+  if (crisis?.status === "crisis") {
+    return [
+      "我在。先不要一个人扛。",
+      "请现在把可能伤害自己的东西放远一点，联系一个你信任的人来陪你；如果你觉得自己可能马上伤害自己，请立刻联系当地紧急服务。在美国可以拨打 911 或 988。",
+      "你不用解释完整，先回我一个字：“在”。",
+    ].join("\n\n");
+  }
+
+  const text = String(payload.userText || "");
+  if (/胸口|心口|呼吸|疼|痛|指标|检查|癌|复查|生病|病/.test(text)) {
+    return [
+      "我听见你现在很怕，尤其是身体不舒服时，一个人越查越容易被最坏的可能拖走。",
+      "我不能替医生判断结果；如果胸口闷得厉害、呼吸困难、疼痛加重，先联系医生、急诊咨询线或当地紧急服务。若暂时能等到天亮，先把搜索关掉，记下症状出现的时间和感觉。",
+      "现在先把脚踩稳，慢慢呼一口气。今晚先不让网页替你下结论。",
+    ].join("\n\n");
+  }
+
+  return [
+    "我听见了，这一刻对你很重。",
+    "先不急着解释完整，也不急着审判自己。我们先让身体稳一点。",
+    "把脚踩在地上，慢慢呼一口气。今晚先从这一小步开始。",
+  ].join("\n\n");
 }
 
 function buildHealthPayload() {
