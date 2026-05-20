@@ -11,13 +11,23 @@ export interface AvalokaV2Request {
 
 export async function requestAvalokaV2(payload: AvalokaV2Request): Promise<AvalokaV2Result> {
   const startedAt = Date.now();
-  const response = await fetch("/api/avaloka-v2", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+  let response: Response;
+
+  try {
+    response = await fetch("/api/avaloka-v2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    return {
+      status: "error",
+      latencyMs: Date.now() - startedAt,
+      error: error instanceof Error ? error.message : "Avaloka V2 request failed.",
+    };
+  }
 
   const result = await response.json().catch(() => undefined);
   if (!response.ok) {

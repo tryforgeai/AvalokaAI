@@ -9,6 +9,7 @@ import { applyAvalokaV2Result, createInitialLlmDebugState } from "./lib/llmPipel
 import { requestAvalokaV2 } from "./lib/orchestratorClient";
 import { selectScenario } from "./lib/responseSelector";
 import { getVisibleBaifaResult } from "./lib/visibleDebug";
+import { isDeveloperMode } from "./lib/uiMode";
 import {
   clearAvalokaData,
   exportAvalokaData,
@@ -26,6 +27,7 @@ function makeId(prefix: string): string {
 }
 
 export default function App() {
+  const developerMode = isDeveloperMode(window.location.search);
   const [consented, setConsented] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [feedback, setFeedback] = useState<FeedbackEntry[]>([]);
@@ -162,6 +164,9 @@ export default function App() {
   }
 
   function clearData() {
+    const confirmed = window.confirm("确定清空当前浏览器里的 Avaloka 对话和反馈记录吗？这个操作不能撤销。");
+    if (!confirmed) return;
+
     clearAvalokaData();
     setMessages([]);
     setFeedback([]);
@@ -204,6 +209,7 @@ export default function App() {
             <h1>安静地接住这一刻</h1>
           </div>
           <div className="toolbar">
+            {developerMode ? <span className="mode-pill">Dev</span> : null}
             <button className="icon-button" onClick={downloadData} title="导出记录">
               <Download size={18} />
             </button>
@@ -227,11 +233,17 @@ export default function App() {
               <article
                 className={`message ${message.role === "user" ? "user-message" : "avaloka-message"} ${
                   message.crisis ? "crisis-message" : ""
-                }`}
+                } ${message.orchestratorV2?.status === "loading" ? "message-loading" : ""}`}
                 key={message.id}
               >
                 <span>{message.role === "user" ? "你" : "Avaloka"}</span>
                 <p>{message.text}</p>
+                {message.role === "avaloka" && message.orchestratorV2?.status === "loading" ? (
+                  <small className="message-status">正在让回应更贴近你这一刻...</small>
+                ) : null}
+                {message.role === "avaloka" && message.orchestratorV2?.status === "error" ? (
+                  <small className="message-status">当前先使用本地备用回应。</small>
+                ) : null}
               </article>
             ))
           )}
@@ -253,37 +265,13 @@ export default function App() {
 
       <aside className="feedback-panel">
         <div className="feedback-card">
-          <p className="eyebrow">7 天记录</p>
-          <h2>这次有没有让你稳一点？</h2>
+          <p className="eyebrow">小记录</p>
+          <h2>留一笔小记录</h2>
           {latestAvalokaMessage && activeMessageId ? (
             <form onSubmit={submitFeedback}>
               <label>
-                这是真实低谷吗？
-                <select name="realLowMoment" defaultValue="yes">
-                  <option value="yes">是</option>
-                  <option value="no">不是，只是测试</option>
-                  <option value="unsure">不确定</option>
-                </select>
-              </label>
-              <label>
-                是主动打开的吗？
-                <select name="openedUnprompted" defaultValue="yes">
-                  <option value="yes">是</option>
-                  <option value="no">不是，被提醒后打开</option>
-                  <option value="unsure">不确定</option>
-                </select>
-              </label>
-              <label>
-                安顿评分：<strong>1-5</strong>
+                现在有没有稳一点？<strong>1-5</strong>
                 <input name="settlingScore" type="range" min="1" max="5" defaultValue="4" />
-              </label>
-              <label>
-                最有帮助的一句话
-                <input name="mostHelpfulLine" placeholder="可以留空" />
-              </label>
-              <label>
-                哪一句冷、泛泛、不对或不安全？
-                <input name="failedLine" placeholder="可以留空" />
               </label>
               <label>
                 明天还想继续吗？
@@ -293,18 +281,52 @@ export default function App() {
                   <option value="unsure">不确定</option>
                 </select>
               </label>
+              <details className="feedback-details">
+                <summary>补充记录</summary>
+                <label>
+                  这是真实低谷吗？
+                  <select name="realLowMoment" defaultValue="yes">
+                    <option value="yes">是</option>
+                    <option value="no">不是，只是测试</option>
+                    <option value="unsure">不确定</option>
+                  </select>
+                </label>
+                <label>
+                  是主动打开的吗？
+                  <select name="openedUnprompted" defaultValue="yes">
+                    <option value="yes">是</option>
+                    <option value="no">不是，被提醒后打开</option>
+                    <option value="unsure">不确定</option>
+                  </select>
+                </label>
+                <label>
+                  最有帮助的一句话
+                  <input name="mostHelpfulLine" placeholder="可以留空" />
+                </label>
+                <label>
+                  哪一句冷、泛泛、不对或不安全？
+                  <input name="failedLine" placeholder="可以留空" />
+                </label>
+              </details>
               <button className="primary-button" type="submit">
                 保存反馈
               </button>
             </form>
           ) : (
             <p className="soft-note">
-              发送一次对话后，这里会出现轻量反馈表。当前已保存 {feedback.length} 条反馈。
+              发送一次对话后，这里会出现很短的记录。当前已保存 {feedback.length} 条反馈。
             </p>
           )}
         </div>
 
-        <div className="debug-card" aria-label="Internal debug panel">
+        <div className="privacy-card">
+          <p className="eyebrow">隐私</p>
+          <p className="soft-note">这些记录只保存在当前浏览器里。你可以随时导出，或在准备好时清空。</p>
+        </div>
+
+        {developerMode ? (
+          <>
+            <div className="debug-card" aria-label="Internal debug panel">
           <p className="eyebrow">Internal Debug</p>
           <h2>Local testing only</h2>
           {latestDebugMessage ? (
@@ -328,9 +350,9 @@ export default function App() {
           ) : (
             <p className="soft-note">No Avaloka message yet.</p>
           )}
-        </div>
+            </div>
 
-        <div className="baseline-card" aria-label="Local baseline panel">
+            <div className="baseline-card" aria-label="Local baseline panel">
           <p className="eyebrow">Local Baseline</p>
           <h2>Developer testing only</h2>
           {latestDebugMessage?.localBaselineText ? (
@@ -338,9 +360,9 @@ export default function App() {
           ) : (
             <p className="soft-note">No local baseline yet.</p>
           )}
-        </div>
+            </div>
 
-        <div className="orchestrator-card" aria-label="LLM orchestrator V2 panel">
+            <div className="orchestrator-card" aria-label="LLM orchestrator V2 panel">
           <p className="eyebrow">LLM Orchestrator V2</p>
           <h2>Developer testing only</h2>
           {latestDebugMessage?.orchestratorV2 ? (
@@ -376,9 +398,9 @@ export default function App() {
           ) : (
             <p className="soft-note">Send a non-crisis message to run V2 orchestration.</p>
           )}
-        </div>
+            </div>
 
-        <div className="compassion-card" aria-label="Compassion OS planner panel">
+            <div className="compassion-card" aria-label="Compassion OS planner panel">
           <p className="eyebrow">Compassion OS</p>
           <h2>Developer testing only</h2>
           {latestDebugMessage?.orchestratorV2?.compassionPlan ? (
@@ -411,9 +433,9 @@ export default function App() {
           ) : (
             <p className="soft-note">Send a message to run the Compassion OS planner inside V2.</p>
           )}
-        </div>
+            </div>
 
-        <div className="baifa-card" aria-label="Baifa mapper panel">
+            <div className="baifa-card" aria-label="Baifa mapper panel">
           <p className="eyebrow">Baifa Mapper</p>
           <h2>Developer testing only</h2>
           {latestVisibleBaifa ? (
@@ -437,7 +459,9 @@ export default function App() {
           ) : (
             <p className="soft-note">Send a non-crisis message to see Baifa from V2 orchestration.</p>
           )}
-        </div>
+            </div>
+          </>
+        ) : null}
 
         {exportText ? (
           <div className="export-card" aria-label="Export JSON fallback">

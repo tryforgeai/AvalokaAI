@@ -77,4 +77,21 @@ describe("requestAvalokaV2", () => {
     expect(result.status).toBe("error");
     expect(result.error).toBe("OPENAI_API_KEY is not set.");
   });
+
+  it("returns an error result when the request cannot reach the server", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("Failed to fetch");
+      }),
+    );
+
+    const result = await requestAvalokaV2({
+      userText: "我现在很乱。",
+      localText: "把脚踩在地上。",
+    });
+
+    expect(result.status).toBe("error");
+    expect(result.error).toBe("Failed to fetch");
+  });
 });
