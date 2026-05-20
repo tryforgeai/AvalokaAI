@@ -43,10 +43,11 @@ Required before Alpha: all checked.
 - [x] User can save feedback.
 - [x] User can export local data.
 - [x] User can clear local data.
-- [x] Internal Debug is visible for local testing.
-- [x] Internal Debug can be hidden or explained before real-user observation, so testers are not confused.
+- [x] Default user mode hides Internal Debug and developer diagnostics.
+- [x] Developer mode is available at `http://127.0.0.1:5173/?dev=1` for Internal Debug, Local Baseline, LLM Orchestrator V2, Compassion OS, and Baifa Mapper panels.
+- [x] User mode and developer mode follow `DESIGN.md`.
 
-Required before Alpha: all checked except Internal Debug can remain visible only if testers are told it is local testing metadata.
+Required before Alpha: all checked. Real-user observation should use default user mode unless explicitly debugging.
 
 ## 4. Safety Gate
 
@@ -108,6 +109,7 @@ Required commands:
 cd app
 npm run content:check
 npm test
+npm run coverage
 npm run build
 ```
 
@@ -115,6 +117,7 @@ Latest known verification:
 
 - [x] `npm run content:check` passes.
 - [x] `npm test` passes.
+- [x] `npm run coverage` passes above the configured 80% threshold.
 - [x] `npm run build` passes.
 
 Required before Alpha: rerun all three immediately before sharing with testers.
@@ -154,8 +157,8 @@ No-Go if:
 
 ## 11. Next Recommended Tasks
 
-1. Run OpenAI LLM Shadow Test in developer mode.
-2. Compare local response vs. LLM candidate on 20 smoke inputs.
-3. Start 3-5 user Alpha with schedule-shortcut awareness only after shadow output is confirmed not user-visible.
-4. Review exported `summary`, `turns`, and `shadow` after the first real tester session.
-5. Add failures to smoke tests or evals.
+1. Tune V2 prompts so user-facing replies are shorter, more naturally segmented, and less wall-of-text.
+2. Run 10-20 realistic low-moment inputs in default user mode and developer mode.
+3. Review exported `summary`, `turns`, `orchestratorV2`, `compassionPlan`, and `baifa` after the first real tester session.
+4. Add failures to smoke tests, V2 golden evals, or prompt evals.
+5. Keep UI largely frozen unless real tester behavior shows friction.

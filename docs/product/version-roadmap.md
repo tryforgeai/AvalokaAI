@@ -21,7 +21,7 @@ If documents conflict, follow this order:
 | Goal | Build a stable minimal prototype around the validated low-moment companionship use case |
 | Target user | Overseas Chinese women who experience late-night or low-moment body tension, self-blame, loneliness, chronic-illness anxiety, or meaning emptiness, and do not want to burden family with those feelings |
 | First use case | Late-night or low-moment private emotional settling |
-| Primary artifact | Minimal chat MVP with short responses, body-grounded settling, safety gates, feedback logging, and evaluation gates |
+| Primary artifact | Minimal chat MVP with user/developer modes, short responses, body-grounded settling, safety gates, feedback logging, and evaluation gates |
 | Alpha readiness | `docs/experiments/v1-alpha-readiness-checklist.md` |
 
 ### V1 Entry Evidence
@@ -44,6 +44,8 @@ V0 result summary:
 ### V1 In Scope
 
 - Minimal chat UI or similarly simple local prototype
+- Default user mode for quiet chat and lightweight feedback
+- Explicit developer mode at `?dev=1` for Internal Debug, Local Baseline, LLM Orchestrator V2, Compassion OS, and Baifa Mapper panels
 - Consent and boundary notice
 - Crisis safety gate
 - Short response mode by default

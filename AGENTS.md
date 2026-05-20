@@ -24,6 +24,7 @@ It is not:
 - Final vision: `docs/product/product-vision.md`
 - Current active version: `docs/product/version-roadmap.md`
 - Decision history: `docs/decisions/decision-log.md`
+- UI design guidance: `DESIGN.md`
 - If documents conflict, follow the newest accepted decision in `docs/decisions/decision-log.md`.
 
 ## Required Reading
@@ -34,33 +35,36 @@ Read these before making product, system design, or planning changes:
 2. `docs/product/product-vision.md`
 3. `docs/product/version-roadmap.md`
 4. `docs/decisions/decision-log.md`
-5. `docs/business/2026-05-12-avaloka-ai-7-day-user-validation-zh.md`
-6. `docs/business/2026-05-12-avaloka-ai-business-plan-revision-zh.md`
-7. `docs/superpowers/specs/2026-05-06-avaloka-ai-mvp-design-zh.md`
-8. `docs/superpowers/plans/2026-05-06-avaloka-ai-mvp-zh.md`
-9. `docs/superpowers/plans/2026-05-06-avaloka-ai-system-modules-explained-zh.md`
-10. `docs/superpowers/plans/2026-05-06-avaloka-ai-plan-module-map-zh.md`
-11. `docs/engineering/harness-engineering-setup.md`
-12. `docs/engineering/ai-production-safety-harness.md`
-13. `docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md`
-14. `docs/engineering/agentic-coding-workflow-for-avaloka.md`
-15. `docs/experiments/validation-runbook.md`
-16. `docs/experiments/user-feedback-log-template.md`
-17. `docs/experiments/failure-log.md`
-18. `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
-19. `docs/product/2026-05-16-v1-response-library-zh.md`
-20. `docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md`
-21. `docs/product/2026-05-14-v0-target-personas-zh.md`
-22. `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
-23. `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
-24. `docs/product/quality-checklist.md`
-25. `docs/maintenance/doc-gardening-checklist.md`
+5. `DESIGN.md`
+6. `docs/experiments/v1-alpha-readiness-checklist.md`
+7. `docs/business/2026-05-12-avaloka-ai-7-day-user-validation-zh.md`
+8. `docs/business/2026-05-12-avaloka-ai-business-plan-revision-zh.md`
+9. `docs/superpowers/specs/2026-05-06-avaloka-ai-mvp-design-zh.md`
+10. `docs/superpowers/plans/2026-05-06-avaloka-ai-mvp-zh.md`
+11. `docs/superpowers/plans/2026-05-06-avaloka-ai-system-modules-explained-zh.md`
+12. `docs/superpowers/plans/2026-05-06-avaloka-ai-plan-module-map-zh.md`
+13. `docs/engineering/harness-engineering-setup.md`
+14. `docs/engineering/ai-production-safety-harness.md`
+15. `docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md`
+16. `docs/engineering/agentic-coding-workflow-for-avaloka.md`
+17. `docs/experiments/validation-runbook.md`
+18. `docs/experiments/user-feedback-log-template.md`
+19. `docs/experiments/failure-log.md`
+20. `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
+21. `docs/product/2026-05-16-v1-response-library-zh.md`
+22. `docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md`
+23. `docs/product/2026-05-14-v0-target-personas-zh.md`
+24. `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
+25. `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
+26. `docs/product/quality-checklist.md`
+27. `docs/maintenance/doc-gardening-checklist.md`
 
 ## Operating Rules
 
 - Treat `docs/` as the source of truth.
 - Treat `archive/` as historical reference only.
 - Follow `docs/engineering/agentic-coding-workflow-for-avaloka.md` for non-trivial agentic development work.
+- Follow `DESIGN.md` before changing the default user interface, developer diagnostics, or visual tone.
 - Follow version authority before changing roadmap, scope, or architecture.
 - If a plan conflicts with the current validation direction, update the plan before implementation.
 - Do not reintroduce the old “Buddhist AI / RAG-first / broad workplace-relationship-emotion” scope.

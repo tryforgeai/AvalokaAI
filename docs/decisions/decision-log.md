@@ -4,6 +4,43 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-05-19 — Separate User Mode And Developer Mode In The V1 MVP
+
+Status: Accepted
+
+### Context
+
+The V1 local MVP now uses LLM Orchestrator V2, Baifa Mapper, Compassion OS, Guardian, local baseline responses, feedback logging, and export data. Showing all of that diagnostic machinery in the main interface made the product feel like an AI control panel instead of a quiet private emotional support space.
+
+### Decision
+
+Avaloka V1 has two local UI modes:
+
+- default user mode at `http://127.0.0.1:5173/`
+- developer mode at `http://127.0.0.1:5173/?dev=1`
+
+Default user mode shows the chat, lightweight feedback, local privacy note, and export/clear controls. Developer mode may show Internal Debug, Local Baseline, LLM Orchestrator V2, Compassion OS, and Baifa Mapper panels.
+
+### Rationale
+
+The validated user need is to feel privately met during low moments. Internal analysis, labels, latency, model state, and hidden routing metadata are useful for builders but should not contaminate the emotional experience.
+
+### Consequences
+
+- `DESIGN.md` is now active UI guidance.
+- User-facing UI should stay low-pressure, non-clinical, non-religious, and free of implementation terms.
+- Debug and evaluation surfaces should remain explicit developer-mode features.
+- Future UI changes should preserve this separation unless a later decision log entry supersedes it.
+
+### Affected Docs
+
+- `DESIGN.md`
+- `README.md`
+- `README.zh.md`
+- `AGENTS.md`
+- `docs/product/version-roadmap.md`
+- `docs/experiments/v1-alpha-readiness-checklist.md`
+
 ## 2026-05-16 — V0 First Validation Passed And V1 May Start
 
 Status: Accepted
