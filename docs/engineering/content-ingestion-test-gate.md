@@ -12,6 +12,7 @@ New content is not considered integrated until it has:
 3. Runtime mapper or response changes when the content affects demo behavior.
 4. Automated tests proving the new behavior.
 5. Passing verification.
+6. A `prompt/registry.json` `knowledgeSources` entry when a prompt depends on it.
 
 In short:
 
@@ -32,6 +33,8 @@ For each new source, create or update:
 | Asset | Required When | Purpose |
 |---|---|---|
 | `docs/kb/...` | Always | Human-readable product translation. |
+| `docs/kb/README.md` | Always | KB authority, directory roles, and promotion rule. |
+| `prompt/registry.json` | When prompt behavior depends on KB | Declares which KB files the prompt must remember. |
 | `evals/wisdom-response-cases.json` | Always | Shared test seed for desired behavior and forbidden misuse. |
 | `app/src/data/...` | When app behavior changes | Runtime mapper data. |
 | `app/src/lib/...` | When app behavior changes | Runtime selection/response logic. |

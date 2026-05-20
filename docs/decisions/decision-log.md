@@ -4,6 +4,40 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-05-19 — Treat `docs/kb/` As Avaloka's Internal Learning Base
+
+Status: Accepted
+
+### Context
+
+Avaloka's internal philosophy, Baifa mind-state mapping, dukkha mapping, Compassion OS, Five Mindfulness Guardian, and secular Buddhism notes are stored under `docs/kb/`. Without an explicit binding rule, future agents or prompt changes could ignore this material and rely on chat memory, ad hoc assumptions, or generic model knowledge.
+
+### Decision
+
+`docs/kb/` is Avaloka's internal learning base. Runtime-facing knowledge must be promoted through derived KB notes, `prompt/registry.json` `knowledgeSources`, prompt files, eval cases, and content checks.
+
+### Rationale
+
+Avaloka should not "remember" project philosophy from prior conversations. The repo must make the learning source visible and testable so agents, prompts, and evals keep using the same internal philosophy.
+
+### Consequences
+
+- `docs/kb/README.md` is the KB entry point.
+- Active prompts should declare KB dependencies through `knowledgeSources`.
+- `npm run content:check` validates registered knowledge-source paths.
+- New wisdom sources must follow `docs/engineering/content-ingestion-test-gate.md`.
+- User-facing responses still remain plain, non-doctrinal, and safety-bound.
+
+### Affected Docs
+
+- `docs/kb/README.md`
+- `prompt/registry.json`
+- `AGENTS.md`
+- `README.md`
+- `README.zh.md`
+- `docs/engineering/content-ingestion-test-gate.md`
+- `scripts/check-content-ingestion.mjs`
+
 ## 2026-05-19 — Separate User Mode And Developer Mode In The V1 MVP
 
 Status: Accepted

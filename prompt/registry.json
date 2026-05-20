@@ -7,6 +7,13 @@
       "status": "active",
       "version": "v1",
       "purpose": "Generate internal shadow candidate responses for developer comparison.",
+      "knowledgeSources": [
+        "docs/kb/README.md",
+        "docs/kb/derived/avaloka-core-philosophy.zh.md",
+        "docs/kb/derived/avaloka-response-principles.zh.md",
+        "docs/kb/derived/dukkha-mapper.zh.md",
+        "docs/kb/secular-buddhism/INGESTION_CHECKLIST.md"
+      ],
       "usedBy": ["server/llm-shadow-server.mjs:POST /api/llm-shadow", "server/llm-shadow-server.mjs:GET /api/llm-shadow/test?run=1"],
       "evals": ["evals/wisdom-response-cases.json"],
       "rollback": "Restore the previous committed version of prompt/llm-shadow-response-generator-v1.md."
@@ -17,6 +24,14 @@
       "status": "active",
       "version": "v1",
       "purpose": "Classify user input into Baifa mind-state candidates and wholesome antidotes.",
+      "knowledgeSources": [
+        "docs/kb/README.md",
+        "docs/kb/大乘百法明门论-原文.zh.md",
+        "docs/kb/大乘百法明门论直解-节录.zh.md",
+        "docs/kb/derived/baifa-mind-state-mapper.zh.md",
+        "docs/kb/derived/baifa-antidote-map.zh.md",
+        "docs/kb/derived/百法心所-用户情绪映射.zh.md"
+      ],
       "usedBy": ["server/llm-shadow-server.mjs:POST /api/baifa-map", "server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
       "evals": ["evals/baifa-mapper-cases.json", "evals/baifa-unwholesome-cases.json", "evals/avaloka-v2-golden-cases.json"],
       "rollback": "Restore the previous committed version of prompt/baifa-mapper-v1.md."
@@ -27,6 +42,10 @@
       "status": "active",
       "version": "v2",
       "purpose": "Classify whether a user message should use normal, ambiguous safety, or crisis flow.",
+      "knowledgeSources": [
+        "docs/kb/README.md",
+        "docs/kb/derived/avaloka-response-principles.zh.md"
+      ],
       "usedBy": ["server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
       "evals": ["evals/avaloka-v2-orchestrator-cases.json", "evals/avaloka-v2-golden-cases.json"],
       "rollback": "Restore the previous committed version of prompt/avaloka-v2-crisis-classifier.md."
@@ -37,6 +56,13 @@
       "status": "active",
       "version": "v1",
       "purpose": "Select internal Compassion OS moves that guide the user-facing reply.",
+      "knowledgeSources": [
+        "docs/kb/README.md",
+        "docs/kb/derived/avalokiteshvara-compassion-os.zh.md",
+        "docs/kb/avalokiteshvara/观世音菩萨普门品.md",
+        "docs/kb/avalokiteshvara/大佛顶首楞严经观世音菩萨耳根圆通章.md",
+        "docs/kb/avalokiteshvara/观音菩萨故事.md"
+      ],
       "usedBy": ["server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
       "evals": ["evals/avalokiteshvara-compassion-cases.json", "evals/avaloka-v2-golden-cases.json"],
       "rollback": "Restore the previous committed version of prompt/avalokiteshvara-compassion-planner-v1.md."
@@ -47,6 +73,16 @@
       "status": "active",
       "version": "v2",
       "purpose": "Generate the user-facing Avaloka V2 response from crisis, Baifa, and Compassion OS context.",
+      "knowledgeSources": [
+        "docs/kb/README.md",
+        "docs/kb/derived/avaloka-core-philosophy.zh.md",
+        "docs/kb/derived/avaloka-response-principles.zh.md",
+        "docs/kb/derived/dukkha-mapper.zh.md",
+        "docs/kb/derived/baifa-mind-state-mapper.zh.md",
+        "docs/kb/derived/baifa-antidote-map.zh.md",
+        "docs/kb/derived/avalokiteshvara-compassion-os.zh.md",
+        "docs/kb/secular-buddhism/episode-002-nature-of-human-suffering.zh.md"
+      ],
       "usedBy": ["server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
       "evals": ["evals/avaloka-v2-orchestrator-cases.json", "evals/avaloka-v2-golden-cases.json", "evals/wisdom-response-cases.json"],
       "rollback": "Restore the previous committed version of prompt/avaloka-v2-orchestrator-response.md."
@@ -57,6 +93,12 @@
       "status": "active",
       "version": "v2",
       "purpose": "Review candidate Avaloka replies before display and require repair or fallback when unsafe.",
+      "knowledgeSources": [
+        "docs/kb/README.md",
+        "docs/kb/derived/五项正念修习-输出守护.zh.md",
+        "docs/kb/derived/avaloka-response-principles.zh.md",
+        "docs/product/buddhist-precepts-guardian.md"
+      ],
       "usedBy": ["server/llm-shadow-server.mjs:POST /api/avaloka-v2"],
       "evals": ["evals/precepts-cases.json", "evals/avaloka-v2-golden-cases.json"],
       "rollback": "Restore the previous committed version of prompt/avaloka-v2-guardian.md."
@@ -67,6 +109,11 @@
       "status": "draft",
       "version": "v1",
       "purpose": "Draft artifact for future response generation after guardrails and evals mature.",
+      "knowledgeSources": [
+        "docs/kb/README.md",
+        "docs/kb/derived/avaloka-core-philosophy.zh.md",
+        "docs/kb/derived/avaloka-response-principles.zh.md"
+      ],
       "usedBy": [],
       "evals": ["evals/wisdom-response-cases.json"],
       "rollback": "No runtime rollback needed; draft prompt is not active."

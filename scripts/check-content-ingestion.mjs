@@ -11,6 +11,7 @@ const avalokaV2CasesPath = join(repoRoot, "evals/avaloka-v2-orchestrator-cases.j
 const avalokaV2GoldenCasesPath = join(repoRoot, "evals/avaloka-v2-golden-cases.json");
 const avalokiteshvaraCasesPath = join(repoRoot, "evals/avalokiteshvara-compassion-cases.json");
 const promptRegistryPath = join(repoRoot, "prompt/registry.json");
+const kbReadmePath = join(repoRoot, "docs/kb/README.md");
 const baifaPromptPath = join(repoRoot, "prompt/baifa-mapper-v1.md");
 const avalokiteshvaraCompassionOsPath = join(repoRoot, "docs/kb/derived/avalokiteshvara-compassion-os.zh.md");
 const avalokaV2ResponsePromptPath = join(repoRoot, "prompt/avaloka-v2-orchestrator-response.md");
@@ -40,6 +41,7 @@ assert(existsSync(avalokaV2CasesPath), "Missing evals/avaloka-v2-orchestrator-ca
 assert(existsSync(avalokaV2GoldenCasesPath), "Missing evals/avaloka-v2-golden-cases.json.");
 assert(existsSync(avalokiteshvaraCasesPath), "Missing evals/avalokiteshvara-compassion-cases.json.");
 assert(existsSync(promptRegistryPath), "Missing prompt/registry.json.");
+assert(existsSync(kbReadmePath), "Missing docs/kb/README.md.");
 assert(existsSync(baifaPromptPath), "Missing prompt/baifa-mapper-v1.md.");
 assert(existsSync(avalokiteshvaraCompassionOsPath), "Missing docs/kb/derived/avalokiteshvara-compassion-os.zh.md.");
 assert(existsSync(avalokaV2ResponsePromptPath), "Missing prompt/avaloka-v2-orchestrator-response.md.");
@@ -216,9 +218,19 @@ for (const record of promptRegistry.prompts) {
   assert(record.rollback, `Prompt registry record ${record.id} must include rollback.`);
   assert(Array.isArray(record.usedBy), `Prompt registry record ${record.id} must include usedBy.`);
   assert(Array.isArray(record.evals), `Prompt registry record ${record.id} must include evals.`);
+  assert(
+    record.knowledgeSources === undefined || Array.isArray(record.knowledgeSources),
+    `Prompt registry record ${record.id} knowledgeSources must be an array when present.`,
+  );
   assert(existsSync(join(repoRoot, record.file)), `Prompt registry record ${record.id} points to missing file ${record.file}.`);
   for (const evalPath of record.evals) {
     assert(existsSync(join(repoRoot, evalPath)), `Prompt registry record ${record.id} points to missing eval ${evalPath}.`);
+  }
+  for (const sourcePath of record.knowledgeSources || []) {
+    assert(
+      existsSync(join(repoRoot, sourcePath)),
+      `Prompt registry record ${record.id} points to missing knowledge source ${sourcePath}.`,
+    );
   }
   if (record.status === "active") {
     assert(record.usedBy.length > 0, `Active prompt ${record.id} must include at least one usedBy entry.`);
