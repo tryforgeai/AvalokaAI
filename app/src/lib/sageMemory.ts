@@ -1,19 +1,7 @@
-export type MemoryCandidateKind =
-  | "recurring_pain_pattern"
-  | "helpful_response_move"
-  | "avoid_response_move"
-  | "tone_preference"
-  | "safety_note"
-  | "context_category";
+import type { CareCard, CareMemory, MemoryCandidate, SageMemoryCandidateKind } from "../types";
 
-export interface MemoryCandidate {
-  id: string;
-  kind: MemoryCandidateKind;
-  text: string;
-  confidence: number;
-  evidenceIds: string[];
-  tags?: string[];
-}
+export type MemoryCandidateKind = SageMemoryCandidateKind;
+export type { MemoryCandidate };
 
 export interface CareFact extends MemoryCandidate {
   tags: string[];
@@ -105,4 +93,76 @@ export function selectCareFacts(facts: CareFact[], activeTags: string[], limit =
     .sort((a, b) => b.relevance - a.relevance || b.fact.confidence - a.fact.confidence)
     .slice(0, limit)
     .map(({ fact }) => fact);
+}
+
+function unique(values: string[]): string[] {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function normalizeMemoryText(text: string): string {
+  return text.trim().replace(/\s+/g, " ");
+}
+
+function careMemoryKey(memory: Pick<MemoryCandidate, "kind" | "text">): string {
+  return `${memory.kind}:${normalizeMemoryText(memory.text).toLowerCase()}`;
+}
+
+export function createEmptyCareCard(now: string): CareCard {
+  return {
+    version: "care_card_v1",
+    createdAt: now,
+    updatedAt: now,
+    memories: [],
+  };
+}
+
+export function upsertCareMemory(card: CareCard, candidate: MemoryCandidate, now: string): CareCard {
+  const text = normalizeMemoryText(candidate.text);
+  const key = careMemoryKey({ ...candidate, text });
+  const existingIndex = card.memories.findIndex((memory) => careMemoryKey(memory) === key);
+
+  if (existingIndex === -1) {
+    const memory: CareMemory = {
+      ...candidate,
+      text,
+      tags: candidate.tags || [],
+      createdAt: now,
+      updatedAt: now,
+      lastSeenAt: now,
+      occurrences: 1,
+    };
+
+    return {
+      ...card,
+      updatedAt: now,
+      memories: [...card.memories, memory],
+    };
+  }
+
+  const memories = [...card.memories];
+  const existing = memories[existingIndex];
+  memories[existingIndex] = {
+    ...existing,
+    confidence: Math.max(existing.confidence, candidate.confidence),
+    evidenceIds: unique([...existing.evidenceIds, ...candidate.evidenceIds]),
+    tags: unique([...existing.tags, ...(candidate.tags || [])]),
+    updatedAt: now,
+    lastSeenAt: now,
+    occurrences: existing.occurrences + 1,
+  };
+
+  return {
+    ...card,
+    updatedAt: now,
+    memories,
+  };
+}
+
+export function addAllowedMemoryCandidates(card: CareCard, candidates: MemoryCandidate[], now: string): CareCard {
+  return candidates.reduce((nextCard, candidate) => {
+    const result = guardMemoryCandidate(candidate);
+    if (result.status !== "allow" || !result.memory) return nextCard;
+
+    return upsertCareMemory(nextCard, result.memory, now);
+  }, card);
 }

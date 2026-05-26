@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { guardMemoryCandidate, selectCareFacts } from "./sageMemory";
+import { createEmptyCareCard, guardMemoryCandidate, selectCareFacts, upsertCareMemory } from "./sageMemory";
 
 describe("SAGE Lite memory core", () => {
   it("rejects candidates without source evidence", () => {
@@ -82,5 +82,78 @@ describe("SAGE Lite memory core", () => {
     );
 
     expect(facts.map((fact) => fact.id)).toEqual(["fact_illness", "fact_short"]);
+  });
+
+  it("stores an allowed memory candidate as a care memory", () => {
+    const card = createEmptyCareCard("2026-05-26T10:00:00.000Z");
+    const updated = upsertCareMemory(
+      card,
+      {
+        id: "memory-1",
+        kind: "tone_preference",
+        text: " User prefers short body-grounded responses. ",
+        confidence: 0.76,
+        evidenceIds: ["feedback-1"],
+        tags: ["tone", "body_grounding"],
+      },
+      "2026-05-26T10:01:00.000Z",
+    );
+
+    expect(updated.memories).toHaveLength(1);
+    expect(updated.memories[0]).toMatchObject({
+      id: "memory-1",
+      kind: "tone_preference",
+      text: "User prefers short body-grounded responses.",
+      confidence: 0.76,
+      evidenceIds: ["feedback-1"],
+      tags: ["tone", "body_grounding"],
+      createdAt: "2026-05-26T10:01:00.000Z",
+      updatedAt: "2026-05-26T10:01:00.000Z",
+      lastSeenAt: "2026-05-26T10:01:00.000Z",
+      occurrences: 1,
+    });
+    expect(updated.updatedAt).toBe("2026-05-26T10:01:00.000Z");
+  });
+
+  it("merges duplicate care memories by kind and normalized text", () => {
+    const first = upsertCareMemory(
+      createEmptyCareCard("2026-05-26T10:00:00.000Z"),
+      {
+        id: "memory-1",
+        kind: "avoid_response_move",
+        text: "Avoid confirming punishment or debt framing.",
+        confidence: 0.72,
+        evidenceIds: ["feedback-1"],
+        tags: ["self_blame"],
+      },
+      "2026-05-26T10:01:00.000Z",
+    );
+
+    const updated = upsertCareMemory(
+      first,
+      {
+        id: "memory-2",
+        kind: "avoid_response_move",
+        text: " avoid  confirming punishment or debt framing. ",
+        confidence: 0.91,
+        evidenceIds: ["feedback-2", "turn-2"],
+        tags: ["illness_fear"],
+      },
+      "2026-05-26T10:05:00.000Z",
+    );
+
+    expect(updated.memories).toHaveLength(1);
+    expect(updated.memories[0]).toMatchObject({
+      id: "memory-1",
+      kind: "avoid_response_move",
+      text: "Avoid confirming punishment or debt framing.",
+      confidence: 0.91,
+      evidenceIds: ["feedback-1", "feedback-2", "turn-2"],
+      tags: ["self_blame", "illness_fear"],
+      createdAt: "2026-05-26T10:01:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      lastSeenAt: "2026-05-26T10:05:00.000Z",
+      occurrences: 2,
+    });
   });
 });

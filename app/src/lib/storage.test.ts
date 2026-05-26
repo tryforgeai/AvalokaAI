@@ -1,5 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { exportAvalokaData, saveFeedback, saveMessages } from "./storage";
+import {
+  clearAvalokaData,
+  exportAvalokaData,
+  loadCareCard,
+  saveFeedback,
+  saveMemoryCandidates,
+  saveMessages,
+} from "./storage";
 import type { ChatMessage, FeedbackEntry } from "../types";
 
 describe("exportAvalokaData", () => {
@@ -259,6 +266,79 @@ describe("exportAvalokaData", () => {
       protect_self_worth: 1,
       reject_punishment_frame: 1,
       conditions_not_blame: 1,
+    });
+  });
+
+  it("persists allowed memory candidates to the care card export", () => {
+    saveMemoryCandidates(
+      [
+        {
+          id: "memory-allowed",
+          kind: "tone_preference",
+          text: "User prefers short body-grounded responses.",
+          confidence: 0.82,
+          evidenceIds: ["feedback-1"],
+          tags: ["tone"],
+        },
+        {
+          id: "memory-rejected",
+          kind: "safety_note",
+          text: "User may have cancer because of karmic debt.",
+          confidence: 0.9,
+          evidenceIds: ["feedback-2"],
+          tags: ["unsafe"],
+        },
+      ],
+      "2026-05-26T10:00:00.000Z",
+    );
+
+    const exported = JSON.parse(exportAvalokaData());
+
+    expect(exported.careCard).toMatchObject({
+      version: "care_card_v1",
+      memories: [
+        {
+          id: "memory-allowed",
+          kind: "tone_preference",
+          text: "User prefers short body-grounded responses.",
+          confidence: 0.82,
+          evidenceIds: ["feedback-1"],
+          tags: ["tone"],
+          createdAt: "2026-05-26T10:00:00.000Z",
+          updatedAt: "2026-05-26T10:00:00.000Z",
+          occurrences: 1,
+        },
+      ],
+    });
+    expect(exported.careCard.memories).toHaveLength(1);
+    expect(exported.summary).toMatchObject({
+      careMemoryCount: 1,
+      careMemoryKindCounts: {
+        tone_preference: 1,
+      },
+    });
+  });
+
+  it("clears the care card with local Avaloka data", () => {
+    saveMemoryCandidates(
+      [
+        {
+          id: "memory-1",
+          kind: "helpful_response_move",
+          text: "Body grounding helped before reflection.",
+          confidence: 0.7,
+          evidenceIds: ["feedback-1"],
+          tags: ["body_grounding"],
+        },
+      ],
+      "2026-05-26T10:00:00.000Z",
+    );
+
+    clearAvalokaData();
+
+    expect(loadCareCard()).toMatchObject({
+      version: "care_card_v1",
+      memories: [],
     });
   });
 });

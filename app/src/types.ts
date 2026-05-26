@@ -145,6 +145,21 @@ export interface MemoryCandidate {
   tags?: string[];
 }
 
+export interface CareMemory extends MemoryCandidate {
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+  lastSeenAt: string;
+  occurrences: number;
+}
+
+export interface CareCard {
+  version: "care_card_v1";
+  createdAt: string;
+  updatedAt: string;
+  memories: CareMemory[];
+}
+
 export interface MemoryGuardianResult {
   candidateId: string;
   status: "allow" | "revise" | "reject";

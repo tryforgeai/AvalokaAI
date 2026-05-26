@@ -1,8 +1,10 @@
-import type { ChatMessage, FeedbackEntry } from "../types";
+import { addAllowedMemoryCandidates, createEmptyCareCard } from "./sageMemory";
+import type { CareCard, ChatMessage, FeedbackEntry, MemoryCandidate } from "../types";
 
 const messagesKey = "avaloka:v1:messages";
 const feedbackKey = "avaloka:v1:feedback";
 const consentKey = "avaloka:v1:consent";
+const careCardKey = "avaloka:v1:careCard";
 
 function readJson<T>(key: string, fallback: T): T {
   const raw = window.localStorage.getItem(key);
@@ -40,6 +42,20 @@ export function loadFeedback(): FeedbackEntry[] {
 
 export function saveFeedback(entries: FeedbackEntry[]): void {
   writeJson(feedbackKey, entries);
+}
+
+export function loadCareCard(): CareCard {
+  return readJson<CareCard>(careCardKey, createEmptyCareCard(new Date().toISOString()));
+}
+
+export function saveCareCard(card: CareCard): void {
+  writeJson(careCardKey, card);
+}
+
+export function saveMemoryCandidates(candidates: MemoryCandidate[], now = new Date().toISOString()): CareCard {
+  const careCard = addAllowedMemoryCandidates(loadCareCard(), candidates, now);
+  saveCareCard(careCard);
+  return careCard;
 }
 
 function buildTurns(messages: ChatMessage[], feedback: FeedbackEntry[]) {
@@ -88,7 +104,12 @@ function countBy(items: string[]): Record<string, number> {
   }, {});
 }
 
-function buildSummary(messages: ChatMessage[], feedback: FeedbackEntry[], turns: ReturnType<typeof buildTurns>) {
+function buildSummary(
+  messages: ChatMessage[],
+  feedback: FeedbackEntry[],
+  turns: ReturnType<typeof buildTurns>,
+  careCard: CareCard,
+) {
   const scoredFeedback = feedback.filter((entry) => Number.isFinite(entry.settlingScore));
   const totalScore = scoredFeedback.reduce((total, entry) => total + entry.settlingScore, 0);
   const averageSettlingScore = scoredFeedback.length > 0 ? Number((totalScore / scoredFeedback.length).toFixed(2)) : null;
@@ -125,19 +146,23 @@ function buildSummary(messages: ChatMessage[], feedback: FeedbackEntry[], turns:
     sageMemoryCandidateCount: turns.reduce((total, turn) => total + (turn.sageMemory?.candidates.length || 0), 0),
     sageMemoryKindCounts: countBy(turns.flatMap((turn) => turn.sageMemory?.candidates.map((candidate) => candidate.kind) || [])),
     sageMemoryGuardianCounts: countBy(turns.flatMap((turn) => turn.sageMemory?.guardian.map((result) => result.status) || [])),
+    careMemoryCount: careCard.memories.length,
+    careMemoryKindCounts: countBy(careCard.memories.map((memory) => memory.kind)),
   };
 }
 
 export function exportAvalokaData(): string {
   const messages = loadMessages();
   const feedback = loadFeedback();
+  const careCard = loadCareCard();
   const turns = buildTurns(messages, feedback);
 
   return JSON.stringify(
     {
       exportedAt: new Date().toISOString(),
-      summary: buildSummary(messages, feedback, turns),
+      summary: buildSummary(messages, feedback, turns, careCard),
       turns,
+      careCard,
       messages,
       feedback,
     },
@@ -149,4 +174,5 @@ export function exportAvalokaData(): string {
 export function clearAvalokaData(): void {
   window.localStorage.removeItem(messagesKey);
   window.localStorage.removeItem(feedbackKey);
+  window.localStorage.removeItem(careCardKey);
 }

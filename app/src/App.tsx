@@ -19,6 +19,7 @@ import {
   loadMessages,
   saveConsent,
   saveFeedback,
+  saveMemoryCandidates,
   saveMessages,
 } from "./lib/storage";
 import type { BaifaMindState, ChatMessage, CompassionMove, FeedbackEntry, MemoryCandidate, MemoryGuardianResult } from "./types";
@@ -163,6 +164,10 @@ export default function App() {
           },
           feedback: entry,
         }).then((sageMemory) => {
+          if (sageMemory.status === "ready" && sageMemory.candidates.length > 0) {
+            saveMemoryCandidates(sageMemory.candidates);
+          }
+
           setMessages((current) =>
             current.map((message) => (message.id === avalokaMessage.id ? { ...message, sageMemory } : message)),
           );
@@ -198,7 +203,7 @@ export default function App() {
   }
 
   function clearData() {
-    const confirmed = window.confirm("确定清空当前浏览器里的 Avaloka 对话和反馈记录吗？这个操作不能撤销。");
+    const confirmed = window.confirm("确定清空当前浏览器里的 Avaloka 对话、反馈和本地记忆记录吗？这个操作不能撤销。");
     if (!confirmed) return;
 
     clearAvalokaData();
