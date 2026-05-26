@@ -104,6 +104,26 @@
       "rollback": "Restore the previous committed version of prompt/avaloka-v2-guardian.md."
     },
     {
+      "id": "sage-memory-writer-v1",
+      "file": "prompt/sage-memory-writer-v1.md",
+      "status": "active",
+      "version": "v1",
+      "purpose": "Extract sparse, evidence-backed SAGE Lite memory candidates from one user/Avaloka/feedback turn.",
+      "knowledgeSources": [
+        "docs/kb/README.md",
+        "docs/research/sage-memory-research-plan.md",
+        "docs/engineering/avaloka-memory-engine-v1.md",
+        "docs/engineering/avaloka-memory-engine-v1.zh.md",
+        "docs/kb/ai-research/sage-self-evolving-graph-memory.md",
+        "docs/kb/ai-research/sage-self-evolving-graph-memory.zh.md",
+        "docs/kb/derived/sage-memory-principles.md",
+        "docs/kb/derived/sage-memory-principles.zh.md"
+      ],
+      "usedBy": ["server/llm-shadow-server.mjs:POST /api/sage-memory-writer"],
+      "evals": ["evals/sage-memory-cases.json"],
+      "rollback": "Restore the previous committed version of prompt/sage-memory-writer-v1.md and remove the /api/sage-memory-writer route."
+    },
+    {
       "id": "response-generator-v1",
       "file": "prompt/response-generator-v1.md",
       "status": "draft",

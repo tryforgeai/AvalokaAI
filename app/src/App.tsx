@@ -8,6 +8,7 @@ import { buildGuardedResponse } from "./lib/guardedResponse";
 import { applyAvalokaV2Result, createInitialLlmDebugState } from "./lib/llmPipeline";
 import { requestAvalokaV2 } from "./lib/orchestratorClient";
 import { selectScenario } from "./lib/responseSelector";
+import { requestSageMemoryWriter } from "./lib/sageMemoryClient";
 import { getVisibleBaifaResult } from "./lib/visibleDebug";
 import { isDeveloperMode } from "./lib/uiMode";
 import {
@@ -20,7 +21,7 @@ import {
   saveFeedback,
   saveMessages,
 } from "./lib/storage";
-import type { BaifaMindState, ChatMessage, CompassionMove, FeedbackEntry } from "./types";
+import type { BaifaMindState, ChatMessage, CompassionMove, FeedbackEntry, MemoryCandidate, MemoryGuardianResult } from "./types";
 
 function makeId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -120,6 +121,7 @@ export default function App() {
   function submitFeedback(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!activeMessageId) return;
+    const avalokaMessageId = activeMessageId;
 
     const formData = new FormData(event.currentTarget);
     const entry: FeedbackEntry = {
@@ -135,6 +137,38 @@ export default function App() {
     };
 
     setFeedback((current) => [...current, entry]);
+    if (developerMode) {
+      const avalokaIndex = messages.findIndex((message) => message.id === avalokaMessageId && message.role === "avaloka");
+      const avalokaMessage = messages[avalokaIndex];
+      const userMessage = messages
+        .slice(0, avalokaIndex)
+        .reverse()
+        .find((message) => message.role === "user");
+
+      if (userMessage && avalokaMessage) {
+        setMessages((current) =>
+          current.map((message) =>
+            message.id === avalokaMessage.id
+              ? { ...message, sageMemory: { status: "loading", candidates: [], guardian: [] } }
+              : message,
+          ),
+        );
+
+        requestSageMemoryWriter({
+          turn: {
+            userMessageId: userMessage.id,
+            avalokaMessageId: avalokaMessage.id,
+            userText: userMessage.text,
+            avalokaText: avalokaMessage.text,
+          },
+          feedback: entry,
+        }).then((sageMemory) => {
+          setMessages((current) =>
+            current.map((message) => (message.id === avalokaMessage.id ? { ...message, sageMemory } : message)),
+          );
+        });
+      }
+    }
     setActiveMessageId(null);
     event.currentTarget.reset();
   }
@@ -435,6 +469,34 @@ export default function App() {
           )}
             </div>
 
+            <div className="orchestrator-card" aria-label="SAGE memory writer panel">
+          <p className="eyebrow">SAGE Memory Writer</p>
+          <h2>Developer testing only</h2>
+          {latestDebugMessage?.sageMemory ? (
+            <div className="orchestrator-body">
+              <dl>
+                <dt>status</dt>
+                <dd>{latestDebugMessage.sageMemory.status}</dd>
+                <dt>model</dt>
+                <dd>{latestDebugMessage.sageMemory.model || "n/a"}</dd>
+                <dt>latency</dt>
+                <dd>
+                  {latestDebugMessage.sageMemory.latencyMs ? `${latestDebugMessage.sageMemory.latencyMs}ms` : "n/a"}
+                </dd>
+                <dt>candidates</dt>
+                <dd>{formatMemoryCandidates(latestDebugMessage.sageMemory.candidates)}</dd>
+                <dt>guardian</dt>
+                <dd>{formatMemoryGuardian(latestDebugMessage.sageMemory.guardian)}</dd>
+              </dl>
+              {latestDebugMessage.sageMemory.error ? (
+                <p className="soft-note">{latestDebugMessage.sageMemory.error}</p>
+              ) : null}
+            </div>
+          ) : (
+            <p className="soft-note">Save feedback on the latest Avaloka message to run the SAGE writer.</p>
+          )}
+            </div>
+
             <div className="baifa-card" aria-label="Baifa mapper panel">
           <p className="eyebrow">Baifa Mapper</p>
           <h2>Developer testing only</h2>
@@ -489,4 +551,18 @@ function formatBaifaStates(states?: BaifaMindState[]): string {
 function formatCompassionMoves(moves?: CompassionMove[]): string {
   if (!moves || moves.length === 0) return "none";
   return moves.map((move) => `${move.id} ${Math.round(move.confidence * 100)}%`).join(", ");
+}
+
+function formatMemoryCandidates(candidates?: MemoryCandidate[]): string {
+  if (!candidates || candidates.length === 0) return "none";
+  return candidates
+    .map((candidate) => `${candidate.kind}: ${candidate.text} ${Math.round(candidate.confidence * 100)}%`)
+    .join(" | ");
+}
+
+function formatMemoryGuardian(results?: MemoryGuardianResult[]): string {
+  if (!results || results.length === 0) return "none";
+  return results
+    .map((result) => `${result.candidateId}: ${result.status}${result.reasons.length ? ` (${result.reasons.join(", ")})` : ""}`)
+    .join(" | ");
 }

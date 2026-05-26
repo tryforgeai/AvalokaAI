@@ -33,6 +33,7 @@ export interface ChatMessage {
   localBaselineText?: string;
   openaiPrimary?: LlmShadowResult;
   orchestratorV2?: AvalokaV2Result;
+  sageMemory?: SageMemoryWriterResult;
   shadow?: LlmShadowResult;
   baifa?: BaifaMapResult;
 }
@@ -125,6 +126,50 @@ export interface AvalokaV2Result {
   guardian?: LlmGuardianReview;
   repairAttempted?: boolean;
   error?: string;
+}
+
+export type SageMemoryCandidateKind =
+  | "recurring_pain_pattern"
+  | "helpful_response_move"
+  | "avoid_response_move"
+  | "tone_preference"
+  | "safety_note"
+  | "context_category";
+
+export interface MemoryCandidate {
+  id: string;
+  kind: SageMemoryCandidateKind;
+  text: string;
+  confidence: number;
+  evidenceIds: string[];
+  tags?: string[];
+}
+
+export interface MemoryGuardianResult {
+  candidateId: string;
+  status: "allow" | "revise" | "reject";
+  reasons: string[];
+}
+
+export interface SageMemoryWriterResult {
+  status: "loading" | "ready" | "error";
+  model?: string;
+  latencyMs?: number;
+  candidates: MemoryCandidate[];
+  guardian: MemoryGuardianResult[];
+  error?: string;
+}
+
+export interface SageMemoryWriterTurn {
+  userMessageId: string;
+  avalokaMessageId: string;
+  userText: string;
+  avalokaText: string;
+}
+
+export interface SageMemoryWriterRequest {
+  turn: SageMemoryWriterTurn;
+  feedback?: FeedbackEntry;
 }
 
 export interface FeedbackEntry {

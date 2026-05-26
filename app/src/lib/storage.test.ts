@@ -136,6 +136,22 @@ describe("exportAvalokaData", () => {
             doNotDo: ["不要确认还债/报应框架"],
           },
         },
+        sageMemory: {
+          status: "ready",
+          model: "gpt-5.2",
+          latencyMs: 710,
+          candidates: [
+            {
+              id: "memory-1",
+              kind: "avoid_response_move",
+              text: "Avoid confirming punishment or debt framing.",
+              confidence: 0.9,
+              evidenceIds: ["user-2", "avaloka-2"],
+              tags: ["self_blame"],
+            },
+          ],
+          guardian: [{ candidateId: "memory-1", status: "allow", reasons: [] }],
+        },
       },
     ];
     const feedback: FeedbackEntry[] = [
@@ -182,6 +198,11 @@ describe("exportAvalokaData", () => {
       mindState: "不正见",
       confidence: 0.86,
     });
+    expect(exported.turns[1].sageMemory).toMatchObject({
+      status: "ready",
+      candidates: [{ id: "memory-1", kind: "avoid_response_move" }],
+      guardian: [{ candidateId: "memory-1", status: "allow" }],
+    });
     expect(exported.turns[1]).toMatchObject({
       responseSource: "openai_primary_dev",
       localBaselineText: "我不会把生病解释成“还债”或惩罚。",
@@ -219,6 +240,15 @@ describe("exportAvalokaData", () => {
       orchestratorV2RepairCount: 0,
       compassionReadyCount: 1,
       compassionErrorCount: 0,
+      sageMemoryReadyCount: 1,
+      sageMemoryErrorCount: 0,
+      sageMemoryCandidateCount: 1,
+    });
+    expect(exported.summary.sageMemoryKindCounts).toMatchObject({
+      avoid_response_move: 1,
+    });
+    expect(exported.summary.sageMemoryGuardianCounts).toMatchObject({
+      allow: 1,
     });
     expect(exported.summary.compassionMoveCounts).toMatchObject({
       give_fearlessness_first: 1,

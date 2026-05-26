@@ -70,6 +70,7 @@ function buildTurns(messages: ChatMessage[], feedback: FeedbackEntry[]) {
       localBaselineText: nextMessage.localBaselineText,
       orchestratorV2: nextMessage.orchestratorV2,
       compassionPlan: nextMessage.orchestratorV2?.compassionPlan,
+      sageMemory: nextMessage.sageMemory,
       openaiPrimary: nextMessage.openaiPrimary,
       shadow: nextMessage.shadow,
       baifa: nextMessage.baifa,
@@ -119,6 +120,11 @@ function buildSummary(messages: ChatMessage[], feedback: FeedbackEntry[], turns:
     compassionReadyCount: turns.filter((turn) => turn.compassionPlan?.status === "ready").length,
     compassionErrorCount: turns.filter((turn) => turn.compassionPlan?.status === "error").length,
     compassionMoveCounts: countBy(turns.flatMap((turn) => turn.compassionPlan?.moves.map((move) => move.id) || [])),
+    sageMemoryReadyCount: turns.filter((turn) => turn.sageMemory?.status === "ready").length,
+    sageMemoryErrorCount: turns.filter((turn) => turn.sageMemory?.status === "error").length,
+    sageMemoryCandidateCount: turns.reduce((total, turn) => total + (turn.sageMemory?.candidates.length || 0), 0),
+    sageMemoryKindCounts: countBy(turns.flatMap((turn) => turn.sageMemory?.candidates.map((candidate) => candidate.kind) || [])),
+    sageMemoryGuardianCounts: countBy(turns.flatMap((turn) => turn.sageMemory?.guardian.map((result) => result.status) || [])),
   };
 }
 

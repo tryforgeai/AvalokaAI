@@ -90,6 +90,46 @@ const compassionMoveIds = [
   "return_from_story_to_step",
   "protect_before_practice",
 ];
+const memoryCandidateKinds = [
+  "recurring_pain_pattern",
+  "helpful_response_move",
+  "avoid_response_move",
+  "tone_preference",
+  "safety_note",
+  "context_category",
+];
+const memoryGuardianRules = [
+  {
+    reason: "raw_or_private_detail",
+    patterns: [
+      /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/,
+      /\b1[3-9]\d{9}\b/,
+      /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i,
+      /\b\d{3}-\d{2}-\d{4}\b/,
+      /\b(?:wechat|weixin|微信|身份证|护照|passport|ssn)\b/i,
+      /\b\d{1,6}\s+[A-Z][A-Za-z0-9'.-]*(?:\s+[A-Z][A-Za-z0-9'.-]*){0,4}\s+(?:street|st|avenue|ave|road|rd|lane|ln|drive|dr|boulevard|blvd)\b/i,
+      /住在.{0,24}(街|路|号|弄|栋|单元|室|apartment|公寓)/i,
+    ],
+  },
+  {
+    reason: "medical_or_spiritual_claim",
+    patterns: [
+      /\b(?:user|she|he|they) (?:has|is diagnosed with|suffers from) (?:cancer|depression|ptsd|bipolar|ocd|adhd|anxiety disorder)\b/i,
+      /\b(?:diagnosed|medical diagnosis|clinical diagnosis|terminal illness)\b/i,
+      /\b(?:karmically guilty|karmic debt|spiritual debt|divine punishment)\b/i,
+      /(确诊|诊断为|患有).{0,18}(癌|抑郁症|双相|精神病|焦虑症|创伤后)/,
+      /(?:是|属于|证明|代表|说明|因为).{0,12}(?:业力|业障|报应|还债|惩罚|罪业|因果报应)|(?:业力|业障|报应|还债|惩罚|罪业|因果报应).{0,12}(?:导致|造成|惩罚|活该)/,
+    ],
+  },
+  {
+    reason: "harm_or_crisis_detail",
+    patterns: [
+      /\b(?:suicide plan|self-harm means|method to self-harm|revenge plan|weapon details)\b/i,
+      /\b(?:overdose|hang herself|hang himself|jump from|cut wrists)\b/i,
+      /(自杀计划|自残方式|自杀方法|报复计划|伤害.{0,8}方法|跳楼|割腕|上吊|吞药)/,
+    ],
+  },
+];
 
 function loadDotEnv(path) {
   if (!existsSync(path)) return;
@@ -177,6 +217,13 @@ function buildCompassionPlanInput(payload) {
     dukkhaTypes: payload.dukkhaTypes || [],
     dukkhaPatterns: payload.dukkhaPatterns || [],
     responseMoves: payload.responseMoves || [],
+  });
+}
+
+function buildMemoryWriterInput(payload) {
+  return promptRuntime.buildPromptInput("sage-memory-writer-v1", {
+    turn: payload.turn,
+    feedback: payload.feedback || null,
   });
 }
 
@@ -324,6 +371,42 @@ function compassionPlanSchema() {
   };
 }
 
+function memoryWriterSchema() {
+  return {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      status: { type: "string", enum: ["ok"] },
+      candidates: {
+        type: "array",
+        maxItems: 5,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            id: { type: "string", minLength: 1, maxLength: 80 },
+            kind: { type: "string", enum: memoryCandidateKinds },
+            text: { type: "string", minLength: 1, maxLength: 280 },
+            confidence: { type: "number", minimum: 0, maximum: 1 },
+            evidenceIds: {
+              type: "array",
+              maxItems: 6,
+              items: { type: "string", minLength: 1, maxLength: 120 },
+            },
+            tags: {
+              type: "array",
+              maxItems: 5,
+              items: { type: "string", minLength: 1, maxLength: 48 },
+            },
+          },
+          required: ["id", "kind", "text", "confidence", "evidenceIds", "tags"],
+        },
+      },
+    },
+    required: ["status", "candidates"],
+  };
+}
+
 function defaultCompassionPlan({ crisis, error = "" }) {
   const crisisMode = crisis?.status === "crisis" || crisis?.status === "ambiguous";
   return {
@@ -434,6 +517,42 @@ async function callAvalokaV2(payload) {
     baifa: baifaResult.body.baifa,
     startedAt,
   });
+}
+
+async function callMemoryWriter(payload) {
+  const startedAt = Date.now();
+  const result = await callOpenAIJson({
+    input: buildMemoryWriterInput(payload),
+    name: "sage_memory_writer",
+    schema: memoryWriterSchema(),
+    maxOutputTokens: 720,
+  });
+
+  if (result.status !== 200) {
+    return {
+      status: result.status,
+      body: buildMemoryWriterError({
+        error: result.body.error || "Memory writer unavailable.",
+        latencyMs: Date.now() - startedAt,
+      }),
+    };
+  }
+
+  const { candidates, guardian } = applyMemoryGuardian(
+    result.body.json.candidates || [],
+    collectAllowedEvidenceIds(payload),
+  );
+
+  return {
+    status: 200,
+    body: {
+      status: "ok",
+      model: result.body.model,
+      latencyMs: Date.now() - startedAt,
+      candidates,
+      guardian,
+    },
+  };
 }
 
 async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) {
@@ -550,6 +669,129 @@ function buildSafeFallbackText({ payload, crisis }) {
   ].join("\n\n");
 }
 
+function applyMemoryGuardian(rawCandidates, allowedEvidenceIds) {
+  const guardian = [];
+  const candidates = [];
+
+  for (const [index, rawCandidate] of rawCandidates.entries()) {
+    const candidate = normalizeMemoryCandidate(rawCandidate, index);
+    const reasons = getMemoryGuardianReasons(candidate, allowedEvidenceIds);
+    const status = reasons.length > 0 ? "reject" : "allow";
+
+    guardian.push({
+      candidateId: candidate.id,
+      status,
+      reasons,
+    });
+
+    if (status === "allow") {
+      candidates.push(candidate);
+    }
+  }
+
+  return { candidates, guardian };
+}
+
+function normalizeMemoryCandidate(candidate, index) {
+  const fallbackId = `candidate_${index + 1}`;
+  return {
+    id: cleanIdentifier(candidate?.id) || fallbackId,
+    kind: String(candidate?.kind || ""),
+    text: String(candidate?.text || "").trim(),
+    confidence: Number(candidate?.confidence),
+    evidenceIds: normalizeStringArray(candidate?.evidenceIds),
+    tags: normalizeStringArray(candidate?.tags).map(cleanTag).filter(Boolean),
+  };
+}
+
+function getMemoryGuardianReasons(candidate, allowedEvidenceIds) {
+  const reasons = [];
+
+  if (!memoryCandidateKinds.includes(candidate.kind)) reasons.push("invalid_kind");
+  if (!candidate.text) reasons.push("empty_text");
+  if (!Number.isFinite(candidate.confidence) || candidate.confidence < 0.55) reasons.push("low_confidence");
+  if (candidate.evidenceIds.length === 0) reasons.push("missing_evidence");
+  if (candidate.evidenceIds.some((evidenceId) => !allowedEvidenceIds.has(evidenceId))) {
+    reasons.push("unsupported_evidence");
+  }
+
+  for (const rule of memoryGuardianRules) {
+    if (rule.patterns.some((pattern) => pattern.test(candidate.text))) {
+      reasons.push(rule.reason);
+    }
+  }
+
+  return [...new Set(reasons)];
+}
+
+function collectAllowedEvidenceIds(payload) {
+  const ids = new Set();
+  for (const value of [payload?.turn?.userMessageId, payload?.turn?.avalokaMessageId]) {
+    const id = String(value || "").trim();
+    if (id) ids.add(id);
+  }
+
+  const feedback = payload?.feedback;
+  if (feedback && typeof feedback === "object") {
+    for (const field of ["id", "feedbackId", "messageId"]) {
+      const id = String(feedback[field] || "").trim();
+      if (id) ids.add(id);
+    }
+  }
+
+  return ids;
+}
+
+function normalizeStringArray(value) {
+  if (!Array.isArray(value)) return [];
+  return [
+    ...new Set(
+      value
+        .map((item) => String(item || "").trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function cleanIdentifier(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 80);
+}
+
+function cleanTag(value) {
+  return cleanIdentifier(value).slice(0, 48);
+}
+
+function validateMemoryWriterPayload(payload) {
+  const turn = payload?.turn;
+  if (!turn || typeof turn !== "object") {
+    return "turn is required.";
+  }
+
+  for (const field of ["userMessageId", "avalokaMessageId", "userText", "avalokaText"]) {
+    if (!String(turn[field] || "").trim()) {
+      return `turn.${field} is required.`;
+    }
+  }
+
+  return "";
+}
+
+function buildMemoryWriterError({ error, latencyMs = 0 }) {
+  return {
+    status: "error",
+    model,
+    latencyMs,
+    candidates: [],
+    guardian: [],
+    error,
+  };
+}
+
 function buildHealthPayload() {
   return {
     status: "ok",
@@ -575,6 +817,7 @@ function buildHealthPayload() {
       shadowPost: "POST /api/llm-shadow",
       baifaMap: "POST /api/baifa-map",
       avalokaV2: "POST /api/avaloka-v2",
+      sageMemoryWriter: "POST /api/sage-memory-writer",
     },
     timestamp: new Date().toISOString(),
   };
@@ -658,6 +901,23 @@ const server = createServer(async (request, response) => {
       }
 
       const result = await callAvalokaV2(payload);
+      sendJson(response, result.status, result.body);
+    } catch (error) {
+      sendRequestError(response, error);
+    }
+    return;
+  }
+
+  if (request.method === "POST" && request.url === "/api/sage-memory-writer") {
+    try {
+      const payload = await readJson(request, { maxBytes: maxJsonBodyBytes });
+      const validationError = validateMemoryWriterPayload(payload);
+      if (validationError) {
+        sendJson(response, 400, buildMemoryWriterError({ error: validationError }));
+        return;
+      }
+
+      const result = await callMemoryWriter(payload);
       sendJson(response, result.status, result.body);
     } catch (error) {
       sendRequestError(response, error);
