@@ -23,6 +23,21 @@ export interface MemoryGuardianResult {
   memory?: CareFact;
 }
 
+export interface MemoryReaderContext {
+  scenarioId?: string;
+  dukkhaTypes?: string[];
+  dukkhaPatterns?: string[];
+  responseMoves?: string[];
+  tags?: string[];
+}
+
+export interface MemoryReaderOptions {
+  limit?: number;
+  minConfidence?: number;
+  now?: string;
+  staleAfterDays?: number;
+}
+
 const rejectRules: Array<{ reason: MemoryGuardianReason; patterns: RegExp[] }> = [
   {
     reason: "raw_or_private_detail",
@@ -93,6 +108,95 @@ export function selectCareFacts(facts: CareFact[], activeTags: string[], limit =
     .sort((a, b) => b.relevance - a.relevance || b.fact.confidence - a.fact.confidence)
     .slice(0, limit)
     .map(({ fact }) => fact);
+}
+
+const responseMoveTagAliases: Record<string, string[]> = {
+  reject_punishment_frame: ["self_blame", "illness_fear"],
+  conditions_not_blame: ["self_blame", "illness_fear"],
+  protect_from_self_blame: ["self_blame"],
+  return_from_story_to_step: ["body_grounding", "tone"],
+  protect_before_practice: ["safety", "body_grounding"],
+  give_fearlessness_first: ["safety", "illness_fear"],
+  role_not_whole_self: ["role_loss", "self_worth"],
+  protect_self_worth: ["role_loss", "self_worth"],
+};
+
+const scenarioTagAliases: Record<string, string[]> = {
+  "dukkha:reject_punishment_frame": ["self_blame", "illness_fear"],
+  "dukkha:role_not_whole_self": ["role_loss", "self_worth"],
+};
+
+const riskTags = new Set(["self_blame", "illness_fear", "safety", "crisis", "harm"]);
+
+function expandScenarioTags(scenarioId: string): string[] {
+  const tags = [scenarioId, ...(scenarioTagAliases[scenarioId] || [])];
+  const [, responseMove] = scenarioId.split(":");
+  if (responseMove) {
+    tags.push(responseMove, ...(responseMoveTagAliases[responseMove] || []));
+  }
+
+  return tags;
+}
+
+function deriveReaderTags(context: MemoryReaderContext): string[] {
+  const tags = [
+    ...(context.tags || []),
+    ...(context.dukkhaTypes || []),
+    ...(context.dukkhaPatterns || []),
+    ...(context.scenarioId ? expandScenarioTags(context.scenarioId) : []),
+  ];
+
+  for (const move of context.responseMoves || []) {
+    tags.push(move, ...(responseMoveTagAliases[move] || []));
+  }
+
+  return unique(tags);
+}
+
+function isStaleMemory(memory: CareMemory, now: string, staleAfterDays: number): boolean {
+  const nowMs = Date.parse(now);
+  const lastSeenMs = Date.parse(memory.lastSeenAt || memory.updatedAt || memory.createdAt);
+  if (!Number.isFinite(nowMs) || !Number.isFinite(lastSeenMs)) return false;
+
+  const ageMs = nowMs - lastSeenMs;
+  return ageMs > staleAfterDays * 24 * 60 * 60 * 1000;
+}
+
+export function readCareFactsFromCard(
+  card: CareCard,
+  context: MemoryReaderContext,
+  options: MemoryReaderOptions = {},
+): CareMemory[] {
+  const limit = options.limit ?? 5;
+  const minConfidence = options.minConfidence ?? 0.5;
+  const now = options.now ?? new Date().toISOString();
+  const staleAfterDays = options.staleAfterDays ?? 180;
+  const activeTags = deriveReaderTags(context);
+  const activeTagSet = new Set(activeTags);
+  const riskContext = activeTags.some((tag) => riskTags.has(tag));
+
+  if (activeTags.length === 0 || limit <= 0) return [];
+
+  return card.memories
+    .filter((memory) => memory.confidence >= minConfidence)
+    .filter((memory) => memory.evidenceIds.length > 0)
+    .filter((memory) => !isStaleMemory(memory, now, staleAfterDays))
+    .map((memory) => {
+      const relevance = memory.tags.filter((tag) => activeTagSet.has(tag)).length;
+      const riskBoost =
+        riskContext && memory.kind === "safety_note"
+          ? 200
+          : riskContext && memory.kind === "avoid_response_move"
+            ? 120
+            : 0;
+      const score = relevance * 100 + riskBoost + memory.confidence * 10 + Math.min(memory.occurrences, 5);
+
+      return { memory, relevance, score };
+    })
+    .filter(({ relevance }) => relevance > 0)
+    .sort((a, b) => b.score - a.score || b.memory.updatedAt.localeCompare(a.memory.updatedAt))
+    .slice(0, limit)
+    .map(({ memory }) => memory);
 }
 
 function unique(values: string[]): string[] {

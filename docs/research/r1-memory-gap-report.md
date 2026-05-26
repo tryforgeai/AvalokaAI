@@ -1,6 +1,6 @@
 # R1 Memory Gap Report
 
-Status: Active research gap report, updated after Care Card Store V0
+Status: Active research gap report, updated after Deterministic Memory Reader V0
 Date: 2026-05-26
 Source-of-truth touched: `docs/research/sage-memory-research-plan.md`
 
@@ -24,10 +24,10 @@ The existing system can:
 - enforce minimum SAGE memory doc/eval presence through `content:check`
 - save allowed writer candidates into a local Care Card Store V0
 - export and clear the local Care Card with local Avaloka data
+- read relevant care facts from a stored Care Card with a deterministic Memory Reader V0
 
 The missing core is:
 
-- no Memory Reader wired to stored memory
 - no response-time memory injection into Avaloka V2
 - no automated eval proving memory improves responses without creepiness
 - no standalone Care Card diagnostics, reader diagnostics, or memory-specific clear UX
@@ -39,6 +39,7 @@ conversation + feedback
 -> Memory Writer shadow endpoint
 -> Memory Guardian post-processing
 -> local Care Card Store V0
+-> deterministic Memory Reader V0
 -> developer diagnostics / export
 ```
 
@@ -46,7 +47,7 @@ It is not yet at:
 
 ```text
 stored accepted memory
--> Memory Reader
+-> retrieved care facts
 -> response-time injection
 -> response eval
 ```
@@ -107,9 +108,9 @@ Gap:
 - The Care Card is localStorage-only and developer-path-only.
 - There is no supersede, delete-one-memory, stale-memory behavior, or conflict resolution.
 - There is no standalone Care Card view or memory-specific clear/export control.
-- The Care Card is not yet read back into the live response flow.
+- The Care Card is readable by deterministic helpers, but not yet read back into the live response flow.
 
-The remaining storage gap is lifecycle maturity; the largest R1 gap has moved to Reader and runtime injection.
+The remaining storage gap is lifecycle maturity; the largest R1 gap has moved to runtime injection.
 
 ### 4. Memory Reader
 
@@ -118,13 +119,18 @@ Implemented:
 - `selectCareFacts(facts, activeTags, limit = 5)` exists in `app/src/lib/sageMemory.ts`
 - it selects high-confidence care facts by tag overlap and caps results
 - there is a unit test for selecting relevant facts
+- `readCareFactsFromCard(card, context, options)` reads directly from a stored Care Card
+- the reader derives tags from explicit tags, dukkha types, dukkha patterns, scenario IDs, and response moves
+- in risk contexts, `safety_note` and `avoid_response_move` outrank generic preferences
+- stale and low-confidence memories are excluded
+- tests cover illness fear, self-blame, tone preference, avoid-response moves, stale/low-confidence filtering, and no-match behavior
 
 Gap:
 
-- It is not wired to an actual memory store.
-- It is not wired to Baifa/dukkha/scenario tags in the live flow.
-- It has no recency, evidence quality, safety-note priority, stale-memory suppression, or conflict handling.
 - It does not currently inject facts into Avaloka V2.
+- The tag alias map is still small and hand-authored.
+- There is no conflict handling beyond deterministic ranking.
+- There is no developer diagnostic view of retrieved facts.
 
 ### 5. Runtime Injection
 
@@ -139,7 +145,7 @@ Gap:
 - There is no cap-enforced "3-5 care facts" prompt context.
 - There is no eval that compares with-memory versus without-memory response quality.
 
-This is now the largest R1 gap after Care Card Store V0.
+This is now the largest R1 gap after Care Card Store V0 and Memory Reader V0.
 
 ### 6. Developer Diagnostics
 
@@ -178,15 +184,15 @@ Implemented:
 
 - `evals/sage-memory-cases.json` exists
 - `scripts/check-content-ingestion.mjs` requires SAGE memory docs and at least five memory eval cases
-- local unit tests cover basic guardian rejection/allow and tag-based retrieval
+- local unit tests cover guardian rejection/allow, Care Card persistence, duplicate merge, and deterministic retrieval
 
 Gap:
 
 - `sage-memory-cases.json` is currently a seed/checklist-like eval file, not an executable evaluator for writer output.
 - no script runs LLM Memory Writer against these cases
 - no eval verifies accepted candidates are persisted correctly
-- no eval verifies Memory Reader chooses the right care facts from a stored Care Card
 - no eval verifies memory injection improves the final response without exposing hidden memory logic or feeling creepy
+- no executable cross-case retrieval eval beyond unit tests
 
 ## Requirement Coverage Matrix
 
@@ -194,9 +200,9 @@ Gap:
 |---|---|---|---|
 | Memory Writer candidate extraction | Partial | `prompt/sage-memory-writer-v1.md`, `/api/sage-memory-writer` | Shadow-only; no automated writer eval runner |
 | Memory Guardian rejection rules | Partial | server guardian, `app/src/lib/sageMemory.ts` | duplicated logic, narrow coverage, no revise behavior |
-| Care Card / memory store | Partial | `CareCard`, `CareMemory`, localStorage persistence, export/clear tests | no reader wiring, no graph store, no lifecycle beyond merge |
+| Care Card / memory store | Partial | `CareCard`, `CareMemory`, localStorage persistence, export/clear tests | no graph store, no lifecycle beyond merge |
 | Graph-memory schema experiments | Not started | docs only | no graph node/edge representation in runtime |
-| Deterministic Memory Reader | Prototype only | `selectCareFacts(...)` | not wired to store or live flow |
+| Deterministic Memory Reader | Partial | `readCareFactsFromCard(...)`, tag derivation, priority/stale tests | not injected into live V2 flow; small alias map |
 | Response injection with 3-5 care facts | Missing | none | V2 prompt/server do not receive retrieved memory |
 | Extraction/rejection/retrieval evals | Partial | seed cases + unit tests | no executable end-to-end SAGE eval runner |
 | Response/privacy evals for memory | Missing | none | no with-memory response comparison |
@@ -207,7 +213,7 @@ Gap:
 
 1. **False sense of R1 completion**
 
-   The UI already says "SAGE Memory Writer", and exports include `sageMemory`, but this is still shadow output. Nothing is remembered for future turns.
+   The UI already says "SAGE Memory Writer", exports include `sageMemory`, and local Care Card memory exists, but memory is still not used in final responses.
 
 2. **Guardian drift**
 
@@ -217,9 +223,9 @@ Gap:
 
    The repo checks that SAGE eval files exist, but not that the actual writer/guardian/reader behavior passes all cases end to end.
 
-4. **No memory lifecycle**
+4. **Thin memory lifecycle**
 
-   Without add/update/merge/delete/export/clear semantics, approved memory candidates cannot yet become trustworthy long-term memory.
+   Add/update/merge/export/clear now exist at V0 level, but delete-one-memory, supersede, stale review, and conflict resolution are not mature.
 
 5. **Injection safety not yet tested**
 
@@ -227,7 +233,7 @@ Gap:
 
 ## Recommended Next Slice
 
-Do not start with graph database work. The smallest useful Care Card loop is now real in code; the next gap is reading from it.
+Do not start with graph database work. The smallest useful Care Card loop and deterministic reader are now real in code; the next gap is developer-only response injection.
 
 ### Slice 1: Care Card Store V0
 
@@ -260,7 +266,7 @@ Acceptance criteria:
 
 ### Slice 2: Deterministic Memory Reader V0
 
-Status: next recommended slice.
+Status: implemented in code on 2026-05-26.
 
 Goal:
 
@@ -278,6 +284,8 @@ Acceptance criteria:
 - tests cover illness fear, self-blame, tone preference, avoid-response moves, and no-match cases
 
 ### Slice 3: Developer-Only Injection Trial
+
+Status: next recommended slice.
 
 Goal:
 

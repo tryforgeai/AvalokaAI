@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { createEmptyCareCard, guardMemoryCandidate, selectCareFacts, upsertCareMemory } from "./sageMemory";
+import {
+  createEmptyCareCard,
+  guardMemoryCandidate,
+  readCareFactsFromCard,
+  selectCareFacts,
+  upsertCareMemory,
+} from "./sageMemory";
 
 describe("SAGE Lite memory core", () => {
   it("rejects candidates without source evidence", () => {
@@ -155,5 +161,149 @@ describe("SAGE Lite memory core", () => {
       lastSeenAt: "2026-05-26T10:05:00.000Z",
       occurrences: 2,
     });
+  });
+
+  it("reads illness and self-blame care facts from current turn tags", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "safety-self-blame",
+          kind: "safety_note" as const,
+          text: "Do not validate punishment, karmic debt, or blame framing.",
+          confidence: 0.82,
+          evidenceIds: ["feedback-1"],
+          tags: ["self_blame", "illness_fear"],
+          createdAt: "2026-05-26T10:00:00.000Z",
+          updatedAt: "2026-05-26T10:00:00.000Z",
+          lastSeenAt: "2026-05-26T10:00:00.000Z",
+          occurrences: 1,
+        },
+        {
+          id: "avoid-self-blame",
+          kind: "avoid_response_move" as const,
+          text: "Avoid long doctrine when the user is asking whether pain is deserved.",
+          confidence: 0.9,
+          evidenceIds: ["feedback-2"],
+          tags: ["self_blame"],
+          createdAt: "2026-05-26T10:01:00.000Z",
+          updatedAt: "2026-05-26T10:01:00.000Z",
+          lastSeenAt: "2026-05-26T10:01:00.000Z",
+          occurrences: 2,
+        },
+        {
+          id: "tone-short",
+          kind: "tone_preference" as const,
+          text: "User prefers short body-grounded responses.",
+          confidence: 0.96,
+          evidenceIds: ["feedback-3"],
+          tags: ["tone", "body_grounding"],
+          createdAt: "2026-05-26T10:02:00.000Z",
+          updatedAt: "2026-05-26T10:02:00.000Z",
+          lastSeenAt: "2026-05-26T10:02:00.000Z",
+          occurrences: 3,
+        },
+      ],
+    };
+
+    const facts = readCareFactsFromCard(
+      card,
+      {
+        scenarioId: "dukkha:reject_punishment_frame",
+        dukkhaTypes: ["story_added_suffering"],
+        dukkhaPatterns: ["ignorance"],
+        responseMoves: ["reject_punishment_frame", "return_from_story_to_step"],
+        tags: ["tone"],
+      },
+      { now: "2026-05-26T10:10:00.000Z", limit: 3 },
+    );
+
+    expect(facts.map((fact) => fact.id)).toEqual(["safety-self-blame", "avoid-self-blame", "tone-short"]);
+  });
+
+  it("excludes stale and low-confidence care memories", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "fresh",
+          kind: "helpful_response_move" as const,
+          text: "Ground in the body before reflection.",
+          confidence: 0.74,
+          evidenceIds: ["feedback-1"],
+          tags: ["body_grounding"],
+          createdAt: "2026-05-20T10:00:00.000Z",
+          updatedAt: "2026-05-20T10:00:00.000Z",
+          lastSeenAt: "2026-05-20T10:00:00.000Z",
+          occurrences: 1,
+        },
+        {
+          id: "stale",
+          kind: "helpful_response_move" as const,
+          text: "A very old tone preference should not dominate.",
+          confidence: 0.95,
+          evidenceIds: ["feedback-2"],
+          tags: ["body_grounding"],
+          createdAt: "2025-01-01T10:00:00.000Z",
+          updatedAt: "2025-01-01T10:00:00.000Z",
+          lastSeenAt: "2025-01-01T10:00:00.000Z",
+          occurrences: 9,
+        },
+        {
+          id: "low-confidence",
+          kind: "tone_preference" as const,
+          text: "Low-confidence body grounding note.",
+          confidence: 0.49,
+          evidenceIds: ["feedback-3"],
+          tags: ["body_grounding"],
+          createdAt: "2026-05-25T10:00:00.000Z",
+          updatedAt: "2026-05-25T10:00:00.000Z",
+          lastSeenAt: "2026-05-25T10:00:00.000Z",
+          occurrences: 1,
+        },
+      ],
+    };
+
+    const facts = readCareFactsFromCard(
+      card,
+      { responseMoves: ["return_from_story_to_step"], tags: ["body_grounding"] },
+      { now: "2026-05-26T10:10:00.000Z", staleAfterDays: 180 },
+    );
+
+    expect(facts.map((fact) => fact.id)).toEqual(["fresh"]);
+  });
+
+  it("returns no care facts when the current turn has no matching tags", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "illness",
+          kind: "recurring_pain_pattern" as const,
+          text: "Illness fear often needs deblaming first.",
+          confidence: 0.8,
+          evidenceIds: ["feedback-1"],
+          tags: ["illness_fear", "self_blame"],
+          createdAt: "2026-05-26T10:00:00.000Z",
+          updatedAt: "2026-05-26T10:00:00.000Z",
+          lastSeenAt: "2026-05-26T10:00:00.000Z",
+          occurrences: 1,
+        },
+      ],
+    };
+
+    const facts = readCareFactsFromCard(
+      card,
+      { scenarioId: "dukkha:role_not_whole_self", responseMoves: ["protect_self_worth"] },
+      { now: "2026-05-26T10:10:00.000Z" },
+    );
+
+    expect(facts).toEqual([]);
   });
 });
