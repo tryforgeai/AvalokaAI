@@ -2,7 +2,9 @@
 
 日期：2026-05-13
 
-状态：维护流程
+状态：Active maintenance workflow；2026-05-26 已按 R1 研究方向更新
+
+R1 说明：本文最初为 V0/V1 用户验证阶段创建。当前文档园艺必须以 `docs/decisions/decision-log.md` 最新 accepted decision、`docs/product/version-roadmap.md` 的 R1、以及 `docs/research/sage-memory-research-plan.md` 为准。
 
 ## 1. 目的
 
@@ -68,15 +70,15 @@ Avaloka 的方向会随着用户验证改变。为了避免 Agent 复制旧方�
 
 active docs 必须一致表达：
 
-- [ ] 第一版是私人情绪疏导陪伴者。
-- [ ] 第一阶段是 7 天免费验证。
-- [ ] 不做付费实验。
-- [ ] 不做佛法百科。
-- [ ] 不做治疗、医疗或危机服务。
-- [ ] 第一场景是深夜/低谷私人安顿。
-- [ ] 用户可见语言不满口佛言佛语。
+- [ ] 当前 active milestone 是 `R1: SAGE Memory Research Prototype`。
+- [ ] Avaloka 当前是 research-first AI companion lab，不是商业 MVP、付费实验、治疗/医疗/危机服务、宗教 chatbot 或泛情绪聊天产品。
+- [ ] V0/V1 低谷情绪安顿材料是历史证据和研究 fixture，不是当前商业 roadmap。
+- [ ] R1 聚焦 SAGE Lite：Memory Writer、Memory Guardian、Care Card / graph-memory store、Memory Reader、response injection 和 evals。
+- [ ] `docs/kb/` 是 protected internal learning base，不是 archive，也不能因为出现佛法、RAG、长期记忆等词而被归档。
+- [ ] full RAG over large wisdom corpora、payment、account、community、broad growth、GRPO、fine-tuning、production graph database 等仍在 R1 scope 外。
+- [ ] 用户可见语言保持慈悲、清楚、实用、非教义化。
 - [ ] 危机安全闸门优先于普通回应。
-- [ ] 五项正念守护是隐藏伦理层。
+- [ ] Five Mindfulness Guardian、Precepts Guardian、Memory Guardian 是隐藏安全与质量层。
 
 ## 6. 文档状态判断
 
@@ -105,12 +107,25 @@ active docs 必须一致表达：
 
 - `README.md`
 - `AGENTS.md`
-- 当前用户验证计划。
-- 当前商业计划。
-- 当前 MVP 设计。
-- 当前系统模块说明。
-- 当前回应质量 checklist。
-- 当前实验记录模板。
+- `docs/product/product-vision.md`
+- `docs/product/version-roadmap.md`
+- `docs/decisions/decision-log.md`
+- `docs/research/sage-memory-research-plan.md`
+- `docs/engineering/avaloka-memory-engine-v1.md`
+- `docs/engineering/avaloka-memory-engine-v1.zh.md`
+- `docs/engineering/harness-engineering-setup.md`
+- `docs/engineering/ai-production-safety-harness.md`
+- `docs/kb/README.md`
+- `docs/kb/` 下的 source、derived、AI research、podcast/source notes，除非有明确人工决定移动。
+- 当前回应质量 checklist 和 failure log。
+
+以下文件可以保留在 `docs/` 作为 historical fixture，但必须清楚标注为 historical，不得冒充当前 active roadmap：
+
+- V0/V1 business plans。
+- V0/V1 validation runbooks。
+- V0/V1 personas and candidate profiles。
+- V0/V1 response libraries and scenario responses。
+- 旧 superpowers specs/plans/reviews。
 
 ## 9. 完成标准
 
@@ -122,4 +137,3 @@ active docs 必须一致表达：
 - [ ] AGENTS.md 指向正确入口。
 - [ ] 没有重复互相冲突的计划。
 - [ ] 当前下一步行动清楚。
-

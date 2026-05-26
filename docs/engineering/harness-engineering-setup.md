@@ -28,14 +28,14 @@ Avaloka uses an agent-first operating model:
 | Field | Value |
 |---|---|
 | Project | Avaloka AI |
-| Current stage | User discovery + 7-day free validation |
-| Final vision | Private compassionate-wisdom companionship for vulnerable emotional moments |
-| Current version | V0 |
-| Next version | V1 local MVP after validation |
-| Target user | 45-60 year-old overseas Chinese women facing loneliness, illness fear, aging, death anxiety, childlessness/DINK regret, or meaning collapse |
-| First use case | Late-night or low-moment private emotional settling |
-| Non-goals | No Buddhist encyclopedia, no therapy/medical/crisis product, no payment test in V0, no full RAG first |
-| Success criteria | 5 users, 3/5 use 4+ days, 2/5 real low-moment unprompted opens, 2/5 want continued free use, 0 serious safety failures |
+| Current stage | Research-first local prototype |
+| Final vision | Foundational AI research project for long-term compassionate companion agents |
+| Current version | R1: SAGE Memory Research Prototype |
+| Next version | R2 graph-memory prototype only after R1 proves local extraction, rejection, retrieval, response, and privacy evals |
+| Primary scenario | Long-term compassionate companion memory for emotionally vulnerable low moments |
+| First research use case | Local SAGE Lite pipeline with Memory Writer, Memory Guardian, Care Card / graph-memory store, Memory Reader, response injection, and evals |
+| Non-goals | No commercial launch, payment test, account system, community, broad growth work, full RAG over large wisdom corpora, graph neural reader, GRPO, fine-tuning, medical/therapy/crisis positioning, or religious chatbot |
+| Success criteria | Local SAGE Lite can extract, reject, store, retrieve, and inject sparse evidence-backed memory; Memory Guardian blocks unsafe/private/speculative candidates; response evals improve personalization without creepiness; existing crisis, guardian, prompt-injection, and response-quality gates still pass |
 
 ## Agent Workflow
 
@@ -55,6 +55,7 @@ For each meaningful change:
 
 - Do not rely on chat memory as source of truth.
 - Do not keep conflicting plans active.
-- Do not skip validation criteria.
-- Do not implement full MVP features before V0 validates user pull.
+- Do not skip research, safety, eval, or coverage gates.
+- Do not treat V0/V1 validation artifacts as the active roadmap.
+- Do not prioritize commercial MVP, payment, account, community, or growth work during R1.
 - Do not revive archived Buddhist AI / RAG-first / broad emotional chatbot direction.

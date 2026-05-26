@@ -1,7 +1,9 @@
 # Avaloka V1 Response Naturalness Plan
 
-Status: Active product design note  
+Status: R1 response-quality reference, not active product roadmap
 Purpose: Reduce rigid three-part responses while keeping Avaloka safe, short, and testable.
+
+R1 note: This remains useful for response naturalness and eval design, but it does not make V1 Alpha the active milestone.
 
 ## 1. Problem
 
@@ -206,4 +208,3 @@ Avaloka 的回应结构应该从：
 ```text
 有安全骨架，但外在节奏自然变化
 ```
-

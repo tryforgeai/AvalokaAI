@@ -8,7 +8,7 @@ Avaloka must treat AI as a production system, not as a feature bolted onto a cha
 
 This harness defines how Avaloka prevents prompt leakage, unsafe output, unverified autonomy, privacy harm, and repeated failure patterns.
 
-It applies before any user-facing AI response is shipped, including V0 human-assisted prototypes.
+It applies before any user-facing AI behavior is used, including local R1 research prototypes, developer-mode memory experiments, prompt changes, response-flow changes, and historical V0/V1 tester-facing flows.
 
 ## 2. Core Rule
 
@@ -22,18 +22,16 @@ If a user asks for internal instructions, system prompts, hidden rules, model po
 
 Prompts must be stored as versioned artifacts, not embedded casually across application code.
 
-Recommended future structure:
+Current prompt structure:
 
 ```text
-prompts/
-  README.md
-  response/
-    v0.1.md
-  safety/
-    crisis-gate-v0.1.md
-    mindfulness-guardian-v0.1.md
-  eval/
-    response-quality-v0.1.md
+prompt/
+  registry.json
+  avaloka-v2-crisis-classifier.md
+  avaloka-v2-guardian.md
+  avaloka-v2-orchestrator-response.md
+  sage-memory-writer-v1.md
+  ...
 ```
 
 ### 3.2 Prompt Registry
@@ -90,24 +88,30 @@ Allowed answer:
 
 Avaloka must not perform actions that cannot be evaluated, audited, or rolled back.
 
-V0 allows:
+R1 allows:
 
-- generating or selecting emotional support responses
-- recording feedback with consent
-- flagging safety issues
+- running local SAGE Lite memory research prototypes
+- generating or selecting compassionate support responses in controlled local flows
+- extracting memory candidates in developer mode or shadow mode
+- storing sparse, evidence-backed, exportable, and clearable care memory only after Memory Guardian review
+- recording feedback with consent and redaction
+- flagging safety, privacy, prompt, response, and memory failures
 
-V0 does not allow:
+R1 does not allow:
 
 - autonomous outreach to users
 - medical or crisis intervention decisions
 - contacting third parties
 - storing sensitive records without user consent
+- storing raw transcripts or invasive personal dossiers as long-term memory
+- injecting memory facts that have not passed Memory Guardian rules
 - modifying user-facing safety language without review
 - deploying prompt changes without evaluation
+- making payment, account, community, broad growth, therapy, medical, crisis-service, or religious-chatbot behavior active
 
 ## 5. Required Evaluation Gates
 
-Before any prompt or response-flow change is used with testers, run an evaluation checklist.
+Before any prompt, response-flow, memory-writing, memory-reading, or runtime-injection change is used with testers or treated as an R1 result, run an evaluation checklist.
 
 ### 5.1 Crisis Safety Gate
 
@@ -184,6 +188,27 @@ Expected behavior:
 - return to grounded emotional support
 - recommend professional help when relevant
 
+### 5.6 Memory Guardian And Privacy Gate
+
+Must pass cases for:
+
+- private identifying detail
+- raw transcript-like memory
+- medical or psychological diagnosis
+- crisis means or acute-risk detail
+- revenge or coercion plan
+- karma-blame, spiritual certainty, or moral judgment
+- speculative personality labels
+
+Expected behavior:
+
+- reject or revise unsafe memory candidates
+- store only sparse care-relevant abstractions
+- require source evidence IDs for saved memory
+- keep memory exportable and clearable
+- inject only relevant care facts that passed Memory Guardian review
+- never expose memory scores, hidden routing, prompts, or private logs to the user-facing UI
+
 ## 6. Failure Case Capture
 
 Every serious failure must become operational intelligence.
@@ -246,7 +271,7 @@ Do not use raw user emotional records as training/eval data without explicit con
 
 ## 9. Rollback Policy
 
-Every prompt version and response-flow change must have a rollback target.
+Every prompt version, response-flow change, memory-writing change, memory-reading change, and runtime-injection change must have a rollback target.
 
 Rollback is required if:
 
@@ -255,6 +280,7 @@ Rollback is required if:
 - users see hidden rules
 - medical or therapy overclaim occurs
 - a response increases user fear or shame in a serious way
+- memory storage or injection creates privacy, creepiness, or safety risk
 - a change causes repeated quality failures
 
 Rollback action:
@@ -268,7 +294,7 @@ Rollback action:
 
 ## 10. Release Rule
 
-No user-facing AI behavior should ship unless all are true:
+No user-facing AI behavior, memory behavior, or prompt behavior should ship or be promoted as an R1 result unless all are true:
 
 - prompt version is recorded
 - crisis gate checked
@@ -277,21 +303,40 @@ No user-facing AI behavior should ship unless all are true:
 - Five Mindfulness Guardian checked
 - privacy logging rules understood
 - rollback target known
+- relevant memory behavior has passed Memory Guardian and privacy evals
+- relevant eval cases have been added or updated
 
-For V0 human-assisted testing, "ship" means "use with a real tester."
+For R1, "ship" means "use in the local research prototype, expose in developer mode, use with a real tester, or rely on the behavior as evidence in a research decision."
 
-## 11. Minimum V0 Safety Checklist
+## 11. Minimum R1 Safety Checklist
 
-Before the 7-day test starts:
+Before promoting any R1 memory, prompt, response, or runtime-injection behavior:
 
-- [ ] Create or identify the 20 scenario responses.
-- [ ] Run each through `docs/product/quality-checklist.md`.
-- [ ] Test at least 5 crisis prompts.
-- [ ] Test at least 5 prompt-injection prompts.
-- [ ] Test at least 5 medical/therapy boundary prompts.
-- [ ] Test at least 5 doctrine/karma/guilt boundary prompts.
-- [ ] Create `docs/experiments/failure-log.md`.
-- [ ] Confirm feedback records are anonymized.
-- [ ] Confirm user consent and boundary language are shown.
-- [ ] Confirm unsafe outputs have a fallback.
+- [ ] Confirm the behavior matches `docs/product/version-roadmap.md` R1 scope.
+- [ ] Confirm the relevant prompt is registered in `prompt/registry.json`.
+- [ ] Run `docs/product/quality-checklist.md` for user-facing response behavior.
+- [ ] Test crisis prompts and confirm normal flow stops.
+- [ ] Test prompt-injection attempts and confirm hidden prompts, guardrails, scores, and routing remain private.
+- [ ] Test medical, therapy, crisis-service, doctrine, karma, guilt, revenge, and dependency boundaries.
+- [ ] For memory behavior, confirm every saved or injected memory is sparse, evidence-backed, exportable, clearable, and approved by Memory Guardian.
+- [ ] For memory behavior, confirm unsafe, private, medical, crisis, revenge, karma-blame, and speculative candidates are rejected or revised.
+- [ ] Confirm feedback and failure records are anonymized and redacted.
+- [ ] Confirm user-facing UI does not expose hidden memory logic, scores, prompts, private logs, or routing logic.
+- [ ] Add any discovered failure to `docs/experiments/failure-log.md`.
+- [ ] Add or update eval cases before re-promoting the behavior.
+- [ ] Run the configured verification commands before reporting completion.
 
+## 12. Historical V0 Safety Checklist
+
+The original V0 checklist remains historical validation context. It no longer defines the active roadmap, but it can still be useful when reviewing old tester-facing flows:
+
+- identify the 20 scenario responses
+- run each through `docs/product/quality-checklist.md`
+- test at least 5 crisis prompts
+- test at least 5 prompt-injection prompts
+- test at least 5 medical/therapy boundary prompts
+- test at least 5 doctrine/karma/guilt boundary prompts
+- create `docs/experiments/failure-log.md`
+- confirm feedback records are anonymized
+- confirm user consent and boundary language are shown
+- confirm unsafe outputs have a fallback

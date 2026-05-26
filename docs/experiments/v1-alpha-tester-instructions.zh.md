@@ -1,7 +1,9 @@
 # Avaloka V1 Alpha 测试者说明
 
-> **用途**：给 3-5 位可信测试者使用本地 V1 Alpha 前阅读。  
-> **版本**：V1 Alpha  
+> **状态**：Historical V1 Alpha tester instructions；当前不作为 active tester handoff。
+> **R1 说明**：当前 active milestone 是 SAGE Memory Research Prototype。若 R1 需要真实 tester，必须先创建 R1-specific safety, privacy, and memory research instructions。
+> **用途**：给 3-5 位可信测试者使用本地 V1 Alpha 前阅读。
+> **版本**：V1 Alpha
 > **测试性质**：免费、小范围、产品验证，不是医疗、心理治疗或危机服务。
 
 ## 1. Avaloka 是什么
@@ -142,4 +144,3 @@ Avaloka 可以陪你写下此刻感受，但不能替代真人安全支持。
 3. 哪类时刻最适合 Avaloka？
 4. 哪类时刻 Avaloka 不适合？
 5. 你最希望下一版改什么？
-

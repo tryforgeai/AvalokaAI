@@ -1,5 +1,9 @@
 # LLM Orchestrator V2 Implementation Plan
 
+Status: Implemented historical plan; Avaloka V2 now exists as the local LLM orchestration surface for R1 experiments.
+
+R1 note: Do not execute this plan from scratch. Use it only to understand the existing `/api/avaloka-v2` architecture, prompts, evals, and developer diagnostics.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a developer-only LLM-native Avaloka V2 flow where crisis triage, Baifa mapping, natural response generation, and guardian review are handled by LLM calls under strict schemas and local fallback.

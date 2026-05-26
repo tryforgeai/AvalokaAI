@@ -2,6 +2,10 @@
 
 日期：2026-05-13
 
+状态：Historical governance context；部分 V0/V1 阶段判断已被 2026-05-26 R1 研究方向取代
+
+R1 说明：本文保留 OpenAI Harness Engineering 对 Avaloka agent-first 文档治理的启发，但关于“用户发现和 7 天免费验证阶段”的项目判断已经过时。当前 active milestone 以 `docs/product/version-roadmap.md` 的 `R1: SAGE Memory Research Prototype` 为准。
+
 来源：[OpenAI Harness Engineering](https://openai.com/index/harness-engineering/)
 
 ## 1. 文章核心总结
@@ -24,9 +28,9 @@ OpenAI 这篇文章的核心不是“AI 写代码很快”，而是：
 
 Avaloka 现在还不适合照搬 OpenAI 的“0 行人工代码”模式。
 
-原因：
+原因（历史判断，已被 R1 方向取代）：
 
-- Avaloka 还在用户发现和 7 天免费验证阶段。
+- 当时判断 Avaloka 还在用户发现和 7 天免费验证阶段。
 - 最大风险不是工程速度，而是用户是否真的需要、是否持续使用、回应是否安全。
 - 产品涉及情绪低谷、抑郁、死亡焦虑、病痛恐惧，安全边界比速度更重要。
 

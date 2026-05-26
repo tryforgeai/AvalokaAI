@@ -1,8 +1,10 @@
 # Buddhist Precepts Guardian
 
-Status: V1 product safety source  
-Scope: Avaloka non-crisis response guardrail  
+Status: Active R1 safety source and runtime guardrail reference
+Scope: Avaloka non-crisis response guardrail
 Related: `docs/kb/derived/五项正念修习-输出守护.zh.md`, `docs/kb/derived/baifa-mind-state-mapper.zh.md`
+
+R1 note: This document remains active because `prompt/registry.json` binds it to the Avaloka V2 guardian and local safety/eval flow. The name is historical; the behavior is a non-user-facing safety layer, not religious instruction.
 
 ## Purpose
 
@@ -105,4 +107,3 @@ Say instead:
 - "That explanation sounds like it is punishing you. We do not have to follow it."
 - "I cannot know that for certain. I can stay with what is here right now."
 - "Let's stop the search page for tonight and let your body come back a little."
-

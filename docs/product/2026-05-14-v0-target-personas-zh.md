@@ -1,7 +1,8 @@
 # Avaloka V0 目标用户 Persona
 
 > **用途**：V0 招募、筛选 call、测试解释和场景覆盖参考
-> **状态**：用户假设，不是验证结果
+> **状态**：Historical V0 recruitment hypothesis；不是当前商业 ICP 或验证结果
+> **R1 说明**：本文保留为历史 persona 和研究场景 fixture。当前 Avaloka 不以这些 persona 作为商业 roadmap，而以 R1 memory/safety/eval research 为主。
 > **版本**：v1.0
 
 这些 persona 用来帮助招募 5 位目标用户，但不能替代真实用户行为。V0 是否成立，仍以 7 天测试记录为准。
@@ -285,4 +286,3 @@
 - Catherine：低（无宗教，人文播客）
 
 没有人是"已经在修行"的状态，这符合当前 ICP 判断。
-

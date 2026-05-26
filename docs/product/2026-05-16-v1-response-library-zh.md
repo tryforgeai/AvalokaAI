@@ -3,7 +3,8 @@
 > **用途**：V1 local MVP 与第二轮免费测试的回应资产
 > **目标用户**：海外华人女性，在深夜或低谷时出现身体紧绷、自责、孤独、慢性病焦虑、意义空白，且不愿把这些话告诉家人
 > **版本**：v1.0
-> **状态**：V1 产品资产，使用前必须通过 AI Production Safety Harness
+> **状态**：R1 test-scenario fixture；源自 V1 产品资产，当前不定义 active roadmap
+> **R1 说明**：本文保留为 local demo、response-quality eval、memory/retrieval 研究场景素材。当前里程碑不是 V1 第二轮免费测试，而是 R1 SAGE Memory Research Prototype。
 
 ---
 
@@ -377,4 +378,3 @@ Avaloka 现在最擅长的不是替你制定方案，而是在你被情绪压住
 | H1 | 用户想要具体解决方案 | 使用边界 |
 | H2 | 用户要求医疗判断 | 使用边界 |
 | H3 | 用户要求死亡后的确定答案 | 使用边界 |
-

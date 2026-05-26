@@ -1,7 +1,9 @@
 # V1 Alpha Runtime Response Moves
 
-Status: Active runtime reference  
+Status: R1 local demo/runtime reference, not active product roadmap
 Purpose: List the wisdom response moves that are actually active in the local MVP.
+
+R1 note: These moves remain useful for local response behavior, evals, and memory research fixtures. They do not make V1 Alpha the active milestone.
 
 ## Selection Principle
 
@@ -76,4 +78,3 @@ Do not output:
 - afterlife certainty
 - medical diagnosis
 - Avaloka-as-only-support language
-

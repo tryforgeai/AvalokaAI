@@ -1,5 +1,9 @@
 # Compassion OS Planner Runtime Implementation Plan
 
+Status: Implemented historical plan; Compassion OS planner is now part of the local Avaloka V2 research surface.
+
+R1 note: Do not execute this plan from scratch. Use it only to understand the current planner prompt, server orchestration, debug UI, exports, and eval gates.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add an OpenAI-driven multi-label Compassion OS Planner to Avaloka V2 runtime, debug UI, exports, and content gates.
@@ -85,4 +89,3 @@
 
 - [ ] All commands pass.
 - [ ] Coverage remains at or above 80%.
-

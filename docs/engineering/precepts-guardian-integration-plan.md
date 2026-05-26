@@ -1,8 +1,10 @@
 # Precepts Guardian Integration Plan
 
-Status: V1 engineering plan  
-Primary module: `app/src/lib/preceptsGuardian.ts`  
+Status: Implemented reference for the active Precepts Guardian
+Primary module: `app/src/lib/preceptsGuardian.ts`
 Product source: `docs/product/buddhist-precepts-guardian.md`
+
+R1 note: The core local module and tests exist. Use this document to understand the guardrail design; do not treat it as an unstarted V1 plan.
 
 ## Goal
 
@@ -108,4 +110,3 @@ If a generated response fails:
 - No automatic judgment of "open exceptions" beyond life/safety protection.
 - No user-facing precepts explanation.
 - No medical, therapy, crisis, or religious authority positioning.
-

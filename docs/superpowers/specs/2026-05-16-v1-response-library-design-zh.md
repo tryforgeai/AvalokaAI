@@ -2,7 +2,9 @@
 
 日期：2026-05-16
 
-状态：Approved design for V1 response library update
+状态：Implemented historical design for response-library fixtures
+
+R1 说明：本文保留为 response-quality、local demo 和 memory/eval fixture 的设计来源，不定义 active product roadmap。
 
 ## 1. 目的
 
@@ -96,4 +98,3 @@ V1 response library 必须明确禁止：
 更新：
 
 - `docs/product/version-roadmap.md`
-

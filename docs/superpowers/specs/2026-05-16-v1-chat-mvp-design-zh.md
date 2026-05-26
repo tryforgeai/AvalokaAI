@@ -2,7 +2,9 @@
 
 日期：2026-05-16
 
-状态：Approved design for V1 local MVP
+状态：Implemented historical design for the local app now used as the R1 demo surface
+
+R1 说明：本文保留为当前 local app 的设计来源，不定义 active product roadmap。
 
 ## 1. 目标
 
@@ -156,4 +158,3 @@ MVP 完成后应满足：
 - 反馈可以保存到 localStorage。
 - 记录可以导出 JSON。
 - UI 适合深夜低刺激使用。
-

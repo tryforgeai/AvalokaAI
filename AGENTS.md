@@ -34,7 +34,7 @@ The previous low-moment emotional settling product direction remains the test sc
 
 ## Required Reading
 
-Read these before making product, system design, or planning changes:
+Read these active source-of-truth documents before making product, system design, research, safety, prompt, memory, or planning changes:
 
 1. `README.md`
 2. `docs/product/product-vision.md`
@@ -45,28 +45,41 @@ Read these before making product, system design, or planning changes:
 7. `docs/engineering/avaloka-memory-engine-v1.zh.md`
 8. `DESIGN.md`
 9. `docs/kb/README.md`
-10. `docs/experiments/v1-alpha-readiness-checklist.md`
-11. `docs/business/2026-05-12-avaloka-ai-7-day-user-validation-zh.md`
-12. `docs/business/2026-05-12-avaloka-ai-business-plan-revision-zh.md`
-13. `docs/superpowers/specs/2026-05-06-avaloka-ai-mvp-design-zh.md`
-14. `docs/superpowers/plans/2026-05-06-avaloka-ai-mvp-zh.md`
-15. `docs/superpowers/plans/2026-05-06-avaloka-ai-system-modules-explained-zh.md`
-16. `docs/superpowers/plans/2026-05-06-avaloka-ai-plan-module-map-zh.md`
-17. `docs/engineering/harness-engineering-setup.md`
-18. `docs/engineering/ai-production-safety-harness.md`
-19. `docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md`
-20. `docs/engineering/agentic-coding-workflow-for-avaloka.md`
-21. `docs/experiments/validation-runbook.md`
-22. `docs/experiments/user-feedback-log-template.md`
-23. `docs/experiments/failure-log.md`
-24. `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
-25. `docs/product/2026-05-16-v1-response-library-zh.md`
-26. `docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md`
-27. `docs/product/2026-05-14-v0-target-personas-zh.md`
-28. `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
-29. `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
-30. `docs/product/quality-checklist.md`
-31. `docs/maintenance/doc-gardening-checklist.md`
+10. `docs/engineering/harness-engineering-setup.md`
+11. `docs/engineering/ai-production-safety-harness.md`
+12. `docs/engineering/agentic-coding-workflow-for-avaloka.md`
+13. `docs/engineering/content-ingestion-test-gate.md`
+14. `docs/experiments/failure-log.md`
+15. `docs/product/quality-checklist.md`
+16. `docs/product/buddhist-precepts-guardian.md`
+17. `docs/maintenance/doc-gardening-checklist.md`
+
+Historical fixtures may be read when they are directly relevant to a task, but they do not define the active roadmap:
+
+- V0/V1 validation and business history:
+  - `docs/business/2026-05-12-avaloka-ai-7-day-user-validation-zh.md`
+  - `docs/business/2026-05-12-avaloka-ai-business-plan-revision-zh.md`
+  - `docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md`
+  - `docs/experiments/v1-alpha-readiness-checklist.md`
+- V0/V1 scenario and response fixtures:
+  - `docs/product/2026-05-14-v0-20-scenario-responses-zh.md`
+  - `docs/product/2026-05-16-v1-response-library-zh.md`
+  - `docs/product/2026-05-14-v0-target-personas-zh.md`
+  - `docs/experiments/2026-05-14-v0-test-user-candidates-zh.md`
+  - `docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md`
+- Superseded V0/V1 plans and reviews:
+  - `docs/superpowers/specs/2026-05-06-avaloka-ai-mvp-design-zh.md`
+  - `docs/superpowers/plans/2026-05-06-avaloka-ai-mvp-zh.md`
+  - `docs/superpowers/plans/2026-05-06-avaloka-ai-system-modules-explained-zh.md`
+  - `docs/superpowers/plans/2026-05-06-avaloka-ai-plan-module-map-zh.md`
+  - `docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md`
+
+## Knowledge Authority
+
+- `docs/` is the active system of record for product, engineering, research, safety, evals, and experiments.
+- `docs/kb/` is Avaloka's protected internal learning base. It is not an archive and must not be gardened away because it contains wisdom, Baifa, dukkha, Compassion OS, SAGE memory, or RAG-related words.
+- Runtime-facing knowledge from `docs/kb/` must be promoted through derived notes, `prompt/registry.json`, prompt files, eval cases, app/server code, and `npm run content:check`.
+- `archive/` is historical reference only and must not override active `docs/`.
 
 ## Operating Rules
 

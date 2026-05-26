@@ -2,7 +2,9 @@
 
 日期：2026-05-12
 
-状态：用户发现阶段
+状态：历史商业假设；用户发现阶段材料，不定义当前 roadmap
+
+R1 说明：2026-05-26 之后，Avaloka 已转为 research-first AI companion lab。本文保留为 V0/V1 商业假设和用户洞察历史材料，不能覆盖 `docs/product/version-roadmap.md` 中的 R1 方向。
 
 ## 1. CEO 判断
 

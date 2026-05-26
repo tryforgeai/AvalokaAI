@@ -1,6 +1,8 @@
 # Avaloka V1 Alpha 导出数据 Review 模板
 
-> **用途**：测试者导出 JSON 后，用于 Day 8 或阶段复盘。  
+> **状态**：Historical V1 Alpha review template；R1 可参考但不直接作为当前实验模板。
+> **R1 说明**：当前 active milestone 是 SAGE Memory Research Prototype。R1 memory/privacy/response eval 应使用专门的研究模板。
+> **用途**：测试者导出 JSON 后，用于 Day 8 或阶段复盘。
 > **原则**：先看真实使用行为，再看主观评价。不要用单句夸奖代替留存证据。
 
 ## 1. 基本信息
@@ -113,4 +115,3 @@
 |  | `docs/experiments/failure-log.md` |
 |  | `evals/wisdom-response-cases.json` |
 |  | `app/src/lib/avalokaSmoke.test.ts` |
-

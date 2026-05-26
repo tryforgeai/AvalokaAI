@@ -2,7 +2,9 @@
 
 日期：2026-05-13
 
-状态：中文主文档
+状态：Historical V0/V1 system module reference；已被 2026-05-26 R1 研究方向取代
+
+R1 说明：本文保留为早期系统模块解释。当前 active architecture 以 `docs/research/sage-memory-research-plan.md`、`docs/engineering/avaloka-memory-engine-v1.md` 和 `docs/engineering/ai-production-safety-harness.md` 为准。
 
 ## 1. 这份文档解决什么问题
 

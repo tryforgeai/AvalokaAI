@@ -1,5 +1,9 @@
 # Avaloka AI MVP 设计文档
 
+状态：Historical V0/V1 MVP design；已被 2026-05-26 R1 研究方向取代
+
+R1 说明：本文保留为早期 MVP 设计参考。当前 active milestone 是 `R1: SAGE Memory Research Prototype`，不是完整 MVP 或 7 天验证架构。
+
 ## 1. 产品定位
 
 Avaloka AI v1 是一个本地、私密的情绪陪伴工具，由慈悲、实际智慧和隐藏伦理守护机制引导。它不是佛教百科，不是通用聊天机器人，也不是心理治疗或紧急支持的替代品。

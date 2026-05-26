@@ -1,7 +1,9 @@
 # Avalokiteshvara Compassion OS Planner Design
 
 Date: 2026-05-19
-Status: Proposed design, approved for planning after user review
+Status: Implemented historical design for the active Compassion OS planner
+
+R1 note: This document explains the design lineage for the active local V2 planner. It does not make V1 Alpha the active milestone.
 Source of truth touched: `docs/kb/derived/avalokiteshvara-compassion-os.zh.md`, `prompt/avaloka-v2-orchestrator-response.md`, `prompt/avaloka-v2-guardian.md`, `server/llm-shadow-server.mjs`, `app/src/types.ts`, `app/src/App.tsx`
 
 ## 1. Goal
@@ -282,4 +284,3 @@ crisis classifier -> Baifa mapper -> response generator -> guardian
 ```
 
 If the Compassion OS planner makes responses worse or unstable, disable the planner call behind one server-side flag and continue passing only Baifa and crisis data to the response generator.
-

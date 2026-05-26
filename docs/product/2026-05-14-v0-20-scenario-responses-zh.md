@@ -3,7 +3,8 @@
 > **用途**：冷启动测试用产品资产
 > **目标用户**：45-60 岁海外华人女性，处于深夜孤独、病痛恐惧、衰老、死亡焦虑、无子/丁克遗憾、意义崩塌等低谷时刻
 > **版本**：v1.0
-> **状态**：V0 测试资产，真实用户测试前必须通过 AI Production Safety Harness
+> **状态**：R1 test-scenario fixture；源自 V0 测试资产，当前不定义 active roadmap
+> **R1 说明**：本文保留为 response-quality、safety、memory/retrieval eval 的历史场景素材。当前里程碑不是 V0 用户测试，而是 R1 SAGE Memory Research Prototype。
 
 ---
 
@@ -289,4 +290,3 @@
 ---
 
 *文档结束*
-
