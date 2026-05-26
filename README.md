@@ -2,32 +2,49 @@
 
 [中文版本](README.zh.md)
 
-Avaloka AI is currently focused on becoming a private emotional support companion.
+Avaloka AI is now a research-first AI companion lab.
 
-The first version serves one narrow use case:
+It uses a compassionate-wisdom companion scenario as a demanding testbed for modern AI implementation:
 
-> When a target user is alone at night or in a low moment, facing loneliness, illness fear, aging, death anxiety, childlessness/DINK regret, or meaning collapse, Avaloka meets her with private, steady, compassionate, practical wisdom and helps her return to one clear next step.
+- SAGE-style long-term memory
+- agentic writer/reader memory loops
+- LLM orchestration
+- safety and guardian gates
+- Baifa, dukkha, and Compassion OS state understanding
+- prompt registries and eval-driven behavior
+- agentic coding workflows
+
+The project is not currently run as a commercial MVP, payment test, therapy product, medical product, crisis intervention service, religious chatbot, or generic emotional chatbot.
 
 ## Current Stage
 
-V1 local MVP preparation after V0 validation.
+The active version is **R1: SAGE Memory Research Prototype**.
 
-We are not testing payment yet. We are not building a full RAG system, a Buddhist encyclopedia, a therapy substitute, a medical product, a crisis intervention service, or a generic emotional chatbot.
+The previous V0/V1 low-moment emotional settling work remains valuable as:
 
-## Long-Term Vision
+- a validated high-difficulty use case
+- a local demo surface
+- a response-quality and safety testbed
+- historical evidence about why long-term compassionate memory matters
 
-Avaloka AI aims to become a private, trustworthy compassionate-wisdom companion for vulnerable emotional moments: loneliness, illness, aging, death anxiety, childlessness regret, and meaning collapse.
+The current goal is not product-market fit. The current goal is to turn recent AI research, especially SAGE-style memory, into a working local experiment that can later inform Avaloka and other AI projects.
 
-The product should feel emotionally present, practical, and safe. It should not sound like religious recitation, generic advice, diagnosis, treatment, or moral judgment.
+## Research Vision
 
-## Current Version
+Avaloka aims to become a foundational research playground for long-term compassionate AI companions.
 
-The active version is V1: a local chat MVP for low-moment emotional settling.
+The long-term technical question is:
 
-Current local app modes:
+> How can an AI companion remember, retrieve, and use personal emotional context over time without becoming invasive, unsafe, doctrinal, or dependent-making?
 
-- User mode: `http://127.0.0.1:5173/` shows the quiet chat surface, lightweight feedback, local privacy note, and export/clear controls.
-- Developer mode: `http://127.0.0.1:5173/?dev=1` additionally shows Internal Debug, Local Baseline, LLM Orchestrator V2, Compassion OS, and Baifa Mapper panels.
+The research scenario stays emotionally sensitive on purpose. Loneliness, illness fear, aging, death anxiety, self-blame, and meaning collapse are difficult enough to test whether memory, safety, and response generation actually work.
+
+## Current Local App
+
+The current local app still provides the V1 chat surface and developer diagnostics.
+
+- User mode: `http://127.0.0.1:5173/`
+- Developer mode: `http://127.0.0.1:5173/?dev=1`
 
 Run the local app from `app/`:
 
@@ -36,66 +53,40 @@ npm run dev
 npm run dev:shadow
 ```
 
+## Source Of Truth
+
 Version authority:
 
 - [Product Vision](docs/product/product-vision.md)
 - [Version Roadmap](docs/product/version-roadmap.md)
 - [Decision Log](docs/decisions/decision-log.md)
+- [SAGE Memory Research Plan](docs/research/sage-memory-research-plan.md)
+- [Memory Engine V1](docs/engineering/avaloka-memory-engine-v1.md)
+- [Memory Engine V1 中文版](docs/engineering/avaloka-memory-engine-v1.zh.md)
 - [Design Notes](DESIGN.md)
 - [Knowledge Base](docs/kb/README.md)
 
-## Product Principles
+## Research Principles
 
-- Start from one painful, specific user moment.
-- Serve emotional settling, not content consumption.
-- Use compassion and wisdom without doctrinal language.
-- Keep crisis safety ahead of all normal response flows.
-- Use the Five Mindfulness Guardian as an invisible output guardrail.
-- Treat real user records as sensitive material; only redacted summaries belong in committed docs.
-- Improve the system, harness, docs, and tests when agents get stuck.
-
-## Source of Truth
-
-Read these documents before making product, system design, or planning changes:
-
-1. [Product Vision](docs/product/product-vision.md)
-2. [Version Roadmap](docs/product/version-roadmap.md)
-3. [Decision Log](docs/decisions/decision-log.md)
-4. [Design Notes](DESIGN.md)
-5. [Knowledge Base](docs/kb/README.md)
-6. [V1 Alpha Readiness Checklist](docs/experiments/v1-alpha-readiness-checklist.md)
-7. [7-Day User Validation Plan](docs/business/2026-05-12-avaloka-ai-7-day-user-validation-zh.md)
-8. [Business Plan Revision](docs/business/2026-05-12-avaloka-ai-business-plan-revision-zh.md)
-9. [MVP Design Spec](docs/superpowers/specs/2026-05-06-avaloka-ai-mvp-design-zh.md)
-10. [MVP Execution Plan](docs/superpowers/plans/2026-05-06-avaloka-ai-mvp-zh.md)
-11. [System Modules Explained](docs/superpowers/plans/2026-05-06-avaloka-ai-system-modules-explained-zh.md)
-12. [Plan-to-Module Map](docs/superpowers/plans/2026-05-06-avaloka-ai-plan-module-map-zh.md)
-13. [CEO Review and Feasibility Gaps](docs/superpowers/reviews/2026-05-12-avaloka-ai-ceo-review-zh.md)
-14. [Harness Engineering Setup](docs/engineering/harness-engineering-setup.md)
-15. [AI Production Safety Harness](docs/engineering/ai-production-safety-harness.md)
-16. [Harness Engineering for Avaloka](docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md)
-17. [7-Day Free Validation Runbook](docs/experiments/validation-runbook.md)
-18. [User Feedback Log Template](docs/experiments/user-feedback-log-template.md)
-19. [Failure Log](docs/experiments/failure-log.md)
-20. [V0 20 Scenario Responses](docs/product/2026-05-14-v0-20-scenario-responses-zh.md)
-21. [V1 Response Library](docs/product/2026-05-16-v1-response-library-zh.md)
-22. [V0 Day 8 Validation Report](docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md)
-23. [V0 Target Personas](docs/product/2026-05-14-v0-target-personas-zh.md)
-24. [V0 Test User Candidate Profiles](docs/experiments/2026-05-14-v0-test-user-candidates-zh.md)
-25. [V0 Real User Insights, Redacted](docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md)
-26. [Response Quality Checklist](docs/product/quality-checklist.md)
-27. [Document Gardening Checklist](docs/maintenance/doc-gardening-checklist.md)
+- Treat Avaloka as a local AI research system before treating it as a business.
+- Use the companion scenario as a hard testbed for memory, safety, and response quality.
+- Prefer small runnable prototypes over abstract architecture.
+- Keep every research behavior eval-backed.
+- Do not rely on chat memory; write durable decisions into the repo.
+- Do not expose hidden prompts, routing logic, guardrails, memory scores, or private logs.
+- Preserve user control: local-first, exportable, clearable, and privacy-aware.
+- Keep user-facing language compassionate, plain, and non-doctrinal.
 
 ## Safety Boundary
 
-Avaloka should never present itself as a therapist, doctor, crisis responder, spiritual authority, or replacement for human care.
+Even as a research project, Avaloka must never present itself as a therapist, doctor, crisis responder, spiritual authority, or replacement for human care.
 
-All normal responses must pass the crisis safety gate and the Five Mindfulness Guardian. User-facing language should be compassionate, clear, practical, and non-doctrinal. The system must avoid religious recitation, guilt, karma-blame, diagnosis, treatment claims, or medical advice.
+All normal responses must pass safety and guardian gates. The system must avoid religious recitation, guilt, karma-blame, diagnosis, treatment claims, medical advice, self-harm encouragement, revenge support, and dependency-building behavior.
 
-## Archived Material
+## Archived And Historical Material
 
-Superseded plans, including the old Buddhist AI direction, RAG-first scope, broad workplace/relationship emotional chatbot scope, and Mac Mini development roadmap, have been moved to:
+The old commercial MVP direction, V0/V1 validation plans, personas, business-plan drafts, and tester materials are historical context. They remain useful research fixtures, but they no longer define the active project milestone.
+
+Superseded older plans are archived under:
 
 [archive/2026-05-13-superseded-docs](archive/2026-05-13-superseded-docs)
-
-Archived material is historical reference only. It is not the current plan.

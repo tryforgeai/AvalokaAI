@@ -4,6 +4,95 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-05-26 — Reposition Avaloka As A Research-First AI Companion Lab
+
+Status: Accepted
+
+### Context
+
+The founder changed Avaloka's purpose. The project should no longer be treated primarily as a commercial MVP or near-term business validation effort. Instead, Avaloka should become a foundational AI research and implementation testbed for applying recent AI techniques, especially SAGE-style long-term memory, to emotionally sensitive companion agents.
+
+The compassionate-wisdom companion scenario remains valuable because it is difficult: it stresses memory, safety, privacy, personalization, emotional state understanding, response naturalness, and long-horizon continuity.
+
+### Decision
+
+Reposition Avaloka as a research-first AI companion lab.
+
+Set the active roadmap version to:
+
+> R1: SAGE Memory Research Prototype
+
+R1 should focus on designing and implementing a local SAGE Lite pipeline:
+
+- Memory Writer
+- Memory Guardian
+- Care Card / graph-memory store
+- Memory Reader
+- response injection
+- extraction/rejection/retrieval/response/privacy evals
+
+The previous V0/V1 low-moment companion work becomes historical evidence and a research test scenario, not the active commercial roadmap.
+
+### Rationale
+
+Avaloka is a stronger foundational AI experiment than a near-term business project. It can help the founder learn how to turn new AI papers into working systems, build reusable memory/safety/eval infrastructure, and transfer those patterns to other projects.
+
+### Consequences
+
+- `docs/product/product-vision.md` now describes Avaloka as a research-first AI companion lab.
+- `docs/product/version-roadmap.md` now uses R-series research versions.
+- `docs/research/sage-memory-research-plan.md` becomes the active research plan.
+- Business plans and 7-day validation docs remain historical context.
+- Payment, launch, account, community, and growth work are out of scope.
+- SAGE memory work may proceed as an experiment even though the old V1 commercial validation milestone is paused.
+
+### Affected Docs
+
+- `AGENTS.md`
+- `README.md`
+- `README.zh.md`
+- `docs/product/product-vision.md`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+- `docs/engineering/avaloka-memory-engine-v1.md`
+- `docs/engineering/avaloka-memory-engine-v1.zh.md`
+
+## 2026-05-25 — Keep SAGE-Inspired Memory Lightweight Until V1 Proves Need
+
+Status: Superseded by `2026-05-26 — Reposition Avaloka As A Research-First AI Companion Lab`
+
+### Context
+
+A SAGE-style self-evolving graph memory architecture suggests a useful pattern for long-term AI companionship: separate memory writing from memory reading, keep memory sparse, and require evidence that each memory improves future retrieval or response quality.
+
+Avaloka may eventually need long-term personalization, but the current product stage is V1 local MVP and second free validation. A full graph-memory engine, graph neural network reader, GRPO training loop, or large RAG system would be premature and could create privacy, safety, and scope risk.
+
+### Decision
+
+Add `docs/engineering/avaloka-memory-engine-v1.md` and `docs/engineering/avaloka-memory-engine-v1.zh.md` as English and Chinese proposed designs for a small local Care Card memory layer.
+
+The design borrows SAGE's discipline but not its full technical weight:
+
+- save care-relevant abstractions, not raw transcripts
+- require source evidence for every saved memory
+- store only sparse response preferences, recurring pain patterns, helpful moves, avoid moves, and safety notes
+- keep memory local, exportable, and clearable
+- require eval coverage before any runtime memory injection
+
+### Rationale
+
+Avaloka should become more personal by remembering how to care for a user, not by accumulating an invasive emotional dossier. The current system should continue prioritizing response quality, safety, and real-user validation before adding memory complexity.
+
+### Consequences
+
+The SAGE-inspired memory design is not runtime-active. Future implementation must start with a local Care Card prototype and pass privacy, safety, extraction, rejection, retrieval, and response evals before affecting user-facing replies.
+
+### Affected Docs
+
+- `docs/product/version-roadmap.md`
+- `docs/engineering/avaloka-memory-engine-v1.md`
+- `docs/engineering/avaloka-memory-engine-v1.zh.md`
+
 ## 2026-05-19 — Treat `docs/kb/` As Avaloka's Internal Learning Base
 
 Status: Accepted

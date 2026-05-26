@@ -1,8 +1,10 @@
 # Avaloka V1 Alpha Readiness Checklist
 
-Status: Active checklist  
+Status: Historical checklist, paused by R1 research direction  
 Owner: Main builder / Codex-assisted development  
 Purpose: Decide whether the local V1 MVP is ready for a small Alpha test with 3-5 trusted users.
+
+Note: On 2026-05-26, Avaloka was repositioned as a research-first AI companion lab. This checklist remains useful as historical QA and local demo context, but it no longer defines the active project milestone. The active milestone is R1: SAGE Memory Research Prototype in `docs/product/version-roadmap.md`.
 
 ## 1. Readiness Decision
 

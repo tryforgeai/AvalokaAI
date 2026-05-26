@@ -10,8 +10,16 @@ const baifaUnwholesomeCasesPath = join(repoRoot, "evals/baifa-unwholesome-cases.
 const avalokaV2CasesPath = join(repoRoot, "evals/avaloka-v2-orchestrator-cases.json");
 const avalokaV2GoldenCasesPath = join(repoRoot, "evals/avaloka-v2-golden-cases.json");
 const avalokiteshvaraCasesPath = join(repoRoot, "evals/avalokiteshvara-compassion-cases.json");
+const sageMemoryCasesPath = join(repoRoot, "evals/sage-memory-cases.json");
 const promptRegistryPath = join(repoRoot, "prompt/registry.json");
 const kbReadmePath = join(repoRoot, "docs/kb/README.md");
+const sageResearchPlanPath = join(repoRoot, "docs/research/sage-memory-research-plan.md");
+const memoryEnginePath = join(repoRoot, "docs/engineering/avaloka-memory-engine-v1.md");
+const memoryEngineZhPath = join(repoRoot, "docs/engineering/avaloka-memory-engine-v1.zh.md");
+const sageKbSourcePath = join(repoRoot, "docs/kb/ai-research/sage-self-evolving-graph-memory.md");
+const sageKbSourceZhPath = join(repoRoot, "docs/kb/ai-research/sage-self-evolving-graph-memory.zh.md");
+const sageKbDerivedPath = join(repoRoot, "docs/kb/derived/sage-memory-principles.md");
+const sageKbDerivedZhPath = join(repoRoot, "docs/kb/derived/sage-memory-principles.zh.md");
 const baifaPromptPath = join(repoRoot, "prompt/baifa-mapper-v1.md");
 const avalokiteshvaraCompassionOsPath = join(repoRoot, "docs/kb/derived/avalokiteshvara-compassion-os.zh.md");
 const avalokaV2ResponsePromptPath = join(repoRoot, "prompt/avaloka-v2-orchestrator-response.md");
@@ -40,8 +48,16 @@ assert(existsSync(baifaUnwholesomeCasesPath), "Missing evals/baifa-unwholesome-c
 assert(existsSync(avalokaV2CasesPath), "Missing evals/avaloka-v2-orchestrator-cases.json.");
 assert(existsSync(avalokaV2GoldenCasesPath), "Missing evals/avaloka-v2-golden-cases.json.");
 assert(existsSync(avalokiteshvaraCasesPath), "Missing evals/avalokiteshvara-compassion-cases.json.");
+assert(existsSync(sageMemoryCasesPath), "Missing evals/sage-memory-cases.json.");
 assert(existsSync(promptRegistryPath), "Missing prompt/registry.json.");
 assert(existsSync(kbReadmePath), "Missing docs/kb/README.md.");
+assert(existsSync(sageResearchPlanPath), "Missing docs/research/sage-memory-research-plan.md.");
+assert(existsSync(memoryEnginePath), "Missing docs/engineering/avaloka-memory-engine-v1.md.");
+assert(existsSync(memoryEngineZhPath), "Missing docs/engineering/avaloka-memory-engine-v1.zh.md.");
+assert(existsSync(sageKbSourcePath), "Missing docs/kb/ai-research/sage-self-evolving-graph-memory.md.");
+assert(existsSync(sageKbSourceZhPath), "Missing docs/kb/ai-research/sage-self-evolving-graph-memory.zh.md.");
+assert(existsSync(sageKbDerivedPath), "Missing docs/kb/derived/sage-memory-principles.md.");
+assert(existsSync(sageKbDerivedZhPath), "Missing docs/kb/derived/sage-memory-principles.zh.md.");
 assert(existsSync(baifaPromptPath), "Missing prompt/baifa-mapper-v1.md.");
 assert(existsSync(avalokiteshvaraCompassionOsPath), "Missing docs/kb/derived/avalokiteshvara-compassion-os.zh.md.");
 assert(existsSync(avalokaV2ResponsePromptPath), "Missing prompt/avaloka-v2-orchestrator-response.md.");
@@ -65,7 +81,15 @@ const baifaUnwholesomeCases = existsSync(baifaUnwholesomeCasesPath) ? JSON.parse
 const avalokaV2Cases = existsSync(avalokaV2CasesPath) ? JSON.parse(read(avalokaV2CasesPath)) : [];
 const avalokaV2GoldenCases = existsSync(avalokaV2GoldenCasesPath) ? JSON.parse(read(avalokaV2GoldenCasesPath)) : [];
 const avalokiteshvaraCases = existsSync(avalokiteshvaraCasesPath) ? JSON.parse(read(avalokiteshvaraCasesPath)) : [];
+const sageMemoryCases = existsSync(sageMemoryCasesPath) ? JSON.parse(read(sageMemoryCasesPath)) : [];
 const promptRegistry = existsSync(promptRegistryPath) ? JSON.parse(read(promptRegistryPath)) : { prompts: [] };
+const sageResearchPlan = existsSync(sageResearchPlanPath) ? read(sageResearchPlanPath) : "";
+const memoryEngine = existsSync(memoryEnginePath) ? read(memoryEnginePath) : "";
+const memoryEngineZh = existsSync(memoryEngineZhPath) ? read(memoryEngineZhPath) : "";
+const sageKbSource = existsSync(sageKbSourcePath) ? read(sageKbSourcePath) : "";
+const sageKbSourceZh = existsSync(sageKbSourceZhPath) ? read(sageKbSourceZhPath) : "";
+const sageKbDerived = existsSync(sageKbDerivedPath) ? read(sageKbDerivedPath) : "";
+const sageKbDerivedZh = existsSync(sageKbDerivedZhPath) ? read(sageKbDerivedZhPath) : "";
 assert(Array.isArray(baifaCases), "baifa-mapper-cases.json must be an array.");
 assert(baifaCases.length >= 8, "baifa-mapper-cases.json must include at least 8 cases.");
 assert(Array.isArray(baifaUnwholesomeCases), "baifa-unwholesome-cases.json must be an array.");
@@ -76,7 +100,21 @@ assert(Array.isArray(avalokaV2GoldenCases), "avaloka-v2-golden-cases.json must b
 assert(avalokaV2GoldenCases.length >= 20, "avaloka-v2-golden-cases.json must include at least 20 cases.");
 assert(Array.isArray(avalokiteshvaraCases), "avalokiteshvara-compassion-cases.json must be an array.");
 assert(avalokiteshvaraCases.length >= 8, "avalokiteshvara-compassion-cases.json must include at least 8 cases.");
+assert(Array.isArray(sageMemoryCases), "sage-memory-cases.json must be an array.");
+assert(sageMemoryCases.length >= 5, "sage-memory-cases.json must include at least 5 cases.");
 assert(Array.isArray(promptRegistry.prompts), "prompt/registry.json must include a prompts array.");
+
+for (const term of ["SAGE Lite", "Memory Writer", "Memory Guardian", "Memory Reader", "eval"]) {
+  assert(sageResearchPlan.includes(term), `sage-memory-research-plan.md must include "${term}".`);
+  assert(memoryEngine.includes(term), `avaloka-memory-engine-v1.md must include "${term}".`);
+  assert(sageKbSource.includes(term), `sage-self-evolving-graph-memory.md must include "${term}".`);
+  assert(sageKbDerived.includes(term), `sage-memory-principles.md must include "${term}".`);
+  assert(sageKbSourceZh.includes(term), `sage-self-evolving-graph-memory.zh.md must include "${term}".`);
+  assert(sageKbDerivedZh.includes(term), `sage-memory-principles.zh.md must include "${term}".`);
+}
+for (const term of ["SAGE Lite", "Memory Writer", "Memory Guardian", "Memory Reader", "eval"]) {
+  assert(memoryEngineZh.includes(term), `avaloka-memory-engine-v1.zh.md must include "${term}".`);
+}
 
 const allMindStates = [
   "作意",
@@ -401,6 +439,29 @@ for (const move of ["hear_the_cry_first", "give_fearlessness_first", "compassion
   assert(avalokiteshvaraMoveCoverage.has(move), `Avalokiteshvara compassion evals must cover "${move}".`);
 }
 
+const sageMemoryGroups = new Set();
+const sageMemoryExpected = new Set();
+const sageMemoryCaseIds = new Set();
+for (const testCase of sageMemoryCases) {
+  assert(testCase.id, "Every SAGE memory eval case must have an id.");
+  assert(!sageMemoryCaseIds.has(testCase.id), `Duplicate SAGE memory eval case id: ${testCase.id}`);
+  sageMemoryCaseIds.add(testCase.id);
+  assert(testCase.group, `SAGE memory eval case ${testCase.id} must include group.`);
+  assert(testCase.input, `SAGE memory eval case ${testCase.id} must include input.`);
+  assert(testCase.reason, `SAGE memory eval case ${testCase.id} must include reason.`);
+  sageMemoryGroups.add(testCase.group);
+  if (testCase.expected) sageMemoryExpected.add(testCase.expected);
+  if (testCase.expectedFacts) {
+    assert(Array.isArray(testCase.expectedFacts), `SAGE memory eval case ${testCase.id} expectedFacts must be an array.`);
+  }
+}
+for (const group of ["extraction", "rejection", "retrieval"]) {
+  assert(sageMemoryGroups.has(group), `SAGE memory evals must include group "${group}".`);
+}
+for (const expected of ["allow", "reject"]) {
+  assert(sageMemoryExpected.has(expected), `SAGE memory evals must include expected "${expected}".`);
+}
+
 const dukkhaMap = existsSync(dukkhaMapPath) ? read(dukkhaMapPath) : "";
 const mapperTest = existsSync(dukkhaMapperTestPath) ? read(dukkhaMapperTestPath) : "";
 const responseTest = existsSync(dukkhaResponseTestPath) ? read(dukkhaResponseTestPath) : "";
@@ -460,5 +521,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases.`,
+  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases, ${sageMemoryCases.length} SAGE memory cases.`,
 );

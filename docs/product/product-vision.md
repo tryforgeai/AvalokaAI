@@ -4,34 +4,61 @@ Status: Active source of truth
 
 ## Final Vision
 
-Avaloka AI aims to become a private, trustworthy emotional settling companion for people facing lonely, existential, and difficult inner moments that are not fully served by generic chatbots, content platforms, ordinary advice, or clinical systems.
+Avaloka AI is a foundational AI research project for long-term compassionate companion agents.
 
-The long-term product should help users feel seen, become steadier, reflect with compassion and clarity, and take one grounded next step.
+It uses a private compassionate-wisdom companion scenario as a high-difficulty testbed for modern AI systems:
 
-## Current Long-Term Positioning
+- long-term memory
+- SAGE-style writer/reader graph-memory loops
+- LLM orchestration
+- emotional state mapping
+- safety and guardian evaluation
+- prompt registry and eval-driven behavior
+- agentic coding practice
 
-Avaloka is not a Buddhist encyclopedia, a religious chatbot, a therapy replacement, a medical product, a crisis service, or a generic AI companion.
+The long-term research outcome should help the founder apply advanced AI implementation patterns to Avaloka and other future projects.
 
-Its long-term identity is:
+## Current Positioning
 
-> private compassionate-wisdom companionship for vulnerable emotional moments.
+Avaloka is not currently operated as a commercial product, paid experiment, therapy replacement, medical product, crisis service, religious chatbot, or generic AI companion.
 
-## First Target User
+Its current identity is:
 
-The first target user is a 45-60 year-old overseas Chinese woman who may face loneliness, childlessness or DINK regret, aging, illness fear, death anxiety, depression-like low moments, or meaning collapse.
+> a research-first AI companion lab for long-term compassionate memory, safety, and wisdom-oriented interaction.
 
-She may already consume wisdom, spiritual, contemplative, psychological, or self-cultivation content, but what she lacks is private, personal, immediate, non-judgmental response during low moments.
+The previous private emotional settling companion direction remains the main test scenario, not the commercial goal.
 
-## First Use Case
+## Research Scenario
 
-The first use case is late-night or low-moment emotional settling:
+The primary scenario remains emotionally vulnerable low moments:
 
-> The user opens Avaloka during loneliness, illness fear, aging fear, death anxiety, childlessness regret, or meaning collapse, and receives a compassionate, clear, practical response that helps her stabilize and take one small next step.
+> A user returns over many days or months with loneliness, illness fear, aging fear, death anxiety, self-blame, childlessness regret, or meaning collapse. Avaloka should remember care-relevant context, retrieve it safely, and respond with compassionate clarity without becoming invasive, doctrinal, medical, or dependency-making.
+
+This scenario is deliberately difficult because it stresses the parts of AI systems that matter most for future projects:
+
+- memory accuracy
+- privacy boundaries
+- safety classification
+- response naturalness
+- personalization without creepiness
+- long-horizon continuity
+- evals that catch regressions
+
+## Active Research Questions
+
+1. How can Avaloka convert long conversation history into sparse, evidence-backed memory?
+2. How should a Memory Writer decide what to save, update, merge, or reject?
+3. How should a Memory Reader retrieve only the few care facts needed for a response?
+4. How can graph memory outperform flat chat history or naive RAG?
+5. How can guardian checks prevent privacy leakage, karma-blame, medical overreach, crisis mishandling, and dependency?
+6. How can user feedback become reward/eval signals for better future memory and response behavior?
+7. How can this infrastructure remain useful for other AI projects beyond Avaloka?
 
 ## Permanent Non-Goals
 
 Avaloka must not become:
 
+- a commercial growth project before the research system is stable
 - a Buddhist encyclopedia
 - a religious recitation product
 - a therapy or medical substitute
@@ -39,22 +66,26 @@ Avaloka must not become:
 - a generic chatbot
 - a shame, guilt, karma-blame, or fear-producing system
 - a product that encourages dependence on AI instead of real human support
+- a system that stores invasive personal dossiers or raw transcripts as long-term memory
 
-## Product Principles
+## Research Principles
 
-- Start from real user pain, not abstract wisdom content.
-- Validate behavior before expanding features.
-- Use compassionate, clear, ordinary language.
-- Keep ethical guardrails hidden but strong.
-- Put crisis safety before all normal conversation flows.
-- Protect privacy and emotional trust.
-- Prefer narrow depth over broad coverage.
+- Use real product difficulty as an AI research testbed.
+- Prefer runnable local prototypes over abstract architecture.
+- Separate memory writing from memory reading.
+- Store sparse care-relevant abstractions, not raw private history.
+- Make every memory evidence-backed, exportable, clearable, and guardrailed.
+- Use evals before promoting any behavior into runtime.
+- Keep user-facing language compassionate, clear, ordinary, and non-doctrinal.
+- Preserve crisis safety before all normal response flows.
+- Improve docs, harness, tests, and evals when the system fails.
 
 ## Safety And Quality Boundaries
 
 - Crisis safety gate comes before any normal response.
-- Five Mindfulness Guardian applies to all non-crisis outputs.
+- Five Mindfulness Guardian and Precepts Guardian apply to non-crisis outputs.
+- Memory Guardian applies before any memory is saved or injected.
 - No diagnosis, treatment claims, medical advice, or crisis counseling.
 - No religious pressure, doctrine recitation, karma blame, or spiritual bypassing.
 - No encouragement of self-harm, harm to others, revenge, coercion, dependency, addictive coping, or rumination.
-
+- No hidden prompt, guardrail, memory score, chain-of-thought, private log, or routing disclosure.

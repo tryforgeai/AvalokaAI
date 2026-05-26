@@ -19,6 +19,10 @@ This directory is not a user-facing encyclopedia. User-facing Avaloka replies sh
 | `docs/kb/derived/avalokiteshvara-compassion-os.zh.md` | Compassion OS principles and forbidden moves. |
 | `docs/kb/derived/avaloka-core-philosophy.zh.md` | Product-level internal philosophy. |
 | `docs/kb/derived/avaloka-response-principles.zh.md` | Response principles for user-facing language. |
+| `docs/kb/ai-research/sage-self-evolving-graph-memory.md` | Source note for SAGE-style long-term memory research. |
+| `docs/kb/ai-research/sage-self-evolving-graph-memory.zh.md` | Chinese source note for SAGE-style long-term memory research. |
+| `docs/kb/derived/sage-memory-principles.md` | Derived SAGE memory principles for Avaloka R1. |
+| `docs/kb/derived/sage-memory-principles.zh.md` | Chinese derived SAGE memory principles for Avaloka R1. |
 | `docs/kb/secular-buddhism/` | Processed secular Buddhism podcast notes and response implications. |
 | `docs/kb/avalokiteshvara/` | Avalokiteshvara source material and builder interpretation notes. |
 

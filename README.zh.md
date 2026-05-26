@@ -1,29 +1,48 @@
 # Avaloka AI
 
-当前方向：私人情绪疏导陪伴者。
+Avaloka AI 现在是一个 research-first 的 AI 陪伴系统实验项目。
 
-Avaloka AI 第一版只服务一个核心场景：
+它用“慈悲智慧陪伴”这个高难度场景，来测试和沉淀最新 AI 技术的真实落地能力：
 
-> 当目标用户在深夜、独处、病痛、衰老、死亡焦虑、无子/丁克遗憾或意义崩塌中感到撑不住时，Avaloka 用私密、稳定、慈悲、有智慧的方式接住她，并帮助她回到一个清明的下一步。
+- SAGE 式长期记忆
+- agentic writer/reader 记忆闭环
+- LLM 编排
+- safety / guardian gate
+- 百法、dukkha、Compassion OS 情绪状态理解
+- prompt registry 和 eval-driven AI behavior
+- agentic coding 工作流
+
+这个项目当前不作为商业 MVP、付费实验、心理治疗产品、医疗产品、危机干预服务、宗教 chatbot 或通用情绪聊天产品运行。
 
 ## 当前阶段
 
-V1 本地 MVP 准备阶段。V0 的 7 天免费验证已经通过，现在重点是把低谷情绪安顿的本地聊天原型做好。
+当前 active version 是 **R1：SAGE Memory Research Prototype**。
 
-现在不做付费实验，不做完整 RAG 系统，不做佛法百科，不做心理治疗替代品。
+之前的 V0/V1 低谷情绪安顿工作仍然重要，但它现在的角色变成：
 
-## 最终愿景
+- 一个已经验证过的高难度使用场景
+- 一个本地 demo surface
+- 一个回应质量和安全测试场
+- 一份解释“为什么长期慈悲记忆重要”的历史证据
 
-Avaloka AI 的长期方向是成为一个私密、可信赖的慈悲智慧情绪安顿陪伴者，服务用户在孤独、病痛、衰老、死亡焦虑、无子遗憾和意义崩塌等脆弱时刻的安顿与反思。
+当前目标不是 PMF，也不是商业验证。当前目标是把最新 AI 研究，尤其是 SAGE 式长期记忆，变成一个可以本地运行、可以评估、可以迁移到其他项目的实验系统。
 
-## 当前版本
+## 研究愿景
 
-当前 active version 是 V1：服务低谷情绪安顿的本地聊天 MVP。
+Avaloka 的长期方向，是成为长期陪伴型 AI 的基础研究实验场。
 
-当前本地应用有两个模式：
+核心技术问题是：
 
-- 用户模式：`http://127.0.0.1:5173/`，只显示安静聊天界面、轻量反馈、本地隐私说明，以及导出/清空入口。
-- 开发者模式：`http://127.0.0.1:5173/?dev=1`，额外显示 Internal Debug、Local Baseline、LLM Orchestrator V2、Compassion OS 和 Baifa Mapper。
+> 一个 AI 陪伴者如何长期记住、检索并使用用户的情绪上下文，同时不变得侵入、不安全、不教条、不制造依赖？
+
+我们保留慈悲智慧陪伴场景，是因为它足够难。孤独、病痛恐惧、衰老、死亡焦虑、自责和意义崩塌，能很好地测试记忆、安全和回应生成是不是真的可靠。
+
+## 当前本地应用
+
+当前本地 app 仍然保留 V1 聊天界面和开发者诊断面板。
+
+- 用户模式：`http://127.0.0.1:5173/`
+- 开发者模式：`http://127.0.0.1:5173/?dev=1`
 
 本地运行：
 
@@ -33,48 +52,40 @@ npm run dev
 npm run dev:shadow
 ```
 
+## Source Of Truth
+
 版本权威请看：
 
 - [Product Vision](docs/product/product-vision.md)
 - [Version Roadmap](docs/product/version-roadmap.md)
 - [Decision Log](docs/decisions/decision-log.md)
+- [SAGE Memory Research Plan](docs/research/sage-memory-research-plan.md)
+- [Memory Engine V1](docs/engineering/avaloka-memory-engine-v1.md)
+- [Memory Engine V1 中文版](docs/engineering/avaloka-memory-engine-v1.zh.md)
 - [Design Notes](DESIGN.md)
 - [Knowledge Base](docs/kb/README.md)
 
-## 必读文档
+## 研究原则
 
-1. [Product Vision](docs/product/product-vision.md)
-2. [Version Roadmap](docs/product/version-roadmap.md)
-3. [Decision Log](docs/decisions/decision-log.md)
-4. [Design Notes](DESIGN.md)
-5. [Knowledge Base](docs/kb/README.md)
-6. [V1 Alpha Readiness Checklist](docs/experiments/v1-alpha-readiness-checklist.md)
-7. [7 天用户验证计划](docs/business/2026-05-12-avaloka-ai-7-day-user-validation-zh.md)
-8. [商业计划修订稿](docs/business/2026-05-12-avaloka-ai-business-plan-revision-zh.md)
-9. [MVP 设计文档](docs/superpowers/specs/2026-05-06-avaloka-ai-mvp-design-zh.md)
-10. [MVP 中文执行计划](docs/superpowers/plans/2026-05-06-avaloka-ai-mvp-zh.md)
-11. [系统模块说明](docs/superpowers/plans/2026-05-06-avaloka-ai-system-modules-explained-zh.md)
-12. [计划步骤与系统模块对应表](docs/superpowers/plans/2026-05-06-avaloka-ai-plan-module-map-zh.md)
-13. [CEO 漏洞清单与可行性复盘](docs/superpowers/reviews/2026-05-12-avaloka-ai-ceo-review-zh.md)
-14. [Harness Engineering Setup](docs/engineering/harness-engineering-setup.md)
-15. [AI Production Safety Harness](docs/engineering/ai-production-safety-harness.md)
-16. [Harness Engineering 应用计划](docs/engineering/2026-05-13-harness-engineering-for-avaloka-zh.md)
-17. [7 天免费验证 Runbook](docs/experiments/validation-runbook.md)
-18. [用户反馈记录模板](docs/experiments/user-feedback-log-template.md)
-19. [Failure Log](docs/experiments/failure-log.md)
-20. [V0 20 条场景回应](docs/product/2026-05-14-v0-20-scenario-responses-zh.md)
-21. [V1 回应库](docs/product/2026-05-16-v1-response-library-zh.md)
-22. [V0 Day 8 验证报告](docs/experiments/2026-05-16-v0-day-8-validation-report-zh.md)
-23. [V0 目标用户 Persona](docs/product/2026-05-14-v0-target-personas-zh.md)
-24. [V0 测试用户候选画像](docs/experiments/2026-05-14-v0-test-user-candidates-zh.md)
-25. [V0 真实用户洞察（脱敏版）](docs/experiments/2026-05-14-v0-real-user-insights-redacted-zh.md)
-26. [回应质量 Checklist](docs/product/quality-checklist.md)
-27. [文档园艺 Checklist](docs/maintenance/doc-gardening-checklist.md)
+- 先把 Avaloka 当成 AI 研究系统，而不是商业产品。
+- 用陪伴场景测试记忆、安全和回应质量。
+- 优先做小而可运行的原型，不停留在抽象架构。
+- 每个研究行为都要有 eval 支撑。
+- 不依赖聊天记忆，重要决策必须写入 repo。
+- 不暴露隐藏 prompt、routing logic、guardrails、memory scores 或 private logs。
+- 保持用户控制：本地优先、可导出、可清除、隐私敏感。
+- 用户可见语言保持慈悲、平实、非教条。
 
-## 已归档内容
+## 安全边界
 
-旧版“佛法 AI / RAG 优先 / 职场关系泛烦恼 / Mac Mini 开发路线图”等文档已移动到：
+即使作为研究项目，Avaloka 也不能把自己定位为心理治疗师、医生、危机干预者、灵性权威或真人照护替代品。
+
+所有普通回应都必须经过 safety 和 guardian gates。系统必须避免宗教背诵、罪感、业力归罪、诊断、治疗承诺、医疗建议、自伤鼓励、报复支持和制造依赖。
+
+## 历史材料
+
+旧的商业 MVP 方向、V0/V1 验证计划、persona、商业计划和 tester 材料，现在都是历史上下文。它们仍然是有价值的研究 fixtures，但不再定义当前 active milestone。
+
+更早的旧方向文档已归档到：
 
 [archive/2026-05-13-superseded-docs](archive/2026-05-13-superseded-docs)
-
-这些内容不再作为当前计划依据，只保留作历史参考。
