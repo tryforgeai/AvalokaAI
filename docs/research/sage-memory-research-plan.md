@@ -286,6 +286,15 @@ The response should improve personalization without sounding creepy, overconfide
 
 Test export and clear behavior.
 
+### Developer Memory Diagnostics
+
+R1 developer mode should keep memory behavior inspectable before any user-facing memory claim:
+
+- show current Care Card memories without raw private transcripts
+- show writer candidate and guardian summaries
+- show latest retrieved care fact IDs
+- provide a copyable memory report for research review
+
 ## 12. Implementation Phases
 
 ### Phase 1: SAGE Lite Spec And Fixtures
@@ -317,6 +326,7 @@ Test export and clear behavior.
 - cap injection at 3-5 facts
 - run response-quality evals
 - keep user mode free of memory internals
+- inspect Care Card and memory eval summaries in developer mode
 
 ### Phase 5: Graph Memory Experiment
 

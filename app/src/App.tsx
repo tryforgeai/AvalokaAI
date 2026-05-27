@@ -6,6 +6,7 @@ import { mapDukkha } from "./lib/dukkhaMapper";
 import { buildDukkhaResponse } from "./lib/dukkhaResponse";
 import { buildGuardedResponse } from "./lib/guardedResponse";
 import { applyAvalokaV2Result, createInitialLlmDebugState } from "./lib/llmPipeline";
+import { buildMemoryInspectorReport } from "./lib/memoryInspector";
 import { requestAvalokaV2 } from "./lib/orchestratorClient";
 import { selectScenario } from "./lib/responseSelector";
 import { buildPromptCareFacts, readCareFactsFromCard } from "./lib/sageMemory";
@@ -47,6 +48,7 @@ export default function App() {
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [exportText, setExportText] = useState("");
   const [exportStatus, setExportStatus] = useState("");
+  const [memoryReportStatus, setMemoryReportStatus] = useState("");
 
   useEffect(() => {
     setConsented(hasConsent());
@@ -68,6 +70,10 @@ export default function App() {
   );
   const latestDebugMessage = latestAvalokaMessage;
   const latestVisibleBaifa = getVisibleBaifaResult(latestDebugMessage);
+  const memoryInspectorReport = useMemo(
+    () => (developerMode ? buildMemoryInspectorReport({ careCard: loadCareCard(), messages }) : null),
+    [developerMode, messages],
+  );
 
   function acceptConsent() {
     saveConsent();
@@ -229,6 +235,18 @@ export default function App() {
     }
   }
 
+  async function copyMemoryInspectorReport() {
+    if (!memoryInspectorReport) return;
+    const data = JSON.stringify(memoryInspectorReport, null, 2);
+
+    try {
+      await navigator.clipboard.writeText(data);
+      setMemoryReportStatus("Memory report JSON copied.");
+    } catch {
+      setMemoryReportStatus(data);
+    }
+  }
+
   function clearData() {
     const confirmed = window.confirm("确定清空当前浏览器里的 Avaloka 对话、反馈和本地记忆记录吗？这个操作不能撤销。");
     if (!confirmed) return;
@@ -239,6 +257,7 @@ export default function App() {
     setActiveMessageId(null);
     setExportText("");
     setExportStatus("");
+    setMemoryReportStatus("");
   }
 
   if (!consented) {
@@ -531,6 +550,87 @@ export default function App() {
           )}
             </div>
 
+            <div className="memory-card" aria-label="Care Card inspector panel">
+          <div className="card-heading-row">
+            <div>
+              <p className="eyebrow">Care Card Store</p>
+              <h2>Developer testing only</h2>
+            </div>
+            <button className="icon-button small-icon-button" onClick={copyMemoryInspectorReport} title="Copy memory report JSON">
+              <Copy size={15} />
+            </button>
+          </div>
+          {memoryInspectorReport ? (
+            <div className="memory-body">
+              <dl>
+                <dt>memories</dt>
+                <dd>{memoryInspectorReport.summary.careMemoryCount}</dd>
+                <dt>kinds</dt>
+                <dd>{formatCountMap(memoryInspectorReport.kindCounts)}</dd>
+                <dt>tags</dt>
+                <dd>{formatCountMap(memoryInspectorReport.tagCounts)}</dd>
+                <dt>latest read</dt>
+                <dd>{formatDebugList(memoryInspectorReport.latestRetrievedCareFacts)}</dd>
+              </dl>
+              {memoryInspectorReport.memories.length > 0 ? (
+                <div className="memory-list">
+                  {memoryInspectorReport.memories.map((memory) => (
+                    <article className="memory-row" key={memory.id}>
+                      <div>
+                        <strong>{memory.id}</strong>
+                        <span>
+                          {memory.kind} | {Math.round(memory.confidence * 100)}% | seen {memory.occurrences}
+                        </span>
+                      </div>
+                      <p>{memory.text}</p>
+                      <small>
+                        {memory.source} | evidence {memory.evidenceCount} | {formatDebugList(memory.tags)}
+                      </small>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="soft-note">No Care Card memories stored yet.</p>
+              )}
+            </div>
+          ) : (
+            <p className="soft-note">Memory inspector unavailable outside developer mode.</p>
+          )}
+            </div>
+
+            <div className="eval-card" aria-label="Memory eval report panel">
+          <p className="eyebrow">Memory Eval Report</p>
+          <h2>Developer testing only</h2>
+          {memoryInspectorReport ? (
+            <div className="memory-body">
+              <dl>
+                <dt>writer</dt>
+                <dd>
+                  {memoryInspectorReport.summary.writerReadyCount} ready /{" "}
+                  {memoryInspectorReport.summary.writerErrorCount} error
+                </dd>
+                <dt>candidates</dt>
+                <dd>{memoryInspectorReport.summary.writerCandidateCount}</dd>
+                <dt>guardian</dt>
+                <dd>{formatCountMap(memoryInspectorReport.latestWriter.guardianStatusCounts)}</dd>
+                <dt>latest ids</dt>
+                <dd>{formatDebugList(memoryInspectorReport.latestWriter.candidateIds)}</dd>
+                <dt>commands</dt>
+                <dd>{memoryInspectorReport.evalCommands.join(" | ")}</dd>
+              </dl>
+              {memoryReportStatus ? (
+                memoryReportStatus.startsWith("{") ? (
+                  <textarea readOnly value={memoryReportStatus} rows={8} aria-label="Memory report JSON" />
+                ) : (
+                  <p className="soft-note">{memoryReportStatus}</p>
+                )
+              ) : null}
+            </div>
+          ) : (
+            <p className="soft-note">No memory eval report available.</p>
+          )}
+            </div>
+
             <div className="baifa-card" aria-label="Baifa mapper panel">
           <p className="eyebrow">Baifa Mapper</p>
           <h2>Developer testing only</h2>
@@ -604,4 +704,10 @@ function formatMemoryGuardian(results?: MemoryGuardianResult[]): string {
 function formatRetrievedCareFacts(facts?: RetrievedCareFact[]): string {
   if (!facts || facts.length === 0) return "none";
   return facts.map((fact) => `${fact.memoryId} ${fact.kind}: ${fact.text}`).join(" | ");
+}
+
+function formatCountMap(counts: Record<string, number>): string {
+  const entries = Object.entries(counts);
+  if (entries.length === 0) return "none";
+  return entries.map(([key, count]) => `${key} ${count}`).join(", ");
 }

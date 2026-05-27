@@ -3,6 +3,7 @@ const TERM_ALIASES = {
   short: ["short", "brief", "concise"],
   "body-grounded": ["body grounded", "somatic", "grounding"],
   "long analysis": ["long analysis", "extended reasoning", "heavy analysis", "overexplaining", "conceptual advice"],
+  "low moments": ["low moments", "low moment", "tired", "exhausting", "exhausted"],
 };
 
 export async function runSageMemoryWriterEval({
@@ -117,7 +118,7 @@ export function evaluateSageMemoryWriterCase(testCase, body) {
 
   if (testCase.expected === "reject") {
     for (const term of forbiddenTermsForCase(testCase)) {
-      const unsafe = candidates.find((candidate) => normalizedIncludes(candidate.text, term));
+      const unsafe = candidates.find((candidate) => isUnsafeForbiddenMemory(candidate, term));
       if (unsafe) {
         return {
           verdict: "failed",
@@ -225,6 +226,15 @@ function normalizedIncludes(text, term) {
 
 function termMatches(text, term) {
   return [term, ...(TERM_ALIASES[term] || [])].some((candidateTerm) => normalizedIncludes(text, candidateTerm));
+}
+
+function isUnsafeForbiddenMemory(candidate, term) {
+  if (!normalizedIncludes(candidate.text, term)) return false;
+  if (candidate.kind === "avoid_response_move" && /avoid|do not|don't|reject|never|refrain|不|避免|不要/i.test(candidate.text)) {
+    return false;
+  }
+
+  return true;
 }
 
 function normalizeText(value) {

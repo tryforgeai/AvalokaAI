@@ -1,6 +1,6 @@
 # R1 Memory Gap Report
 
-Status: Active research gap report, updated after Live Memory Writer Eval V0
+Status: Active research gap report, updated after Care Card Inspector / Eval Report V0
 Date: 2026-05-26
 Source-of-truth touched: `docs/research/sage-memory-research-plan.md`
 
@@ -30,12 +30,13 @@ The existing system can:
 - run a memory response eval that compares with-memory and without-memory V2 responses
 - run a SAGE end-to-end eval that exercises writer fixtures through guardian, store, and deterministic reader
 - run a live Memory Writer eval against `evals/sage-memory-cases.json`
+- inspect the local Care Card and copy a developer memory report in `?dev=1`
 
 The missing core is:
 
-- no standalone Care Card diagnostics or memory-specific clear UX
 - no production/user-facing memory management surface
 - no graph-memory schema/runtime experiment
+- no memory lifecycle controls beyond whole-app clear
 
 In roadmap terms, R1 is roughly at:
 
@@ -49,6 +50,7 @@ conversation + feedback
 -> memory response eval V0
 -> SAGE end-to-end eval V0
 -> live Memory Writer eval V0
+-> Care Card Inspector / Eval Report V0
 -> developer diagnostics / export
 ```
 
@@ -56,6 +58,7 @@ It is not yet at:
 
 ```text
 graph-memory schema experiment
+-> memory lifecycle controls
 -> user-facing memory controls
 ```
 
@@ -165,9 +168,9 @@ Implemented:
 
 Gap:
 
-- diagnostics only show writer output for the latest message
-- there is no Care Card view
+- diagnostics now include Care Card inspection and a copyable memory report, but still only in developer mode
 - there is no before/after memory-injection comparison
+- there is no per-memory delete, supersede, or edit surface
 
 ### 7. Export And Clear
 
@@ -198,6 +201,7 @@ Implemented:
 - `scripts/check-content-ingestion.mjs` requires at least six memory response cases and required groups
 - local unit tests cover guardian rejection/allow, Care Card persistence, duplicate merge, and deterministic retrieval
 - local/unit contract tests cover developer-only memory injection plumbing
+- `buildMemoryInspectorReport(...)` summarizes Care Card memories, writer output, latest retrieval, and eval commands for developer inspection
 - `runMemoryResponseEval(...)` compares without-memory and with-memory V2 outputs and returns verdict counts
 - `runSageMemoryEndToEndEval(...)` runs fixture writer candidates through guardian, in-memory Care Card storage, and deterministic retrieval
 - `runSageMemoryWriterEval(...)` runs the live Memory Writer endpoint against allow/reject cases in `evals/sage-memory-cases.json`
@@ -224,8 +228,8 @@ Gap:
 | Response injection with 3-5 care facts | Partial | developer-only `retrievedCareFacts` -> V2 prompt `careFacts` | no production memory retrieval |
 | Extraction/rejection/retrieval evals | Partial | seed cases, unit tests, `evals/sage-end-to-end-cases.json`, `npm run eval:sage`, `npm run eval:sage:writer` | no persisted live eval report artifact |
 | Response/privacy evals for memory | Partial | `evals/memory-response-cases.json`, `npm run eval:memory` | heuristic verdicts; needs real model baselines / judge |
-| Developer diagnostics | Partial | SAGE Memory Writer panel, V2 retrieved care facts | no Care Card inspector or before/after comparison |
-| Local-first export/clear | Partial | export includes turn-level writer output and top-level `careCard`; clear removes Care Card | no standalone memory management UI |
+| Developer diagnostics | Partial | SAGE Memory Writer panel, V2 retrieved care facts, Care Card Inspector, copyable memory report | no before/after memory-injection comparison |
+| Local-first export/clear | Partial | export includes turn-level writer output and top-level `careCard`; clear removes Care Card | no per-memory lifecycle controls |
 
 ## Main Risks
 
@@ -243,7 +247,7 @@ Gap:
 
 4. **Thin memory lifecycle**
 
-   Add/update/merge/export/clear now exist at V0 level, but delete-one-memory, supersede, stale review, and conflict resolution are not mature.
+   Add/update/merge/export/clear and developer inspection now exist at V0 level, but delete-one-memory, supersede, stale review, and conflict resolution are not mature.
 
 5. **Injection safety needs stronger evals**
 
@@ -251,7 +255,7 @@ Gap:
 
 ## Recommended Next Slice
 
-Do not start with graph database work. The smallest useful Care Card loop, deterministic reader, developer-only response injection, memory response eval V0, SAGE end-to-end fixture eval, and live Memory Writer eval V0 are now real in code; the next gap is developer memory diagnostics and live eval reporting.
+Do not start with graph database work unless the lifecycle surface is stable enough to inspect. The smallest useful Care Card loop, deterministic reader, developer-only response injection, memory response eval V0, SAGE end-to-end fixture eval, live Memory Writer eval V0, and Care Card Inspector / Eval Report V0 are now real in code; the next gap is memory lifecycle control or a very small graph-schema experiment.
 
 ### Slice 1: Care Card Store V0
 
@@ -385,7 +389,7 @@ Acceptance criteria:
 
 ### Slice 7: Care Card Inspector / Eval Report V0
 
-Status: next recommended slice.
+Status: implemented in code on 2026-05-27.
 
 Goal:
 
@@ -402,6 +406,26 @@ Acceptance criteria:
 - add a lightweight way to copy or export latest memory eval summaries for research review
 - keep user-facing mode free of memory internals
 
+### Slice 8: Memory Lifecycle Control V0
+
+Status: next recommended slice.
+
+Goal:
+
+```text
+stored Care Card memories
+-> inspect stale/problematic entries
+-> delete or supersede one memory
+-> exportable lifecycle trail
+```
+
+Acceptance criteria:
+
+- developer mode can delete one Care Card memory without clearing the whole app
+- superseded memory behavior is explicit in storage and export
+- stale memory review is visible in the inspector
+- tests cover delete, supersede, stale filtering, export, and clear behavior
+
 ## Explicit Non-Goals For The Next Slice
 
 - no production graph database
@@ -414,6 +438,6 @@ Acceptance criteria:
 
 ## Bottom Line
 
-The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, run a V0 memory response eval, exercise the writer-fixture/guardian/store/reader loop end to end, and run a live writer eval against committed fixtures.
+The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, run a V0 memory response eval, exercise the writer-fixture/guardian/store/reader loop end to end, run a live writer eval against committed fixtures, and inspect/copy the local memory state in developer mode.
 
-The next real milestone is not "better prompt wording." It is making memory diagnostics and live eval reporting inspectable before making memory behavior broader or more user-visible.
+The next real milestone is not "better prompt wording." It is adding memory lifecycle controls so stored facts can be removed, superseded, and reviewed before making memory behavior broader or more user-visible.

@@ -31,6 +31,8 @@ const compassionPlannerPromptPath = join(repoRoot, "prompt/avalokiteshvara-compa
 const shadowServerPath = join(repoRoot, "server/llm-shadow-server.mjs");
 const sageMemoryWriterEvalRunnerPath = join(repoRoot, "scripts/sage-memory-writer-eval-runner.mjs");
 const sageMemoryWriterEvalScriptPath = join(repoRoot, "scripts/run-sage-memory-writer-eval.mjs");
+const memoryInspectorPath = join(repoRoot, "app/src/lib/memoryInspector.ts");
+const memoryInspectorTestPath = join(repoRoot, "app/src/lib/memoryInspector.test.ts");
 const dukkhaMapPath = join(repoRoot, "app/src/data/dukkhaMap.ts");
 const dukkhaMapperTestPath = join(repoRoot, "app/src/lib/dukkhaMapper.test.ts");
 const dukkhaResponseTestPath = join(repoRoot, "app/src/lib/dukkhaResponse.test.ts");
@@ -72,6 +74,8 @@ assert(existsSync(avalokaV2GuardianPromptPath), "Missing prompt/avaloka-v2-guard
 assert(existsSync(compassionPlannerPromptPath), "Missing prompt/avalokiteshvara-compassion-planner-v1.md.");
 assert(existsSync(sageMemoryWriterEvalRunnerPath), "Missing scripts/sage-memory-writer-eval-runner.mjs.");
 assert(existsSync(sageMemoryWriterEvalScriptPath), "Missing scripts/run-sage-memory-writer-eval.mjs.");
+assert(existsSync(memoryInspectorPath), "Missing app/src/lib/memoryInspector.ts.");
+assert(existsSync(memoryInspectorTestPath), "Missing app/src/lib/memoryInspector.test.ts.");
 
 const episodeFiles = readdirSync(podcastDir)
   .filter((file) => /^episode-\d{3}-.+\.zh\.md$/.test(file))

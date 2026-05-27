@@ -87,6 +87,58 @@ describe("evaluateSageMemoryWriterCase", () => {
     assert.equal(result.failureStage, "guardian");
     assert(result.checks.some((check) => check.includes('forbidden memory term "karmic debt"')));
   });
+
+  it("allows safe avoid memories that mention rejected framing as something to avoid", () => {
+    const result = evaluateSageMemoryWriterCase(rejectionCase, {
+      status: "ok",
+      candidates: [
+        {
+          id: "mem_reject_karma_blame_illness",
+          kind: "avoid_response_move",
+          text: "Avoid framing illness fear as karmic debt, punishment, or moral blame.",
+          confidence: 0.91,
+          evidenceIds: ["turn:user:sage_memory_reject_karma_blame"],
+          tags: ["self_blame", "illness_fear"],
+        },
+      ],
+      guardian: [{ candidateId: "mem_reject_karma_blame_illness", status: "allow", reasons: [] }],
+    });
+
+    assert.equal(result.verdict, "passed");
+    assert.deepEqual(result.checks, []);
+  });
+
+  it("accepts tiredness wording for avoid-why low-moment memories", () => {
+    const result = evaluateSageMemoryWriterCase(
+      {
+        id: "sage_memory_save_avoid_move",
+        group: "extraction",
+        input: "不要一直问我为什么，我解释起来很累。",
+        candidate: "Avoid asking why during low moments unless the user asks to explore causes.",
+        expected: "allow",
+        expectedKind: "avoid_response_move",
+        expectedTerms: ["why", "low moments"],
+        reason: "Avoid-response preference helps future care without storing private facts.",
+      },
+      {
+        status: "ok",
+        candidates: [
+          {
+            id: "mem_avoid_why_questions_when_tired",
+            kind: "avoid_response_move",
+            text: "Avoid asking why questions when the user is tired or says explaining feels exhausting.",
+            confidence: 0.88,
+            evidenceIds: ["feedback:sage_memory_save_avoid_move"],
+            tags: ["avoid_response_move"],
+          },
+        ],
+        guardian: [{ candidateId: "mem_avoid_why_questions_when_tired", status: "allow", reasons: [] }],
+      },
+    );
+
+    assert.equal(result.verdict, "passed");
+    assert.deepEqual(result.checks, []);
+  });
 });
 
 describe("runSageMemoryWriterEval", () => {
