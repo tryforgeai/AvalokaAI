@@ -1,6 +1,6 @@
 # R1 Memory Gap Report
 
-Status: Active research gap report, updated after Memory Response Eval V0
+Status: Active research gap report, updated after SAGE End-To-End Eval V0
 Date: 2026-05-26
 Source-of-truth touched: `docs/research/sage-memory-research-plan.md`
 
@@ -28,12 +28,13 @@ The existing system can:
 - pass up to five retrieved care facts into the Avaloka V2 response prompt in developer mode
 - show retrieved care facts in developer diagnostics and export them per turn
 - run a memory response eval that compares with-memory and without-memory V2 responses
+- run a SAGE end-to-end eval that exercises writer fixtures through guardian, store, and deterministic reader
 
 The missing core is:
 
 - no standalone Care Card diagnostics or memory-specific clear UX
 - no production/user-facing memory management surface
-- no executable Memory Writer eval runner over `evals/sage-memory-cases.json`
+- no live LLM Memory Writer eval runner over `evals/sage-memory-cases.json`
 
 In roadmap terms, R1 is roughly at:
 
@@ -45,14 +46,16 @@ conversation + feedback
 -> deterministic Memory Reader V0
 -> developer-only response injection trial
 -> memory response eval V0
+-> SAGE end-to-end eval V0
 -> developer diagnostics / export
 ```
 
 It is not yet at:
 
 ```text
-developer-only response-time injection
--> response/privacy eval
+live writer eval
+-> graph-memory schema experiment
+-> user-facing memory controls
 ```
 
 ## Current Implementation
@@ -188,19 +191,22 @@ Implemented:
 
 - `evals/sage-memory-cases.json` exists
 - `evals/memory-response-cases.json` exists with self-blame, illness fear, aging fear, tone preference, no-match, and stale-memory cases
+- `evals/sage-end-to-end-cases.json` exists with self-blame and illness-fear end-to-end cases
 - `scripts/check-content-ingestion.mjs` requires SAGE memory docs and at least five memory eval cases
+- `scripts/check-content-ingestion.mjs` requires at least two SAGE end-to-end cases, rejected-candidate coverage, saved-candidate coverage, and required groups
 - `scripts/check-content-ingestion.mjs` requires at least six memory response cases and required groups
 - local unit tests cover guardian rejection/allow, Care Card persistence, duplicate merge, and deterministic retrieval
 - local/unit contract tests cover developer-only memory injection plumbing
 - `runMemoryResponseEval(...)` compares without-memory and with-memory V2 outputs and returns verdict counts
+- `runSageMemoryEndToEndEval(...)` runs fixture writer candidates through guardian, in-memory Care Card storage, and deterministic retrieval
 - `npm run eval:memory` runs `scripts/run-memory-response-eval.mjs`
+- `npm run eval:sage` runs the SAGE end-to-end eval test suite
 
 Gap:
 
 - `sage-memory-cases.json` is currently a seed/checklist-like eval file, not an executable evaluator for writer output.
 - no script runs LLM Memory Writer against these cases
-- no eval verifies accepted candidates are persisted correctly
-- no executable cross-case retrieval eval beyond unit tests
+- no live eval verifies LLM-generated accepted candidates are persisted correctly
 - memory response eval is deterministic/heuristic and still needs real model-run baselines
 
 ## Requirement Coverage Matrix
@@ -213,7 +219,7 @@ Gap:
 | Graph-memory schema experiments | Not started | docs only | no graph node/edge representation in runtime |
 | Deterministic Memory Reader | Partial | `readCareFactsFromCard(...)`, tag derivation, priority/stale tests | small alias map; no standalone reader diagnostic |
 | Response injection with 3-5 care facts | Partial | developer-only `retrievedCareFacts` -> V2 prompt `careFacts` | no production memory retrieval |
-| Extraction/rejection/retrieval evals | Partial | seed cases + unit tests | no executable end-to-end SAGE eval runner |
+| Extraction/rejection/retrieval evals | Partial | seed cases, unit tests, `evals/sage-end-to-end-cases.json`, `npm run eval:sage` | no live LLM writer eval runner |
 | Response/privacy evals for memory | Partial | `evals/memory-response-cases.json`, `npm run eval:memory` | heuristic verdicts; needs real model baselines / judge |
 | Developer diagnostics | Partial | SAGE Memory Writer panel, V2 retrieved care facts | no Care Card inspector or before/after comparison |
 | Local-first export/clear | Partial | export includes turn-level writer output and top-level `careCard`; clear removes Care Card | no standalone memory management UI |
@@ -228,9 +234,9 @@ Gap:
 
    Guardian rules exist in both server JavaScript and app TypeScript. As R1 grows, these can diverge unless the contract is centralized or tested against the same cases.
 
-3. **Writer eval gap**
+3. **Live writer eval gap**
 
-   The repo now checks memory response eval fixtures and runner behavior, but it still does not run the LLM Memory Writer against `evals/sage-memory-cases.json`.
+   The repo now checks memory response eval fixtures and SAGE end-to-end fixture behavior, but it still does not run the live LLM Memory Writer against `evals/sage-memory-cases.json`.
 
 4. **Thin memory lifecycle**
 
@@ -242,7 +248,7 @@ Gap:
 
 ## Recommended Next Slice
 
-Do not start with graph database work. The smallest useful Care Card loop, deterministic reader, developer-only response injection, and memory response eval V0 are now real in code; the next gap is end-to-end writer/store/reader evaluation.
+Do not start with graph database work. The smallest useful Care Card loop, deterministic reader, developer-only response injection, memory response eval V0, and SAGE end-to-end fixture eval are now real in code; the next gap is live writer evaluation and developer memory diagnostics.
 
 ### Slice 1: Care Card Store V0
 
@@ -333,7 +339,7 @@ Acceptance criteria:
 
 ### Slice 5: SAGE End-To-End Eval V0
 
-Status: next recommended slice.
+Status: implemented in code on 2026-05-26.
 
 Goal:
 
@@ -354,6 +360,26 @@ Acceptance criteria:
 - verifies retrieval returns the expected care facts for self-blame and illness-fear contexts
 - reports whether a failure belongs to writer extraction, guardian rejection, store merge, reader retrieval, or fixture expectations
 
+### Slice 6: Live Memory Writer Eval V0
+
+Status: next recommended slice.
+
+Goal:
+
+```text
+evals/sage-memory-cases.json
+-> live Memory Writer endpoint
+-> Memory Guardian
+-> scored extraction/rejection summary
+```
+
+Acceptance criteria:
+
+- runs the developer Memory Writer endpoint against the existing SAGE memory eval fixture file
+- records model, latency, candidate ids/kinds/tags, guardian result, and failure reason per case
+- keeps raw private user records out of committed eval artifacts
+- reports whether failure belongs to writer extraction, guardian rejection, prompt contract, endpoint availability, or eval fixture expectations
+
 ## Explicit Non-Goals For The Next Slice
 
 - no production graph database
@@ -366,6 +392,6 @@ Acceptance criteria:
 
 ## Bottom Line
 
-The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, and run a V0 memory response eval.
+The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, run a V0 memory response eval, and exercise the writer-fixture/guardian/store/reader loop end to end.
 
-The next real milestone is not "better prompt wording." It is proving the whole writer/store/reader loop end to end before making memory behavior broader or more user-visible.
+The next real milestone is not "better prompt wording." It is proving live writer outputs against the eval fixtures and then adding memory diagnostics before making memory behavior broader or more user-visible.

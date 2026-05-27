@@ -12,7 +12,8 @@
     "coverage": "vitest run --coverage",
     "content:check": "node ../scripts/check-content-ingestion.mjs",
     "eval:v2": "node ../scripts/run-avaloka-v2-eval.mjs",
-    "eval:memory": "node ../scripts/run-memory-response-eval.mjs"
+    "eval:memory": "node ../scripts/run-memory-response-eval.mjs",
+    "eval:sage": "vitest run src/lib/sageMemoryEndToEndEval.test.ts"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",

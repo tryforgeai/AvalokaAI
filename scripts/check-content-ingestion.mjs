@@ -11,6 +11,7 @@ const avalokaV2CasesPath = join(repoRoot, "evals/avaloka-v2-orchestrator-cases.j
 const avalokaV2GoldenCasesPath = join(repoRoot, "evals/avaloka-v2-golden-cases.json");
 const avalokiteshvaraCasesPath = join(repoRoot, "evals/avalokiteshvara-compassion-cases.json");
 const sageMemoryCasesPath = join(repoRoot, "evals/sage-memory-cases.json");
+const sageEndToEndCasesPath = join(repoRoot, "evals/sage-end-to-end-cases.json");
 const memoryResponseCasesPath = join(repoRoot, "evals/memory-response-cases.json");
 const promptRegistryPath = join(repoRoot, "prompt/registry.json");
 const kbReadmePath = join(repoRoot, "docs/kb/README.md");
@@ -50,6 +51,7 @@ assert(existsSync(avalokaV2CasesPath), "Missing evals/avaloka-v2-orchestrator-ca
 assert(existsSync(avalokaV2GoldenCasesPath), "Missing evals/avaloka-v2-golden-cases.json.");
 assert(existsSync(avalokiteshvaraCasesPath), "Missing evals/avalokiteshvara-compassion-cases.json.");
 assert(existsSync(sageMemoryCasesPath), "Missing evals/sage-memory-cases.json.");
+assert(existsSync(sageEndToEndCasesPath), "Missing evals/sage-end-to-end-cases.json.");
 assert(existsSync(memoryResponseCasesPath), "Missing evals/memory-response-cases.json.");
 assert(existsSync(promptRegistryPath), "Missing prompt/registry.json.");
 assert(existsSync(kbReadmePath), "Missing docs/kb/README.md.");
@@ -84,6 +86,7 @@ const avalokaV2Cases = existsSync(avalokaV2CasesPath) ? JSON.parse(read(avalokaV
 const avalokaV2GoldenCases = existsSync(avalokaV2GoldenCasesPath) ? JSON.parse(read(avalokaV2GoldenCasesPath)) : [];
 const avalokiteshvaraCases = existsSync(avalokiteshvaraCasesPath) ? JSON.parse(read(avalokiteshvaraCasesPath)) : [];
 const sageMemoryCases = existsSync(sageMemoryCasesPath) ? JSON.parse(read(sageMemoryCasesPath)) : [];
+const sageEndToEndCases = existsSync(sageEndToEndCasesPath) ? JSON.parse(read(sageEndToEndCasesPath)) : [];
 const memoryResponseCases = existsSync(memoryResponseCasesPath) ? JSON.parse(read(memoryResponseCasesPath)) : [];
 const promptRegistry = existsSync(promptRegistryPath) ? JSON.parse(read(promptRegistryPath)) : { prompts: [] };
 const sageResearchPlan = existsSync(sageResearchPlanPath) ? read(sageResearchPlanPath) : "";
@@ -105,6 +108,8 @@ assert(Array.isArray(avalokiteshvaraCases), "avalokiteshvara-compassion-cases.js
 assert(avalokiteshvaraCases.length >= 8, "avalokiteshvara-compassion-cases.json must include at least 8 cases.");
 assert(Array.isArray(sageMemoryCases), "sage-memory-cases.json must be an array.");
 assert(sageMemoryCases.length >= 5, "sage-memory-cases.json must include at least 5 cases.");
+assert(Array.isArray(sageEndToEndCases), "sage-end-to-end-cases.json must be an array.");
+assert(sageEndToEndCases.length >= 2, "sage-end-to-end-cases.json must include at least 2 cases.");
 assert(Array.isArray(memoryResponseCases), "memory-response-cases.json must be an array.");
 assert(memoryResponseCases.length >= 6, "memory-response-cases.json must include at least 6 cases.");
 assert(Array.isArray(promptRegistry.prompts), "prompt/registry.json must include a prompts array.");
@@ -467,6 +472,48 @@ for (const expected of ["allow", "reject"]) {
   assert(sageMemoryExpected.has(expected), `SAGE memory evals must include expected "${expected}".`);
 }
 
+const sageEndToEndGroups = new Set();
+const sageEndToEndCaseIds = new Set();
+let sageEndToEndHasRejection = false;
+let sageEndToEndHasStoreExpectation = false;
+for (const testCase of sageEndToEndCases) {
+  assert(testCase.id, "Every SAGE end-to-end eval case must have an id.");
+  assert(!sageEndToEndCaseIds.has(testCase.id), `Duplicate SAGE end-to-end eval case id: ${testCase.id}`);
+  sageEndToEndCaseIds.add(testCase.id);
+  assert(testCase.group, `SAGE end-to-end eval case ${testCase.id} must include group.`);
+  assert(testCase.now, `SAGE end-to-end eval case ${testCase.id} must include now.`);
+  assert(
+    Array.isArray(testCase.writerCandidates),
+    `SAGE end-to-end eval case ${testCase.id} must include writerCandidates.`,
+  );
+  assert(testCase.retrievalContext, `SAGE end-to-end eval case ${testCase.id} must include retrievalContext.`);
+  assert(
+    Array.isArray(testCase.expectedRetrievedIds),
+    `SAGE end-to-end eval case ${testCase.id} must include expectedRetrievedIds.`,
+  );
+  assert(testCase.reason, `SAGE end-to-end eval case ${testCase.id} must include reason.`);
+  if (testCase.expectedRejectedIds) {
+    assert(
+      Array.isArray(testCase.expectedRejectedIds),
+      `SAGE end-to-end eval case ${testCase.id} expectedRejectedIds must be an array.`,
+    );
+    sageEndToEndHasRejection ||= testCase.expectedRejectedIds.length > 0;
+  }
+  if (testCase.expectedSavedIds) {
+    assert(
+      Array.isArray(testCase.expectedSavedIds),
+      `SAGE end-to-end eval case ${testCase.id} expectedSavedIds must be an array.`,
+    );
+    sageEndToEndHasStoreExpectation ||= testCase.expectedSavedIds.length > 0;
+  }
+  sageEndToEndGroups.add(testCase.group);
+}
+for (const group of ["self_blame", "illness_fear"]) {
+  assert(sageEndToEndGroups.has(group), `SAGE end-to-end evals must include group "${group}".`);
+}
+assert(sageEndToEndHasRejection, "SAGE end-to-end evals must verify at least one rejected writer candidate.");
+assert(sageEndToEndHasStoreExpectation, "SAGE end-to-end evals must verify at least one saved writer candidate.");
+
 const memoryResponseGroups = new Set();
 const memoryResponseUses = new Set();
 const memoryResponseCaseIds = new Set();
@@ -550,5 +597,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases, ${sageMemoryCases.length} SAGE memory cases, ${memoryResponseCases.length} memory response cases.`,
+  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases, ${sageMemoryCases.length} SAGE memory cases, ${sageEndToEndCases.length} SAGE end-to-end cases, ${memoryResponseCases.length} memory response cases.`,
 );

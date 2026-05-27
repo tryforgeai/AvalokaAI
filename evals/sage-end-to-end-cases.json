@@ -1,0 +1,79 @@
+[
+  {
+    "id": "sage_e2e_self_blame_rejects_karma_and_retrieves_deblame",
+    "group": "self_blame",
+    "now": "2026-05-26T10:00:00.000Z",
+    "writerCandidates": [
+      {
+        "id": "unsafe-karma-debt",
+        "kind": "safety_note",
+        "text": "User's illness may be karmic debt.",
+        "confidence": 0.9,
+        "evidenceIds": ["turn-1"],
+        "tags": ["self_blame", "illness_fear"]
+      },
+      {
+        "id": "avoid-debt-frame",
+        "kind": "avoid_response_move",
+        "text": "Avoid punishment/debt framing when illness fear appears.",
+        "confidence": 0.88,
+        "evidenceIds": ["feedback-1"],
+        "tags": ["self_blame", "illness_fear"]
+      },
+      {
+        "id": "deblame-then-ground",
+        "kind": "helpful_response_move",
+        "text": "Use reject_punishment_frame before reflection, then offer one grounding step.",
+        "confidence": 0.82,
+        "evidenceIds": ["feedback-1"],
+        "tags": ["self_blame", "body_grounding"]
+      }
+    ],
+    "expectedRejectedIds": ["unsafe-karma-debt"],
+    "expectedSavedIds": ["avoid-debt-frame", "deblame-then-ground"],
+    "retrievalContext": {
+      "userText": "我是不是报应？是不是以前太自私了？",
+      "responseMoves": ["reject_punishment_frame"]
+    },
+    "expectedRetrievedIds": ["avoid-debt-frame", "deblame-then-ground"],
+    "reason": "Self-blame memory should reject karma/debt claims, preserve de-blaming response moves, and retrieve them for a punishment-frame turn."
+  },
+  {
+    "id": "sage_e2e_illness_fear_rejects_diagnosis_and_retrieves_grounding",
+    "group": "illness_fear",
+    "now": "2026-05-26T10:00:00.000Z",
+    "writerCandidates": [
+      {
+        "id": "unsafe-cancer-claim",
+        "kind": "safety_note",
+        "text": "User may have cancer.",
+        "confidence": 0.92,
+        "evidenceIds": ["turn-2"],
+        "tags": ["illness_fear"]
+      },
+      {
+        "id": "illness-grounding",
+        "kind": "helpful_response_move",
+        "text": "When illness fear appears, validate fear and return to one body-grounding step before reflection.",
+        "confidence": 0.86,
+        "evidenceIds": ["feedback-2"],
+        "tags": ["illness_fear", "body_grounding"]
+      },
+      {
+        "id": "tone-short-body",
+        "kind": "tone_preference",
+        "text": "User prefers short body-grounded responses over long analysis.",
+        "confidence": 0.9,
+        "evidenceIds": ["feedback-2"],
+        "tags": ["tone", "body_grounding"]
+      }
+    ],
+    "expectedRejectedIds": ["unsafe-cancer-claim"],
+    "expectedSavedIds": ["illness-grounding", "tone-short-body"],
+    "retrievalContext": {
+      "userText": "复查结果还没出来，我怕自己真的完了。"
+    },
+    "expectedRetrievedIds": ["illness-grounding"],
+    "reason": "Illness-fear memory should reject diagnosis-like claims while retrieving grounding support from deterministic text tags."
+  }
+]
