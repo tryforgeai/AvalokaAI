@@ -308,6 +308,70 @@ describe("SAGE Lite memory core", () => {
     expect(facts).toEqual([]);
   });
 
+  it("derives illness fear tags from the current user text", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "illness-grounding",
+          kind: "helpful_response_move" as const,
+          text: "When illness fear appears, validate fear and return to one body-grounding step before reflection.",
+          confidence: 0.86,
+          evidenceIds: ["feedback-1"],
+          tags: ["illness_fear"],
+          createdAt: "2026-05-26T10:00:00.000Z",
+          updatedAt: "2026-05-26T10:00:00.000Z",
+          lastSeenAt: "2026-05-26T10:00:00.000Z",
+          occurrences: 1,
+        },
+      ],
+    };
+
+    const facts = readCareFactsFromCard(
+      card,
+      {
+        userText: "复查结果还没出来，我怕自己真的完了。",
+      },
+      { now: "2026-05-26T10:10:00.000Z" },
+    );
+
+    expect(facts.map((fact) => fact.id)).toEqual(["illness-grounding"]);
+  });
+
+  it("does not derive illness fear from unrelated uses of done or problem language", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "illness-grounding",
+          kind: "helpful_response_move" as const,
+          text: "When illness fear appears, validate fear and return to one body-grounding step before reflection.",
+          confidence: 0.86,
+          evidenceIds: ["feedback-1"],
+          tags: ["illness_fear"],
+          createdAt: "2026-05-26T10:00:00.000Z",
+          updatedAt: "2026-05-26T10:00:00.000Z",
+          lastSeenAt: "2026-05-26T10:00:00.000Z",
+          occurrences: 1,
+        },
+      ],
+    };
+
+    const facts = readCareFactsFromCard(
+      card,
+      {
+        userText: "我今天工作终于做完了，但还是觉得自己有毛病。",
+      },
+      { now: "2026-05-26T10:10:00.000Z" },
+    );
+
+    expect(facts).toEqual([]);
+  });
+
   it("formats retrieved care facts for prompt injection without evidence ids", () => {
     const careFacts = buildPromptCareFacts([
       {

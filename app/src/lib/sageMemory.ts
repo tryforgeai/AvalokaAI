@@ -24,6 +24,7 @@ export interface MemoryGuardianResult {
 }
 
 export interface MemoryReaderContext {
+  userText?: string;
   scenarioId?: string;
   dukkhaTypes?: string[];
   dukkhaPatterns?: string[];
@@ -128,6 +129,13 @@ const scenarioTagAliases: Record<string, string[]> = {
 
 const riskTags = new Set(["self_blame", "illness_fear", "safety", "crisis", "harm"]);
 
+const textTagRules: Array<{ tag: string; patterns: RegExp[] }> = [
+  {
+    tag: "illness_fear",
+    patterns: [/复查|检查结果|体检|化验|报告|生病|病了|病情|疾病|癌|肿瘤|怕死|真的完了|自己.*完了|活不久|结果还没出来/],
+  },
+];
+
 function expandScenarioTags(scenarioId: string): string[] {
   const tags = [scenarioId, ...(scenarioTagAliases[scenarioId] || [])];
   const [, responseMove] = scenarioId.split(":");
@@ -144,6 +152,7 @@ function deriveReaderTags(context: MemoryReaderContext): string[] {
     ...(context.dukkhaTypes || []),
     ...(context.dukkhaPatterns || []),
     ...(context.scenarioId ? expandScenarioTags(context.scenarioId) : []),
+    ...deriveTextTags(context.userText || ""),
   ];
 
   for (const move of context.responseMoves || []) {
@@ -151,6 +160,12 @@ function deriveReaderTags(context: MemoryReaderContext): string[] {
   }
 
   return unique(tags);
+}
+
+function deriveTextTags(userText: string): string[] {
+  return textTagRules
+    .filter((rule) => rule.patterns.some((pattern) => pattern.test(userText)))
+    .map((rule) => rule.tag);
 }
 
 function isStaleMemory(memory: CareMemory, now: string, staleAfterDays: number): boolean {

@@ -118,6 +118,7 @@ export default function App() {
           readCareFactsFromCard(
             loadCareCard(),
             {
+              userText: text,
               scenarioId: avalokaMessage.scenarioId,
               dukkhaTypes: dukkha?.dukkhaTypes,
               dukkhaPatterns: dukkha?.patterns,
