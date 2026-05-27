@@ -29,6 +29,8 @@ const avalokaV2CrisisPromptPath = join(repoRoot, "prompt/avaloka-v2-crisis-class
 const avalokaV2GuardianPromptPath = join(repoRoot, "prompt/avaloka-v2-guardian.md");
 const compassionPlannerPromptPath = join(repoRoot, "prompt/avalokiteshvara-compassion-planner-v1.md");
 const shadowServerPath = join(repoRoot, "server/llm-shadow-server.mjs");
+const sageMemoryWriterEvalRunnerPath = join(repoRoot, "scripts/sage-memory-writer-eval-runner.mjs");
+const sageMemoryWriterEvalScriptPath = join(repoRoot, "scripts/run-sage-memory-writer-eval.mjs");
 const dukkhaMapPath = join(repoRoot, "app/src/data/dukkhaMap.ts");
 const dukkhaMapperTestPath = join(repoRoot, "app/src/lib/dukkhaMapper.test.ts");
 const dukkhaResponseTestPath = join(repoRoot, "app/src/lib/dukkhaResponse.test.ts");
@@ -68,6 +70,8 @@ assert(existsSync(avalokaV2ResponsePromptPath), "Missing prompt/avaloka-v2-orche
 assert(existsSync(avalokaV2CrisisPromptPath), "Missing prompt/avaloka-v2-crisis-classifier.md.");
 assert(existsSync(avalokaV2GuardianPromptPath), "Missing prompt/avaloka-v2-guardian.md.");
 assert(existsSync(compassionPlannerPromptPath), "Missing prompt/avalokiteshvara-compassion-planner-v1.md.");
+assert(existsSync(sageMemoryWriterEvalRunnerPath), "Missing scripts/sage-memory-writer-eval-runner.mjs.");
+assert(existsSync(sageMemoryWriterEvalScriptPath), "Missing scripts/run-sage-memory-writer-eval.mjs.");
 
 const episodeFiles = readdirSync(podcastDir)
   .filter((file) => /^episode-\d{3}-.+\.zh\.md$/.test(file))
@@ -461,6 +465,19 @@ for (const testCase of sageMemoryCases) {
   assert(testCase.reason, `SAGE memory eval case ${testCase.id} must include reason.`);
   sageMemoryGroups.add(testCase.group);
   if (testCase.expected) sageMemoryExpected.add(testCase.expected);
+  if (testCase.expected === "allow") {
+    assert(testCase.expectedKind, `SAGE memory allow case ${testCase.id} must include expectedKind.`);
+    assert(
+      Array.isArray(testCase.expectedTerms) && testCase.expectedTerms.length > 0,
+      `SAGE memory allow case ${testCase.id} must include expectedTerms.`,
+    );
+  }
+  if (testCase.expected === "reject") {
+    assert(
+      Array.isArray(testCase.forbiddenTerms) && testCase.forbiddenTerms.length > 0,
+      `SAGE memory reject case ${testCase.id} must include forbiddenTerms.`,
+    );
+  }
   if (testCase.expectedFacts) {
     assert(Array.isArray(testCase.expectedFacts), `SAGE memory eval case ${testCase.id} expectedFacts must be an array.`);
   }

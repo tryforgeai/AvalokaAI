@@ -1,6 +1,6 @@
 # R1 Memory Gap Report
 
-Status: Active research gap report, updated after SAGE End-To-End Eval V0
+Status: Active research gap report, updated after Live Memory Writer Eval V0
 Date: 2026-05-26
 Source-of-truth touched: `docs/research/sage-memory-research-plan.md`
 
@@ -29,12 +29,13 @@ The existing system can:
 - show retrieved care facts in developer diagnostics and export them per turn
 - run a memory response eval that compares with-memory and without-memory V2 responses
 - run a SAGE end-to-end eval that exercises writer fixtures through guardian, store, and deterministic reader
+- run a live Memory Writer eval against `evals/sage-memory-cases.json`
 
 The missing core is:
 
 - no standalone Care Card diagnostics or memory-specific clear UX
 - no production/user-facing memory management surface
-- no live LLM Memory Writer eval runner over `evals/sage-memory-cases.json`
+- no graph-memory schema/runtime experiment
 
 In roadmap terms, R1 is roughly at:
 
@@ -47,14 +48,14 @@ conversation + feedback
 -> developer-only response injection trial
 -> memory response eval V0
 -> SAGE end-to-end eval V0
+-> live Memory Writer eval V0
 -> developer diagnostics / export
 ```
 
 It is not yet at:
 
 ```text
-live writer eval
--> graph-memory schema experiment
+graph-memory schema experiment
 -> user-facing memory controls
 ```
 
@@ -74,7 +75,7 @@ Gap:
 
 - The writer is only a shadow/developer tool.
 - There is no offline queue or batch writer.
-- There is no automated runner that scores the LLM writer against `evals/sage-memory-cases.json`.
+- The live writer eval runner is V0 and scores only committed allow/reject fixture cases; retrieval cases remain covered by deterministic reader/E2E evals.
 
 ### 2. Memory Guardian
 
@@ -199,13 +200,15 @@ Implemented:
 - local/unit contract tests cover developer-only memory injection plumbing
 - `runMemoryResponseEval(...)` compares without-memory and with-memory V2 outputs and returns verdict counts
 - `runSageMemoryEndToEndEval(...)` runs fixture writer candidates through guardian, in-memory Care Card storage, and deterministic retrieval
+- `runSageMemoryWriterEval(...)` runs the live Memory Writer endpoint against allow/reject cases in `evals/sage-memory-cases.json`
 - `npm run eval:memory` runs `scripts/run-memory-response-eval.mjs`
 - `npm run eval:sage` runs the SAGE end-to-end eval test suite
+- `npm run eval:sage:writer` runs `scripts/run-sage-memory-writer-eval.mjs`
 
 Gap:
 
-- `sage-memory-cases.json` is currently a seed/checklist-like eval file, not an executable evaluator for writer output.
-- no script runs LLM Memory Writer against these cases
+- live writer eval output is not yet persisted as a research report artifact
+- live writer eval is endpoint/model-dependent and should be treated as a development gate, not a deterministic unit test
 - no live eval verifies LLM-generated accepted candidates are persisted correctly
 - memory response eval is deterministic/heuristic and still needs real model-run baselines
 
@@ -213,13 +216,13 @@ Gap:
 
 | R1 Requirement | Current State | Evidence | Gap |
 |---|---|---|---|
-| Memory Writer candidate extraction | Partial | `prompt/sage-memory-writer-v1.md`, `/api/sage-memory-writer` | Shadow-only; no automated writer eval runner |
+| Memory Writer candidate extraction | Partial | `prompt/sage-memory-writer-v1.md`, `/api/sage-memory-writer`, `npm run eval:sage:writer` | Shadow-only; live eval is V0 and model-dependent |
 | Memory Guardian rejection rules | Partial | server guardian, `app/src/lib/sageMemory.ts` | duplicated logic, narrow coverage, no revise behavior |
 | Care Card / memory store | Partial | `CareCard`, `CareMemory`, localStorage persistence, export/clear tests | no graph store, no lifecycle beyond merge |
 | Graph-memory schema experiments | Not started | docs only | no graph node/edge representation in runtime |
 | Deterministic Memory Reader | Partial | `readCareFactsFromCard(...)`, tag derivation, priority/stale tests | small alias map; no standalone reader diagnostic |
 | Response injection with 3-5 care facts | Partial | developer-only `retrievedCareFacts` -> V2 prompt `careFacts` | no production memory retrieval |
-| Extraction/rejection/retrieval evals | Partial | seed cases, unit tests, `evals/sage-end-to-end-cases.json`, `npm run eval:sage` | no live LLM writer eval runner |
+| Extraction/rejection/retrieval evals | Partial | seed cases, unit tests, `evals/sage-end-to-end-cases.json`, `npm run eval:sage`, `npm run eval:sage:writer` | no persisted live eval report artifact |
 | Response/privacy evals for memory | Partial | `evals/memory-response-cases.json`, `npm run eval:memory` | heuristic verdicts; needs real model baselines / judge |
 | Developer diagnostics | Partial | SAGE Memory Writer panel, V2 retrieved care facts | no Care Card inspector or before/after comparison |
 | Local-first export/clear | Partial | export includes turn-level writer output and top-level `careCard`; clear removes Care Card | no standalone memory management UI |
@@ -234,9 +237,9 @@ Gap:
 
    Guardian rules exist in both server JavaScript and app TypeScript. As R1 grows, these can diverge unless the contract is centralized or tested against the same cases.
 
-3. **Live writer eval gap**
+3. **Live writer eval volatility**
 
-   The repo now checks memory response eval fixtures and SAGE end-to-end fixture behavior, but it still does not run the live LLM Memory Writer against `evals/sage-memory-cases.json`.
+   The repo can now run the live LLM Memory Writer against `evals/sage-memory-cases.json`, but the result depends on endpoint availability, model behavior, and API access. Treat it as a development gate and research signal, not a deterministic unit test.
 
 4. **Thin memory lifecycle**
 
@@ -248,7 +251,7 @@ Gap:
 
 ## Recommended Next Slice
 
-Do not start with graph database work. The smallest useful Care Card loop, deterministic reader, developer-only response injection, memory response eval V0, and SAGE end-to-end fixture eval are now real in code; the next gap is live writer evaluation and developer memory diagnostics.
+Do not start with graph database work. The smallest useful Care Card loop, deterministic reader, developer-only response injection, memory response eval V0, SAGE end-to-end fixture eval, and live Memory Writer eval V0 are now real in code; the next gap is developer memory diagnostics and live eval reporting.
 
 ### Slice 1: Care Card Store V0
 
@@ -362,7 +365,7 @@ Acceptance criteria:
 
 ### Slice 6: Live Memory Writer Eval V0
 
-Status: next recommended slice.
+Status: implemented in code on 2026-05-26.
 
 Goal:
 
@@ -380,6 +383,25 @@ Acceptance criteria:
 - keeps raw private user records out of committed eval artifacts
 - reports whether failure belongs to writer extraction, guardian rejection, prompt contract, endpoint availability, or eval fixture expectations
 
+### Slice 7: Care Card Inspector / Eval Report V0
+
+Status: next recommended slice.
+
+Goal:
+
+```text
+local Care Card + eval summaries
+-> developer-readable diagnostics
+-> safer memory iteration
+```
+
+Acceptance criteria:
+
+- show current Care Card memories in developer mode without exposing raw private logs
+- make clear which memories came from writer output versus fixture/eval data
+- add a lightweight way to copy or export latest memory eval summaries for research review
+- keep user-facing mode free of memory internals
+
 ## Explicit Non-Goals For The Next Slice
 
 - no production graph database
@@ -392,6 +414,6 @@ Acceptance criteria:
 
 ## Bottom Line
 
-The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, run a V0 memory response eval, and exercise the writer-fixture/guardian/store/reader loop end to end.
+The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, run a V0 memory response eval, exercise the writer-fixture/guardian/store/reader loop end to end, and run a live writer eval against committed fixtures.
 
-The next real milestone is not "better prompt wording." It is proving live writer outputs against the eval fixtures and then adding memory diagnostics before making memory behavior broader or more user-visible.
+The next real milestone is not "better prompt wording." It is making memory diagnostics and live eval reporting inspectable before making memory behavior broader or more user-visible.

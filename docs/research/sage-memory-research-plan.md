@@ -247,6 +247,14 @@ R1 requires evals before runtime memory affects user-visible responses.
 
 Test whether Writer extracts useful candidates and avoids over-saving.
 
+Current V0 runner:
+
+- `evals/sage-memory-cases.json`
+- `scripts/run-sage-memory-writer-eval.mjs`
+- `npm run eval:sage:writer`
+
+The runner calls the developer Memory Writer endpoint, scores allow/reject writer cases, and reports whether failures belong to endpoint availability, prompt contract, writer extraction, guardian rejection, or fixture expectations.
+
 ### Rejection Evals
 
 Test whether Guardian rejects:
