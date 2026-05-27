@@ -116,6 +116,15 @@ describe("exportAvalokaData", () => {
             model: "gpt-5.2",
             latencyMs: 880,
           },
+          retrievedCareFacts: [
+            {
+              memoryId: "memory-1",
+              kind: "avoid_response_move",
+              text: "Avoid confirming punishment or debt framing.",
+              confidence: 0.9,
+              tags: ["self_blame"],
+            },
+          ],
           repairAttempted: false,
         },
         openaiPrimary: {
@@ -226,6 +235,15 @@ describe("exportAvalokaData", () => {
             { id: "return_from_story_to_step", confidence: 0.66 },
           ],
         },
+        retrievedCareFacts: [
+          {
+            memoryId: "memory-1",
+            kind: "avoid_response_move",
+            text: "Avoid confirming punishment or debt framing.",
+            confidence: 0.9,
+            tags: ["self_blame"],
+          },
+        ],
       },
     });
     expect(exported.summary).toMatchObject({

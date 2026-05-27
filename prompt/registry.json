@@ -71,8 +71,8 @@
       "id": "avaloka-v2-orchestrator-response",
       "file": "prompt/avaloka-v2-orchestrator-response.md",
       "status": "active",
-      "version": "v2",
-      "purpose": "Generate the user-facing Avaloka V2 response from crisis, Baifa, and Compassion OS context.",
+      "version": "v3",
+      "purpose": "Generate the user-facing Avaloka V2 response from crisis, Baifa, Compassion OS, and developer-only retrieved care fact context.",
       "knowledgeSources": [
         "docs/kb/README.md",
         "docs/kb/derived/avaloka-core-philosophy.zh.md",

@@ -1,4 +1,4 @@
-import type { CareCard, CareMemory, MemoryCandidate, SageMemoryCandidateKind } from "../types";
+import type { CareCard, CareMemory, MemoryCandidate, RetrievedCareFact, SageMemoryCandidateKind } from "../types";
 
 export type MemoryCandidateKind = SageMemoryCandidateKind;
 export type { MemoryCandidate };
@@ -197,6 +197,16 @@ export function readCareFactsFromCard(
     .sort((a, b) => b.score - a.score || b.memory.updatedAt.localeCompare(a.memory.updatedAt))
     .slice(0, limit)
     .map(({ memory }) => memory);
+}
+
+export function buildPromptCareFacts(memories: CareMemory[]): RetrievedCareFact[] {
+  return memories.map((memory) => ({
+    memoryId: memory.id,
+    kind: memory.kind,
+    text: memory.text,
+    confidence: memory.confidence,
+    tags: memory.tags,
+  }));
 }
 
 function unique(values: string[]): string[] {

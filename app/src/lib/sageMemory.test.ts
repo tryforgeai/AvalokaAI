@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildPromptCareFacts,
   createEmptyCareCard,
   guardMemoryCandidate,
   readCareFactsFromCard,
@@ -305,5 +306,34 @@ describe("SAGE Lite memory core", () => {
     );
 
     expect(facts).toEqual([]);
+  });
+
+  it("formats retrieved care facts for prompt injection without evidence ids", () => {
+    const careFacts = buildPromptCareFacts([
+      {
+        id: "safety-self-blame",
+        kind: "safety_note",
+        text: "Do not validate punishment, karmic debt, or blame framing.",
+        confidence: 0.82,
+        evidenceIds: ["feedback-1", "user-1"],
+        tags: ["self_blame", "illness_fear"],
+        createdAt: "2026-05-26T10:00:00.000Z",
+        updatedAt: "2026-05-26T10:00:00.000Z",
+        lastSeenAt: "2026-05-26T10:00:00.000Z",
+        occurrences: 2,
+      },
+    ]);
+
+    expect(careFacts).toEqual([
+      {
+        memoryId: "safety-self-blame",
+        kind: "safety_note",
+        text: "Do not validate punishment, karmic debt, or blame framing.",
+        confidence: 0.82,
+        tags: ["self_blame", "illness_fear"],
+      },
+    ]);
+    expect(JSON.stringify(careFacts)).not.toContain("feedback-1");
+    expect(JSON.stringify(careFacts)).not.toContain("evidenceIds");
   });
 });

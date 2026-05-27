@@ -195,6 +195,7 @@ function buildAvalokaV2ResponseInput(payload) {
     dukkhaTypes: payload.dukkhaTypes || [],
     dukkhaPatterns: payload.dukkhaPatterns || [],
     responseMoves: payload.responseMoves || [],
+    careFacts: payload.retrievedCareFacts || [],
     repairGuidance: payload.repairGuidance || "",
   });
 }
@@ -637,6 +638,7 @@ async function callAvalokaV2ResponseFlow({ payload, crisis, baifa, startedAt }) 
       baifa,
       compassionPlan,
       guardian,
+      retrievedCareFacts: payload.retrievedCareFacts || [],
       repairAttempted,
       model,
       latencyMs: Date.now() - startedAt,

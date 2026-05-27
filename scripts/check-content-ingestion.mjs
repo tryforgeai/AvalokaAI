@@ -11,6 +11,7 @@ const avalokaV2CasesPath = join(repoRoot, "evals/avaloka-v2-orchestrator-cases.j
 const avalokaV2GoldenCasesPath = join(repoRoot, "evals/avaloka-v2-golden-cases.json");
 const avalokiteshvaraCasesPath = join(repoRoot, "evals/avalokiteshvara-compassion-cases.json");
 const sageMemoryCasesPath = join(repoRoot, "evals/sage-memory-cases.json");
+const memoryResponseCasesPath = join(repoRoot, "evals/memory-response-cases.json");
 const promptRegistryPath = join(repoRoot, "prompt/registry.json");
 const kbReadmePath = join(repoRoot, "docs/kb/README.md");
 const sageResearchPlanPath = join(repoRoot, "docs/research/sage-memory-research-plan.md");
@@ -49,6 +50,7 @@ assert(existsSync(avalokaV2CasesPath), "Missing evals/avaloka-v2-orchestrator-ca
 assert(existsSync(avalokaV2GoldenCasesPath), "Missing evals/avaloka-v2-golden-cases.json.");
 assert(existsSync(avalokiteshvaraCasesPath), "Missing evals/avalokiteshvara-compassion-cases.json.");
 assert(existsSync(sageMemoryCasesPath), "Missing evals/sage-memory-cases.json.");
+assert(existsSync(memoryResponseCasesPath), "Missing evals/memory-response-cases.json.");
 assert(existsSync(promptRegistryPath), "Missing prompt/registry.json.");
 assert(existsSync(kbReadmePath), "Missing docs/kb/README.md.");
 assert(existsSync(sageResearchPlanPath), "Missing docs/research/sage-memory-research-plan.md.");
@@ -82,6 +84,7 @@ const avalokaV2Cases = existsSync(avalokaV2CasesPath) ? JSON.parse(read(avalokaV
 const avalokaV2GoldenCases = existsSync(avalokaV2GoldenCasesPath) ? JSON.parse(read(avalokaV2GoldenCasesPath)) : [];
 const avalokiteshvaraCases = existsSync(avalokiteshvaraCasesPath) ? JSON.parse(read(avalokiteshvaraCasesPath)) : [];
 const sageMemoryCases = existsSync(sageMemoryCasesPath) ? JSON.parse(read(sageMemoryCasesPath)) : [];
+const memoryResponseCases = existsSync(memoryResponseCasesPath) ? JSON.parse(read(memoryResponseCasesPath)) : [];
 const promptRegistry = existsSync(promptRegistryPath) ? JSON.parse(read(promptRegistryPath)) : { prompts: [] };
 const sageResearchPlan = existsSync(sageResearchPlanPath) ? read(sageResearchPlanPath) : "";
 const memoryEngine = existsSync(memoryEnginePath) ? read(memoryEnginePath) : "";
@@ -102,6 +105,8 @@ assert(Array.isArray(avalokiteshvaraCases), "avalokiteshvara-compassion-cases.js
 assert(avalokiteshvaraCases.length >= 8, "avalokiteshvara-compassion-cases.json must include at least 8 cases.");
 assert(Array.isArray(sageMemoryCases), "sage-memory-cases.json must be an array.");
 assert(sageMemoryCases.length >= 5, "sage-memory-cases.json must include at least 5 cases.");
+assert(Array.isArray(memoryResponseCases), "memory-response-cases.json must be an array.");
+assert(memoryResponseCases.length >= 6, "memory-response-cases.json must include at least 6 cases.");
 assert(Array.isArray(promptRegistry.prompts), "prompt/registry.json must include a prompts array.");
 
 for (const term of ["SAGE Lite", "Memory Writer", "Memory Guardian", "Memory Reader", "eval"]) {
@@ -462,6 +467,30 @@ for (const expected of ["allow", "reject"]) {
   assert(sageMemoryExpected.has(expected), `SAGE memory evals must include expected "${expected}".`);
 }
 
+const memoryResponseGroups = new Set();
+const memoryResponseUses = new Set();
+const memoryResponseCaseIds = new Set();
+for (const testCase of memoryResponseCases) {
+  assert(testCase.id, "Every memory response eval case must have an id.");
+  assert(!memoryResponseCaseIds.has(testCase.id), `Duplicate memory response eval case id: ${testCase.id}`);
+  memoryResponseCaseIds.add(testCase.id);
+  assert(testCase.group, `Memory response eval case ${testCase.id} must include group.`);
+  assert(testCase.user_input, `Memory response eval case ${testCase.id} must include user_input.`);
+  assert(Array.isArray(testCase.retrievedCareFacts), `Memory response eval case ${testCase.id} must include retrievedCareFacts.`);
+  assert(["use", "ignore"].includes(testCase.expected_use), `Memory response eval case ${testCase.id} must include expected_use.`);
+  assert(Array.isArray(testCase.expected_with_terms), `Memory response eval case ${testCase.id} must include expected_with_terms.`);
+  assert(Array.isArray(testCase.forbidden_terms), `Memory response eval case ${testCase.id} must include forbidden_terms.`);
+  assert(testCase.reason, `Memory response eval case ${testCase.id} must include reason.`);
+  memoryResponseGroups.add(testCase.group);
+  memoryResponseUses.add(testCase.expected_use);
+}
+for (const group of ["self_blame", "illness_fear", "aging_fear", "tone_preference", "no_match", "stale_memory"]) {
+  assert(memoryResponseGroups.has(group), `Memory response evals must include group "${group}".`);
+}
+for (const expectedUse of ["use", "ignore"]) {
+  assert(memoryResponseUses.has(expectedUse), `Memory response evals must include expected_use "${expectedUse}".`);
+}
+
 const dukkhaMap = existsSync(dukkhaMapPath) ? read(dukkhaMapPath) : "";
 const mapperTest = existsSync(dukkhaMapperTestPath) ? read(dukkhaMapperTestPath) : "";
 const responseTest = existsSync(dukkhaResponseTestPath) ? read(dukkhaResponseTestPath) : "";
@@ -521,5 +550,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases, ${sageMemoryCases.length} SAGE memory cases.`,
+  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases, ${sageMemoryCases.length} SAGE memory cases, ${memoryResponseCases.length} memory response cases.`,
 );

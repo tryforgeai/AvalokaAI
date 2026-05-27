@@ -1,4 +1,4 @@
-import type { AvalokaV2Result } from "../types";
+import type { AvalokaV2Result, RetrievedCareFact } from "../types";
 
 export interface AvalokaV2Request {
   userText: string;
@@ -7,6 +7,7 @@ export interface AvalokaV2Request {
   dukkhaTypes?: string[];
   dukkhaPatterns?: string[];
   responseMoves?: string[];
+  retrievedCareFacts?: RetrievedCareFact[];
 }
 
 export async function requestAvalokaV2(payload: AvalokaV2Request): Promise<AvalokaV2Result> {
@@ -48,6 +49,7 @@ export async function requestAvalokaV2(payload: AvalokaV2Request): Promise<Avalo
     baifa: result.baifa,
     compassionPlan: result.compassionPlan,
     guardian: result.guardian,
+    retrievedCareFacts: result.retrievedCareFacts,
     repairAttempted: Boolean(result.repairAttempted),
   };
 }

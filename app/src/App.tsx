@@ -8,6 +8,7 @@ import { buildGuardedResponse } from "./lib/guardedResponse";
 import { applyAvalokaV2Result, createInitialLlmDebugState } from "./lib/llmPipeline";
 import { requestAvalokaV2 } from "./lib/orchestratorClient";
 import { selectScenario } from "./lib/responseSelector";
+import { buildPromptCareFacts, readCareFactsFromCard } from "./lib/sageMemory";
 import { requestSageMemoryWriter } from "./lib/sageMemoryClient";
 import { getVisibleBaifaResult } from "./lib/visibleDebug";
 import { isDeveloperMode } from "./lib/uiMode";
@@ -15,6 +16,7 @@ import {
   clearAvalokaData,
   exportAvalokaData,
   hasConsent,
+  loadCareCard,
   loadFeedback,
   loadMessages,
   saveConsent,
@@ -22,7 +24,15 @@ import {
   saveMemoryCandidates,
   saveMessages,
 } from "./lib/storage";
-import type { BaifaMindState, ChatMessage, CompassionMove, FeedbackEntry, MemoryCandidate, MemoryGuardianResult } from "./types";
+import type {
+  BaifaMindState,
+  ChatMessage,
+  CompassionMove,
+  FeedbackEntry,
+  MemoryCandidate,
+  MemoryGuardianResult,
+  RetrievedCareFact,
+} from "./types";
 
 function makeId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -103,6 +113,21 @@ export default function App() {
     setActiveMessageId(avalokaMessage.id);
     setInput("");
 
+    const retrievedCareFacts = developerMode
+      ? buildPromptCareFacts(
+          readCareFactsFromCard(
+            loadCareCard(),
+            {
+              scenarioId: avalokaMessage.scenarioId,
+              dukkhaTypes: dukkha?.dukkhaTypes,
+              dukkhaPatterns: dukkha?.patterns,
+              responseMoves: dukkha?.responseMoves,
+            },
+            { limit: 5 },
+          ),
+        )
+      : undefined;
+
     requestAvalokaV2({
       userText: text,
       localText: guardedResponse.text,
@@ -110,6 +135,7 @@ export default function App() {
       dukkhaTypes: dukkha?.dukkhaTypes,
       dukkhaPatterns: dukkha?.patterns,
       responseMoves: dukkha?.responseMoves,
+      retrievedCareFacts,
     }).then((orchestratorV2) => {
       setMessages((current) =>
         current.map((message) =>
@@ -426,6 +452,8 @@ export default function App() {
                 </dd>
                 <dt>repair</dt>
                 <dd>{latestDebugMessage.orchestratorV2.repairAttempted ? "yes" : "no"}</dd>
+                <dt>care facts</dt>
+                <dd>{formatRetrievedCareFacts(latestDebugMessage.orchestratorV2.retrievedCareFacts)}</dd>
               </dl>
               {latestDebugMessage.orchestratorV2.error ? (
                 <p className="soft-note">{latestDebugMessage.orchestratorV2.error}</p>
@@ -570,4 +598,9 @@ function formatMemoryGuardian(results?: MemoryGuardianResult[]): string {
   return results
     .map((result) => `${result.candidateId}: ${result.status}${result.reasons.length ? ` (${result.reasons.join(", ")})` : ""}`)
     .join(" | ");
+}
+
+function formatRetrievedCareFacts(facts?: RetrievedCareFact[]): string {
+  if (!facts || facts.length === 0) return "none";
+  return facts.map((fact) => `${fact.memoryId} ${fact.kind}: ${fact.text}`).join(" | ");
 }

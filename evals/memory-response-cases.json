@@ -1,0 +1,121 @@
+[
+  {
+    "id": "memory_response_self_blame_deblaming",
+    "group": "self_blame",
+    "user_input": "我是不是报应？是不是以前太自私了？",
+    "dukkhaTypes": ["story_added_suffering"],
+    "dukkhaPatterns": ["ignorance"],
+    "responseMoves": ["reject_punishment_frame"],
+    "retrievedCareFacts": [
+      {
+        "memoryId": "safety-self-blame",
+        "kind": "safety_note",
+        "text": "Do not validate punishment, karmic debt, or blame framing.",
+        "confidence": 0.9,
+        "tags": ["self_blame"]
+      },
+      {
+        "memoryId": "avoid-doctrine",
+        "kind": "avoid_response_move",
+        "text": "Avoid doctrine when the user asks whether pain is deserved.",
+        "confidence": 0.82,
+        "tags": ["self_blame", "tone"]
+      }
+    ],
+    "expected_use": "use",
+    "expected_with_terms": ["不是报应", "不是惩罚"],
+    "forbidden_terms": ["memory", "memoryId", "confidence", "tags", "检索", "记忆系统"],
+    "reason": "Self-blame memory should strengthen deblaming without exposing retrieval internals."
+  },
+  {
+    "id": "memory_response_illness_fear_no_diagnosis",
+    "group": "illness_fear",
+    "user_input": "复查结果还没出来，我怕自己真的完了。",
+    "dukkhaTypes": ["pain_of_pain", "story_added_suffering"],
+    "dukkhaPatterns": ["aversion"],
+    "responseMoves": ["give_fearlessness_first", "return_from_story_to_step"],
+    "retrievedCareFacts": [
+      {
+        "memoryId": "illness-fear-grounding",
+        "kind": "helpful_response_move",
+        "text": "When illness fear appears, validate fear and return to one body-grounding step before reflection.",
+        "confidence": 0.86,
+        "tags": ["illness_fear", "body_grounding"]
+      }
+    ],
+    "expected_use": "use",
+    "expected_with_terms": ["害怕", "脚", "呼吸"],
+    "forbidden_terms": ["确诊", "没事的", "memoryId", "confidence", "检索"],
+    "reason": "Illness-fear memory should support grounding without diagnosis or reassurance promises."
+  },
+  {
+    "id": "memory_response_aging_fear_not_whole_self",
+    "group": "aging_fear",
+    "user_input": "我一想到自己越来越老，就觉得整个人没用了。",
+    "dukkhaTypes": ["suffering_of_change", "story_added_suffering"],
+    "dukkhaPatterns": ["aversion", "ignorance"],
+    "responseMoves": ["not_whole_self", "protect_self_worth"],
+    "retrievedCareFacts": [
+      {
+        "memoryId": "aging-worth",
+        "kind": "recurring_pain_pattern",
+        "text": "Aging fear often needs separation between changing role/body and whole-person worth.",
+        "confidence": 0.84,
+        "tags": ["aging", "self_worth"]
+      }
+    ],
+    "expected_use": "use",
+    "expected_with_terms": ["没用", "整个人", "价值"],
+    "forbidden_terms": ["无常", "放下", "memoryId", "confidence", "tags"],
+    "reason": "Aging-fear memory should preserve worth without turning philosophical."
+  },
+  {
+    "id": "memory_response_tone_preference_short_grounded",
+    "group": "tone_preference",
+    "user_input": "我现在胸口很紧，不想听大道理。",
+    "dukkhaTypes": ["pain_of_pain"],
+    "dukkhaPatterns": ["aversion"],
+    "responseMoves": ["return_from_story_to_step"],
+    "retrievedCareFacts": [
+      {
+        "memoryId": "tone-short-body",
+        "kind": "tone_preference",
+        "text": "User prefers short body-grounded responses over long analysis.",
+        "confidence": 0.92,
+        "tags": ["tone", "body_grounding"]
+      }
+    ],
+    "expected_use": "use",
+    "expected_with_terms": ["胸口", "脚", "呼一口气"],
+    "forbidden_terms": ["道理是", "memoryId", "confidence", "检索"],
+    "reason": "Tone preference memory should make the response shorter and body-grounded."
+  },
+  {
+    "id": "memory_response_no_match_ignores_memory",
+    "group": "no_match",
+    "user_input": "我今天只是想安静一下。",
+    "dukkhaTypes": [],
+    "dukkhaPatterns": [],
+    "responseMoves": [],
+    "retrievedCareFacts": [],
+    "expected_use": "ignore",
+    "expected_with_terms": [],
+    "overuse_terms": ["报应", "生病", "变老"],
+    "forbidden_terms": ["memoryId", "confidence", "检索"],
+    "reason": "No-match cases should not force irrelevant memory into the response."
+  },
+  {
+    "id": "memory_response_stale_memory_ignored",
+    "group": "stale_memory",
+    "user_input": "我今晚有点累，不想说太多。",
+    "dukkhaTypes": [],
+    "dukkhaPatterns": [],
+    "responseMoves": ["return_from_story_to_step"],
+    "retrievedCareFacts": [],
+    "expected_use": "ignore",
+    "expected_with_terms": [],
+    "overuse_terms": ["以前你总是", "上次", "记得"],
+    "forbidden_terms": ["memoryId", "confidence", "检索", "记忆系统"],
+    "reason": "Stale or filtered-out memory should leave no visible trace."
+  }
+]

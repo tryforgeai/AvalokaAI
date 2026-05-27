@@ -124,6 +124,7 @@ export interface AvalokaV2Result {
   baifa?: BaifaMap;
   compassionPlan?: CompassionPlanResult;
   guardian?: LlmGuardianReview;
+  retrievedCareFacts?: RetrievedCareFact[];
   repairAttempted?: boolean;
   error?: string;
 }
@@ -158,6 +159,14 @@ export interface CareCard {
   createdAt: string;
   updatedAt: string;
   memories: CareMemory[];
+}
+
+export interface RetrievedCareFact {
+  memoryId: string;
+  kind: SageMemoryCandidateKind;
+  text: string;
+  confidence: number;
+  tags: string[];
 }
 
 export interface MemoryGuardianResult {

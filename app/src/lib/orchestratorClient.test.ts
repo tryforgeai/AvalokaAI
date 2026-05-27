@@ -37,6 +37,15 @@ describe("requestAvalokaV2", () => {
           },
           guardian: { passed: true, severity: "pass", violations: [], notes: "Safe." },
           repairAttempted: false,
+          retrievedCareFacts: [
+            {
+              memoryId: "safety-self-blame",
+              kind: "safety_note",
+              text: "Do not validate punishment framing.",
+              confidence: 0.82,
+              tags: ["self_blame"],
+            },
+          ],
         }),
       })),
     );
@@ -45,6 +54,15 @@ describe("requestAvalokaV2", () => {
       userText: "我是不是报应？",
       localText: "我不会把你的痛苦解释成惩罚。",
       localCrisis: false,
+      retrievedCareFacts: [
+        {
+          memoryId: "safety-self-blame",
+          kind: "safety_note",
+          text: "Do not validate punishment framing.",
+          confidence: 0.82,
+          tags: ["self_blame"],
+        },
+      ],
     });
 
     expect(result.status).toBe("ready");
@@ -57,6 +75,21 @@ describe("requestAvalokaV2", () => {
     ]);
     expect(result.guardian?.passed).toBe(true);
     expect(result.responseSource).toBe("llm_orchestrator_v2");
+    expect(result.retrievedCareFacts).toEqual([
+      {
+        memoryId: "safety-self-blame",
+        kind: "safety_note",
+        text: "Do not validate punishment framing.",
+        confidence: 0.82,
+        tags: ["self_blame"],
+      },
+    ]);
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/avaloka-v2",
+      expect.objectContaining({
+        body: expect.stringContaining("retrievedCareFacts"),
+      }),
+    );
   });
 
   it("returns an error result when the orchestrator request fails", async () => {
