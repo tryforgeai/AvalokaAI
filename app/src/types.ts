@@ -152,6 +152,18 @@ export interface CareMemory extends MemoryCandidate {
   updatedAt: string;
   lastSeenAt: string;
   occurrences: number;
+  status?: "active" | "superseded";
+  supersededBy?: string;
+  supersededAt?: string;
+}
+
+export interface CareMemoryLifecycleEvent {
+  type: "delete" | "supersede";
+  memoryId: string;
+  replacementMemoryId?: string;
+  createdAt: string;
+  memoryKind: SageMemoryCandidateKind;
+  memoryText: string;
 }
 
 export interface CareCard {
@@ -159,6 +171,7 @@ export interface CareCard {
   createdAt: string;
   updatedAt: string;
   memories: CareMemory[];
+  lifecycleEvents?: CareMemoryLifecycleEvent[];
 }
 
 export interface RetrievedCareFact {

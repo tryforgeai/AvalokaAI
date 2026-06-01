@@ -286,6 +286,13 @@ The response should improve personalization without sounding creepy, overconfide
 
 Test export and clear behavior.
 
+Memory lifecycle behavior must also be covered:
+
+- delete one local Care Card memory without clearing the whole app
+- supersede one memory with a replacement
+- exclude superseded memories from reader results
+- preserve delete/supersede lifecycle events in export
+
 ### Developer Memory Diagnostics
 
 R1 developer mode should keep memory behavior inspectable before any user-facing memory claim:
@@ -293,6 +300,7 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - show current Care Card memories without raw private transcripts
 - show writer candidate and guardian summaries
 - show latest retrieved care fact IDs
+- show active, superseded, deleted, and stale memory counts
 - provide a copyable memory report for research review
 
 ## 12. Implementation Phases
@@ -327,6 +335,7 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - run response-quality evals
 - keep user mode free of memory internals
 - inspect Care Card and memory eval summaries in developer mode
+- support developer-only single-memory delete and supersede controls
 
 ### Phase 5: Graph Memory Experiment
 

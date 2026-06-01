@@ -194,6 +194,7 @@ export function readCareFactsFromCard(
 
   return card.memories
     .filter((memory) => memory.confidence >= minConfidence)
+    .filter((memory) => (memory.status || "active") === "active")
     .filter((memory) => memory.evidenceIds.length > 0)
     .filter((memory) => !isStaleMemory(memory, now, staleAfterDays))
     .map((memory) => {
@@ -248,7 +249,9 @@ export function createEmptyCareCard(now: string): CareCard {
 export function upsertCareMemory(card: CareCard, candidate: MemoryCandidate, now: string): CareCard {
   const text = normalizeMemoryText(candidate.text);
   const key = careMemoryKey({ ...candidate, text });
-  const existingIndex = card.memories.findIndex((memory) => careMemoryKey(memory) === key);
+  const existingIndex = card.memories.findIndex(
+    (memory) => (memory.status || "active") === "active" && careMemoryKey(memory) === key,
+  );
 
   if (existingIndex === -1) {
     const memory: CareMemory = {
@@ -259,6 +262,7 @@ export function upsertCareMemory(card: CareCard, candidate: MemoryCandidate, now
       updatedAt: now,
       lastSeenAt: now,
       occurrences: 1,
+      status: "active",
     };
 
     return {

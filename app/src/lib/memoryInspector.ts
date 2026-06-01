@@ -1,8 +1,12 @@
-import type { CareCard, CareMemory, ChatMessage, SageMemoryWriterResult } from "../types";
+import type { CareCard, CareMemory, CareMemoryLifecycleEvent, ChatMessage, SageMemoryWriterResult } from "../types";
 
 export interface MemoryInspectorReport {
   summary: {
     careMemoryCount: number;
+    activeMemoryCount: number;
+    supersededMemoryCount: number;
+    deletedMemoryCount: number;
+    staleMemoryCount: number;
     writerReadyCount: number;
     writerErrorCount: number;
     writerCandidateCount: number;
@@ -21,6 +25,17 @@ export interface MemoryInspectorReport {
     evidenceCount: number;
     updatedAt: string;
     lastSeenAt: string;
+    status: "active" | "superseded";
+    supersededBy?: string;
+    supersededAt?: string;
+    stale: boolean;
+  }>;
+  lifecycleEvents: Array<{
+    type: CareMemoryLifecycleEvent["type"];
+    memoryId: string;
+    replacementMemoryId?: string;
+    createdAt: string;
+    memoryKind: string;
   }>;
   latestWriter: {
     status: SageMemoryWriterResult["status"] | "none";
@@ -36,10 +51,13 @@ export interface MemoryInspectorReport {
 export function buildMemoryInspectorReport({
   careCard,
   messages,
+  now,
 }: {
   careCard: CareCard;
   messages: ChatMessage[];
+  now?: string;
 }): MemoryInspectorReport {
+  const reportNow = now || new Date().toISOString();
   const writerResults = messages.map((message) => message.sageMemory).filter(Boolean) as SageMemoryWriterResult[];
   const latestWriter = [...writerResults].reverse()[0];
   const latestV2WithRetrieval = [...messages].reverse().find((message) => message.orchestratorV2?.retrievedCareFacts);
@@ -48,6 +66,10 @@ export function buildMemoryInspectorReport({
   return {
     summary: {
       careMemoryCount: careCard.memories.length,
+      activeMemoryCount: careCard.memories.filter((memory) => memoryStatus(memory) === "active").length,
+      supersededMemoryCount: careCard.memories.filter((memory) => memoryStatus(memory) === "superseded").length,
+      deletedMemoryCount: (careCard.lifecycleEvents || []).filter((event) => event.type === "delete").length,
+      staleMemoryCount: careCard.memories.filter((memory) => isStaleMemory(memory, reportNow)).length,
       writerReadyCount: writerResults.filter((result) => result.status === "ready").length,
       writerErrorCount: writerResults.filter((result) => result.status === "error").length,
       writerCandidateCount: writerResults.reduce((total, result) => total + result.candidates.length, 0),
@@ -55,7 +77,14 @@ export function buildMemoryInspectorReport({
     },
     kindCounts: countBy(careCard.memories.map((memory) => memory.kind)),
     tagCounts: countBy(careCard.memories.flatMap((memory) => memory.tags)),
-    memories: careCard.memories.map(formatMemoryForInspector),
+    memories: careCard.memories.map((memory) => formatMemoryForInspector(memory, reportNow)),
+    lifecycleEvents: (careCard.lifecycleEvents || []).map((event) => ({
+      type: event.type,
+      memoryId: event.memoryId,
+      replacementMemoryId: event.replacementMemoryId,
+      createdAt: event.createdAt,
+      memoryKind: event.memoryKind,
+    })),
     latestWriter: latestWriter
       ? {
           status: latestWriter.status,
@@ -74,7 +103,7 @@ export function buildMemoryInspectorReport({
   };
 }
 
-function formatMemoryForInspector(memory: CareMemory): MemoryInspectorReport["memories"][number] {
+function formatMemoryForInspector(memory: CareMemory, now: string): MemoryInspectorReport["memories"][number] {
   return {
     id: memory.id,
     source: "care_card",
@@ -86,7 +115,23 @@ function formatMemoryForInspector(memory: CareMemory): MemoryInspectorReport["me
     evidenceCount: memory.evidenceIds.length,
     updatedAt: memory.updatedAt,
     lastSeenAt: memory.lastSeenAt,
+    status: memoryStatus(memory),
+    supersededBy: memory.supersededBy,
+    supersededAt: memory.supersededAt,
+    stale: isStaleMemory(memory, now),
   };
+}
+
+function memoryStatus(memory: CareMemory): "active" | "superseded" {
+  return memory.status || "active";
+}
+
+function isStaleMemory(memory: CareMemory, now: string, staleAfterDays = 180): boolean {
+  const nowMs = Date.parse(now);
+  const lastSeenMs = Date.parse(memory.lastSeenAt || memory.updatedAt || memory.createdAt);
+  if (!Number.isFinite(nowMs) || !Number.isFinite(lastSeenMs)) return false;
+
+  return nowMs - lastSeenMs > staleAfterDays * 24 * 60 * 60 * 1000;
 }
 
 function countBy(items: string[]): Record<string, number> {

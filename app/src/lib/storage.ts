@@ -1,4 +1,4 @@
-import { addAllowedMemoryCandidates, createEmptyCareCard } from "./sageMemory";
+import { addAllowedMemoryCandidates, createEmptyCareCard, guardMemoryCandidate } from "./sageMemory";
 import type { CareCard, ChatMessage, FeedbackEntry, MemoryCandidate } from "../types";
 
 const messagesKey = "avaloka:v1:messages";
@@ -56,6 +56,71 @@ export function saveMemoryCandidates(candidates: MemoryCandidate[], now = new Da
   const careCard = addAllowedMemoryCandidates(loadCareCard(), candidates, now);
   saveCareCard(careCard);
   return careCard;
+}
+
+export function deleteCareMemory(memoryId: string, now = new Date().toISOString()): CareCard {
+  const careCard = loadCareCard();
+  const memory = careCard.memories.find((item) => item.id === memoryId);
+  if (!memory) return careCard;
+
+  const updated: CareCard = {
+    ...careCard,
+    updatedAt: now,
+    memories: careCard.memories.filter((item) => item.id !== memoryId),
+    lifecycleEvents: [
+      ...(careCard.lifecycleEvents || []),
+      {
+        type: "delete",
+        memoryId,
+        createdAt: now,
+        memoryKind: memory.kind,
+        memoryText: memory.text,
+      },
+    ],
+  };
+  saveCareCard(updated);
+  return updated;
+}
+
+export function supersedeCareMemory(
+  memoryId: string,
+  replacement: MemoryCandidate,
+  now = new Date().toISOString(),
+): CareCard {
+  const careCard = loadCareCard();
+  const memory = careCard.memories.find((item) => item.id === memoryId);
+  if (!memory) return careCard;
+  if (guardMemoryCandidate(replacement).status !== "allow") return careCard;
+
+  const markedCard: CareCard = {
+    ...careCard,
+    updatedAt: now,
+    memories: careCard.memories.map((item) =>
+      item.id === memoryId
+        ? {
+            ...item,
+            status: "superseded",
+            supersededBy: replacement.id,
+            supersededAt: now,
+            updatedAt: now,
+          }
+        : item,
+    ),
+    lifecycleEvents: [
+      ...(careCard.lifecycleEvents || []),
+      {
+        type: "supersede",
+        memoryId,
+        replacementMemoryId: replacement.id,
+        createdAt: now,
+        memoryKind: memory.kind,
+        memoryText: memory.text,
+      },
+    ],
+  };
+  const updated = addAllowedMemoryCandidates(markedCard, [replacement], now);
+  saveCareCard(updated);
+  return updated;
 }
 
 function buildTurns(messages: ChatMessage[], feedback: FeedbackEntry[]) {
@@ -147,6 +212,9 @@ function buildSummary(
     sageMemoryKindCounts: countBy(turns.flatMap((turn) => turn.sageMemory?.candidates.map((candidate) => candidate.kind) || [])),
     sageMemoryGuardianCounts: countBy(turns.flatMap((turn) => turn.sageMemory?.guardian.map((result) => result.status) || [])),
     careMemoryCount: careCard.memories.length,
+    careMemoryActiveCount: careCard.memories.filter((memory) => (memory.status || "active") === "active").length,
+    careMemorySupersededCount: careCard.memories.filter((memory) => memory.status === "superseded").length,
+    careMemoryDeletedCount: (careCard.lifecycleEvents || []).filter((event) => event.type === "delete").length,
     careMemoryKindCounts: countBy(careCard.memories.map((memory) => memory.kind)),
   };
 }

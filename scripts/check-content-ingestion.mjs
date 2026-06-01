@@ -33,6 +33,7 @@ const sageMemoryWriterEvalRunnerPath = join(repoRoot, "scripts/sage-memory-write
 const sageMemoryWriterEvalScriptPath = join(repoRoot, "scripts/run-sage-memory-writer-eval.mjs");
 const memoryInspectorPath = join(repoRoot, "app/src/lib/memoryInspector.ts");
 const memoryInspectorTestPath = join(repoRoot, "app/src/lib/memoryInspector.test.ts");
+const storagePath = join(repoRoot, "app/src/lib/storage.ts");
 const dukkhaMapPath = join(repoRoot, "app/src/data/dukkhaMap.ts");
 const dukkhaMapperTestPath = join(repoRoot, "app/src/lib/dukkhaMapper.test.ts");
 const dukkhaResponseTestPath = join(repoRoot, "app/src/lib/dukkhaResponse.test.ts");
@@ -76,6 +77,7 @@ assert(existsSync(sageMemoryWriterEvalRunnerPath), "Missing scripts/sage-memory-
 assert(existsSync(sageMemoryWriterEvalScriptPath), "Missing scripts/run-sage-memory-writer-eval.mjs.");
 assert(existsSync(memoryInspectorPath), "Missing app/src/lib/memoryInspector.ts.");
 assert(existsSync(memoryInspectorTestPath), "Missing app/src/lib/memoryInspector.test.ts.");
+assert(existsSync(storagePath), "Missing app/src/lib/storage.ts.");
 
 const episodeFiles = readdirSync(podcastDir)
   .filter((file) => /^episode-\d{3}-.+\.zh\.md$/.test(file))
@@ -99,6 +101,7 @@ const memoryResponseCases = existsSync(memoryResponseCasesPath) ? JSON.parse(rea
 const promptRegistry = existsSync(promptRegistryPath) ? JSON.parse(read(promptRegistryPath)) : { prompts: [] };
 const sageResearchPlan = existsSync(sageResearchPlanPath) ? read(sageResearchPlanPath) : "";
 const memoryEngine = existsSync(memoryEnginePath) ? read(memoryEnginePath) : "";
+const storageRuntime = existsSync(storagePath) ? read(storagePath) : "";
 const memoryEngineZh = existsSync(memoryEngineZhPath) ? read(memoryEngineZhPath) : "";
 const sageKbSource = existsSync(sageKbSourcePath) ? read(sageKbSourcePath) : "";
 const sageKbSourceZh = existsSync(sageKbSourceZhPath) ? read(sageKbSourceZhPath) : "";
@@ -261,6 +264,9 @@ for (const term of ["Do not role-play Guanyin", "Return JSON only", "Do not inve
 }
 assert(shadowServer.includes("createPromptRuntime"), "Shadow server must use the prompt runtime.");
 assert(shadowServer.includes("avalokiteshvara-compassion-planner-v1"), "Shadow server must reference the Compassion OS planner prompt id.");
+for (const term of ["deleteCareMemory", "supersedeCareMemory", "lifecycleEvents"]) {
+  assert(storageRuntime.includes(term), `storage.ts must include memory lifecycle support "${term}".`);
+}
 
 const promptIds = new Set();
 for (const record of promptRegistry.prompts) {

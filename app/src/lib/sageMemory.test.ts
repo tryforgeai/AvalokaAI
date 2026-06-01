@@ -278,6 +278,48 @@ describe("SAGE Lite memory core", () => {
     expect(facts.map((fact) => fact.id)).toEqual(["fresh"]);
   });
 
+  it("excludes superseded care memories from reader results", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "old-tone",
+          kind: "tone_preference" as const,
+          text: "User prefers long analytical responses.",
+          confidence: 0.9,
+          evidenceIds: ["feedback-1"],
+          tags: ["tone"],
+          createdAt: "2026-05-26T10:00:00.000Z",
+          updatedAt: "2026-05-26T10:00:00.000Z",
+          lastSeenAt: "2026-05-26T10:00:00.000Z",
+          occurrences: 1,
+          status: "superseded" as const,
+          supersededBy: "new-tone",
+          supersededAt: "2026-05-26T10:05:00.000Z",
+        },
+        {
+          id: "new-tone",
+          kind: "tone_preference" as const,
+          text: "User prefers short body-grounded responses.",
+          confidence: 0.86,
+          evidenceIds: ["feedback-2"],
+          tags: ["tone"],
+          createdAt: "2026-05-26T10:05:00.000Z",
+          updatedAt: "2026-05-26T10:05:00.000Z",
+          lastSeenAt: "2026-05-26T10:05:00.000Z",
+          occurrences: 1,
+          status: "active" as const,
+        },
+      ],
+    };
+
+    const facts = readCareFactsFromCard(card, { tags: ["tone"] }, { now: "2026-05-26T10:10:00.000Z" });
+
+    expect(facts.map((fact) => fact.id)).toEqual(["new-tone"]);
+  });
+
   it("returns no care facts when the current turn has no matching tags", () => {
     const card = {
       version: "care_card_v1" as const,

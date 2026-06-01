@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   clearAvalokaData,
+  deleteCareMemory,
   exportAvalokaData,
   loadCareCard,
   saveFeedback,
   saveMemoryCandidates,
   saveMessages,
+  supersedeCareMemory,
 } from "./storage";
 import type { ChatMessage, FeedbackEntry } from "../types";
 
@@ -357,6 +359,138 @@ describe("exportAvalokaData", () => {
     expect(loadCareCard()).toMatchObject({
       version: "care_card_v1",
       memories: [],
+    });
+  });
+
+  it("deletes one care memory and records a lifecycle event in export", () => {
+    saveMemoryCandidates(
+      [
+        {
+          id: "memory-delete-me",
+          kind: "tone_preference",
+          text: "User prefers short body-grounded responses.",
+          confidence: 0.82,
+          evidenceIds: ["feedback-1"],
+          tags: ["tone"],
+        },
+      ],
+      "2026-05-26T10:00:00.000Z",
+    );
+
+    const updated = deleteCareMemory("memory-delete-me", "2026-05-26T10:05:00.000Z");
+    const exported = JSON.parse(exportAvalokaData());
+
+    expect(updated.memories).toHaveLength(0);
+    expect(exported.careCard.lifecycleEvents).toEqual([
+      {
+        type: "delete",
+        memoryId: "memory-delete-me",
+        createdAt: "2026-05-26T10:05:00.000Z",
+        memoryKind: "tone_preference",
+        memoryText: "User prefers short body-grounded responses.",
+      },
+    ]);
+    expect(exported.summary).toMatchObject({
+      careMemoryCount: 0,
+      careMemoryDeletedCount: 1,
+      careMemorySupersededCount: 0,
+    });
+  });
+
+  it("supersedes one care memory with a replacement and preserves lifecycle trail", () => {
+    saveMemoryCandidates(
+      [
+        {
+          id: "old-tone",
+          kind: "tone_preference",
+          text: "User prefers longer analytical responses.",
+          confidence: 0.72,
+          evidenceIds: ["feedback-1"],
+          tags: ["tone"],
+        },
+      ],
+      "2026-05-26T10:00:00.000Z",
+    );
+
+    const updated = supersedeCareMemory(
+      "old-tone",
+      {
+        id: "new-tone",
+        kind: "tone_preference",
+        text: "User prefers short body-grounded responses.",
+        confidence: 0.86,
+        evidenceIds: ["feedback-2"],
+        tags: ["tone", "body_grounding"],
+      },
+      "2026-05-26T10:05:00.000Z",
+    );
+    const exported = JSON.parse(exportAvalokaData());
+
+    expect(updated.memories.map((memory) => [memory.id, memory.status])).toEqual([
+      ["old-tone", "superseded"],
+      ["new-tone", "active"],
+    ]);
+    expect(exported.careCard.memories[0]).toMatchObject({
+      id: "old-tone",
+      status: "superseded",
+      supersededBy: "new-tone",
+      supersededAt: "2026-05-26T10:05:00.000Z",
+    });
+    expect(exported.careCard.lifecycleEvents).toEqual([
+      {
+        type: "supersede",
+        memoryId: "old-tone",
+        replacementMemoryId: "new-tone",
+        createdAt: "2026-05-26T10:05:00.000Z",
+        memoryKind: "tone_preference",
+        memoryText: "User prefers longer analytical responses.",
+      },
+    ]);
+    expect(exported.summary).toMatchObject({
+      careMemoryCount: 2,
+      careMemoryActiveCount: 1,
+      careMemorySupersededCount: 1,
+    });
+  });
+
+  it("does not supersede a care memory when the replacement is rejected by the guardian", () => {
+    saveMemoryCandidates(
+      [
+        {
+          id: "old-safety",
+          kind: "safety_note",
+          text: "Avoid medical certainty and keep the user grounded.",
+          confidence: 0.82,
+          evidenceIds: ["feedback-1"],
+          tags: ["safety"],
+        },
+      ],
+      "2026-05-26T10:00:00.000Z",
+    );
+
+    const updated = supersedeCareMemory(
+      "old-safety",
+      {
+        id: "unsafe-replacement",
+        kind: "safety_note",
+        text: "User may have cancer because of karmic debt.",
+        confidence: 0.9,
+        evidenceIds: ["feedback-2"],
+        tags: ["unsafe"],
+      },
+      "2026-05-26T10:05:00.000Z",
+    );
+    const exported = JSON.parse(exportAvalokaData());
+
+    expect(updated.memories).toHaveLength(1);
+    expect(updated.memories[0]).toMatchObject({
+      id: "old-safety",
+      status: "active",
+    });
+    expect(exported.careCard.lifecycleEvents || []).toEqual([]);
+    expect(exported.summary).toMatchObject({
+      careMemoryActiveCount: 1,
+      careMemorySupersededCount: 0,
     });
   });
 });

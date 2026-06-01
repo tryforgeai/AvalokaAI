@@ -1,4 +1,4 @@
-import { Copy, Download, Moon, Send, ShieldCheck, Trash2 } from "lucide-react";
+import { Copy, Download, Moon, RefreshCw, Send, ShieldCheck, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { crisisFallback } from "./data/responseLibrary";
 import { isCrisisMessage } from "./lib/crisisGate";
@@ -15,6 +15,7 @@ import { getVisibleBaifaResult } from "./lib/visibleDebug";
 import { isDeveloperMode } from "./lib/uiMode";
 import {
   clearAvalokaData,
+  deleteCareMemory,
   exportAvalokaData,
   hasConsent,
   loadCareCard,
@@ -24,6 +25,7 @@ import {
   saveFeedback,
   saveMemoryCandidates,
   saveMessages,
+  supersedeCareMemory,
 } from "./lib/storage";
 import type {
   BaifaMindState,
@@ -49,6 +51,7 @@ export default function App() {
   const [exportText, setExportText] = useState("");
   const [exportStatus, setExportStatus] = useState("");
   const [memoryReportStatus, setMemoryReportStatus] = useState("");
+  const [memoryRevision, setMemoryRevision] = useState(0);
 
   useEffect(() => {
     setConsented(hasConsent());
@@ -72,7 +75,7 @@ export default function App() {
   const latestVisibleBaifa = getVisibleBaifaResult(latestDebugMessage);
   const memoryInspectorReport = useMemo(
     () => (developerMode ? buildMemoryInspectorReport({ careCard: loadCareCard(), messages }) : null),
-    [developerMode, messages],
+    [developerMode, messages, memoryRevision],
   );
 
   function acceptConsent() {
@@ -199,6 +202,7 @@ export default function App() {
         }).then((sageMemory) => {
           if (sageMemory.status === "ready" && sageMemory.candidates.length > 0) {
             saveMemoryCandidates(sageMemory.candidates);
+            refreshMemoryInspector();
           }
 
           setMessages((current) =>
@@ -245,6 +249,47 @@ export default function App() {
     } catch {
       setMemoryReportStatus(data);
     }
+  }
+
+  function refreshMemoryInspector() {
+    setMemoryRevision((current) => current + 1);
+  }
+
+  function deleteMemory(memoryId: string) {
+    const confirmed = window.confirm(`Delete care memory "${memoryId}" from the local Care Card?`);
+    if (!confirmed) return;
+
+    deleteCareMemory(memoryId);
+    setMemoryReportStatus(`Deleted memory ${memoryId}.`);
+    refreshMemoryInspector();
+  }
+
+  function supersedeMemory(memoryId: string) {
+    const careCard = loadCareCard();
+    const memory = careCard.memories.find((item) => item.id === memoryId);
+    if (!memory) return;
+
+    const replacementText = window.prompt(`Replacement text for "${memoryId}"`, memory.text)?.trim();
+    if (!replacementText) return;
+
+    const replacementId = `${memory.id}-replacement-${Date.now()}`;
+    const updated = supersedeCareMemory(memory.id, {
+      id: replacementId,
+      kind: memory.kind,
+      text: replacementText,
+      confidence: memory.confidence,
+      evidenceIds: memory.evidenceIds,
+      tags: memory.tags,
+    });
+    const superseded = updated.memories.some(
+      (item) => item.id === memory.id && item.status === "superseded" && item.supersededBy === replacementId,
+    );
+    setMemoryReportStatus(
+      superseded
+        ? `Superseded memory ${memoryId} with ${replacementId}.`
+        : `Replacement rejected by memory guardian; memory ${memoryId} remains active.`,
+    );
+    refreshMemoryInspector();
   }
 
   function clearData() {
@@ -565,6 +610,13 @@ export default function App() {
               <dl>
                 <dt>memories</dt>
                 <dd>{memoryInspectorReport.summary.careMemoryCount}</dd>
+                <dt>active</dt>
+                <dd>
+                  {memoryInspectorReport.summary.activeMemoryCount} active /{" "}
+                  {memoryInspectorReport.summary.supersededMemoryCount} superseded /{" "}
+                  {memoryInspectorReport.summary.deletedMemoryCount} deleted /{" "}
+                  {memoryInspectorReport.summary.staleMemoryCount} stale
+                </dd>
                 <dt>kinds</dt>
                 <dd>{formatCountMap(memoryInspectorReport.kindCounts)}</dd>
                 <dt>tags</dt>
@@ -576,16 +628,28 @@ export default function App() {
                 <div className="memory-list">
                   {memoryInspectorReport.memories.map((memory) => (
                     <article className="memory-row" key={memory.id}>
-                      <div>
+                      <div className="memory-row-header">
                         <strong>{memory.id}</strong>
                         <span>
-                          {memory.kind} | {Math.round(memory.confidence * 100)}% | seen {memory.occurrences}
+                          {memory.kind} | {memory.status}
+                          {memory.stale ? " | stale" : ""} | {Math.round(memory.confidence * 100)}% | seen {memory.occurrences}
                         </span>
                       </div>
                       <p>{memory.text}</p>
                       <small>
                         {memory.source} | evidence {memory.evidenceCount} | {formatDebugList(memory.tags)}
+                        {memory.supersededBy ? ` | superseded by ${memory.supersededBy}` : ""}
                       </small>
+                      {memory.status === "active" ? (
+                        <div className="memory-actions">
+                          <button className="icon-button small-icon-button" onClick={() => supersedeMemory(memory.id)} title="Supersede memory">
+                            <RefreshCw size={14} />
+                          </button>
+                          <button className="icon-button small-icon-button" onClick={() => deleteMemory(memory.id)} title="Delete memory">
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      ) : null}
                     </article>
                   ))}
                 </div>
@@ -617,6 +681,18 @@ export default function App() {
                 <dd>{formatDebugList(memoryInspectorReport.latestWriter.candidateIds)}</dd>
                 <dt>commands</dt>
                 <dd>{memoryInspectorReport.evalCommands.join(" | ")}</dd>
+                <dt>events</dt>
+                <dd>
+                  {memoryInspectorReport.lifecycleEvents.length
+                    ? memoryInspectorReport.lifecycleEvents
+                        .map((event) =>
+                          event.replacementMemoryId
+                            ? `${event.type}:${event.memoryId}->${event.replacementMemoryId}`
+                            : `${event.type}:${event.memoryId}`,
+                        )
+                        .join(" | ")
+                    : "none"}
+                </dd>
               </dl>
               {memoryReportStatus ? (
                 memoryReportStatus.startsWith("{") ? (

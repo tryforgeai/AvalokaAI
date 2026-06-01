@@ -1,7 +1,7 @@
 # R1 Memory Gap Report
 
-Status: Active research gap report, updated after Care Card Inspector / Eval Report V0
-Date: 2026-05-26
+Status: Active research gap report, updated after Memory Lifecycle Control V0
+Date: 2026-05-27
 Source-of-truth touched: `docs/research/sage-memory-research-plan.md`
 
 ## Purpose
@@ -31,12 +31,13 @@ The existing system can:
 - run a SAGE end-to-end eval that exercises writer fixtures through guardian, store, and deterministic reader
 - run a live Memory Writer eval against `evals/sage-memory-cases.json`
 - inspect the local Care Card and copy a developer memory report in `?dev=1`
+- delete or supersede individual local Care Card memories in developer mode
 
 The missing core is:
 
 - no production/user-facing memory management surface
 - no graph-memory schema/runtime experiment
-- no memory lifecycle controls beyond whole-app clear
+- no durable memory lifecycle review workflow beyond local developer controls
 
 In roadmap terms, R1 is roughly at:
 
@@ -51,6 +52,7 @@ conversation + feedback
 -> SAGE end-to-end eval V0
 -> live Memory Writer eval V0
 -> Care Card Inspector / Eval Report V0
+-> Memory Lifecycle Control V0
 -> developer diagnostics / export
 ```
 
@@ -58,7 +60,7 @@ It is not yet at:
 
 ```text
 graph-memory schema experiment
--> memory lifecycle controls
+-> durable memory lifecycle review
 -> user-facing memory controls
 ```
 
@@ -110,17 +112,17 @@ Implemented:
 - `app/src/lib/storage.ts` persists the local Care Card under `avaloka:v1:careCard`
 - export includes a top-level `careCard` object and care-memory summary counts
 - local data clear removes the Care Card together with messages and feedback
-- tests cover save, reject, export, clear, and duplicate/merge behavior
+- tests cover save, reject, export, clear, duplicate/merge, delete, supersede, and lifecycle event behavior
 
 Gap:
 
 - There is no graph-memory store.
 - The Care Card is localStorage-only and developer-path-only.
-- There is no supersede, delete-one-memory, stale-memory behavior, or conflict resolution.
-- There is no standalone Care Card view or memory-specific clear/export control.
+- Supersede/delete are local developer controls only; there is no user-facing memory-management surface.
+- Conflict resolution beyond manual supersede is not mature.
 - The Care Card is read back into the developer-mode V2 response flow.
 
-The remaining storage gap is lifecycle maturity; the largest R1 gap has moved to response evals and memory-management UX.
+The remaining storage gap is lifecycle maturity beyond local developer controls; the largest R1 gap has moved toward graph-memory schema experiments and durable review workflow.
 
 ### 4. Memory Reader
 
@@ -222,14 +224,14 @@ Gap:
 |---|---|---|---|
 | Memory Writer candidate extraction | Partial | `prompt/sage-memory-writer-v1.md`, `/api/sage-memory-writer`, `npm run eval:sage:writer` | Shadow-only; live eval is V0 and model-dependent |
 | Memory Guardian rejection rules | Partial | server guardian, `app/src/lib/sageMemory.ts` | duplicated logic, narrow coverage, no revise behavior |
-| Care Card / memory store | Partial | `CareCard`, `CareMemory`, localStorage persistence, export/clear tests | no graph store, no lifecycle beyond merge |
+| Care Card / memory store | Partial | `CareCard`, `CareMemory`, localStorage persistence, export/clear/delete/supersede tests | no graph store; lifecycle is local developer-only |
 | Graph-memory schema experiments | Not started | docs only | no graph node/edge representation in runtime |
 | Deterministic Memory Reader | Partial | `readCareFactsFromCard(...)`, tag derivation, priority/stale tests | small alias map; no standalone reader diagnostic |
 | Response injection with 3-5 care facts | Partial | developer-only `retrievedCareFacts` -> V2 prompt `careFacts` | no production memory retrieval |
 | Extraction/rejection/retrieval evals | Partial | seed cases, unit tests, `evals/sage-end-to-end-cases.json`, `npm run eval:sage`, `npm run eval:sage:writer` | no persisted live eval report artifact |
 | Response/privacy evals for memory | Partial | `evals/memory-response-cases.json`, `npm run eval:memory` | heuristic verdicts; needs real model baselines / judge |
 | Developer diagnostics | Partial | SAGE Memory Writer panel, V2 retrieved care facts, Care Card Inspector, copyable memory report | no before/after memory-injection comparison |
-| Local-first export/clear | Partial | export includes turn-level writer output and top-level `careCard`; clear removes Care Card | no per-memory lifecycle controls |
+| Local-first export/clear | Partial | export includes turn-level writer output, top-level `careCard`, and lifecycle events; clear removes Care Card | no durable lifecycle review workflow |
 
 ## Main Risks
 
@@ -247,7 +249,7 @@ Gap:
 
 4. **Thin memory lifecycle**
 
-   Add/update/merge/export/clear and developer inspection now exist at V0 level, but delete-one-memory, supersede, stale review, and conflict resolution are not mature.
+   Add/update/merge/export/clear/delete/supersede and developer inspection now exist at V0 level, but durable stale review and conflict resolution are not mature.
 
 5. **Injection safety needs stronger evals**
 
@@ -255,7 +257,7 @@ Gap:
 
 ## Recommended Next Slice
 
-Do not start with graph database work unless the lifecycle surface is stable enough to inspect. The smallest useful Care Card loop, deterministic reader, developer-only response injection, memory response eval V0, SAGE end-to-end fixture eval, live Memory Writer eval V0, and Care Card Inspector / Eval Report V0 are now real in code; the next gap is memory lifecycle control or a very small graph-schema experiment.
+The smallest useful Care Card loop, deterministic reader, developer-only response injection, memory response eval V0, SAGE end-to-end fixture eval, live Memory Writer eval V0, Care Card Inspector / Eval Report V0, and Memory Lifecycle Control V0 are now real in code; the next gap is a very small graph-schema experiment or a durable lifecycle review report.
 
 ### Slice 1: Care Card Store V0
 
@@ -408,7 +410,7 @@ Acceptance criteria:
 
 ### Slice 8: Memory Lifecycle Control V0
 
-Status: next recommended slice.
+Status: implemented in code on 2026-05-27.
 
 Goal:
 
@@ -426,6 +428,25 @@ Acceptance criteria:
 - stale memory review is visible in the inspector
 - tests cover delete, supersede, stale filtering, export, and clear behavior
 
+### Slice 9: Graph Memory Schema V0
+
+Status: next recommended slice.
+
+Goal:
+
+```text
+Care Card memories + lifecycle events
+-> minimal node/edge representation
+-> compare deterministic reader with graph-shaped retrieval
+```
+
+Acceptance criteria:
+
+- define a local graph projection for current Care Card memories without adding a database
+- represent `evidenced_by`, `supersedes`, `tagged_as`, and `supports_response_move` edges
+- add fixture tests for graph projection and graph-aware retrieval candidates
+- keep prompt injection capped at 3-5 care facts
+
 ## Explicit Non-Goals For The Next Slice
 
 - no production graph database
@@ -438,6 +459,6 @@ Acceptance criteria:
 
 ## Bottom Line
 
-The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, run a V0 memory response eval, exercise the writer-fixture/guardian/store/reader loop end to end, run a live writer eval against committed fixtures, and inspect/copy the local memory state in developer mode.
+The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, run a V0 memory response eval, exercise the writer-fixture/guardian/store/reader loop end to end, run a live writer eval against committed fixtures, inspect/copy the local memory state in developer mode, and delete or supersede one memory with an exportable lifecycle trail.
 
-The next real milestone is not "better prompt wording." It is adding memory lifecycle controls so stored facts can be removed, superseded, and reviewed before making memory behavior broader or more user-visible.
+The next real milestone is not "better prompt wording." It is testing whether the Care Card should grow a graph-shaped projection before making memory behavior broader or more user-visible.

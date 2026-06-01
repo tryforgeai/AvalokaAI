@@ -366,7 +366,7 @@ select:focus {
   background: rgba(239, 233, 221, 0.04);
 }
 
-.memory-row div {
+.memory-row-header {
   display: grid;
   gap: 0.2rem;
   margin-bottom: 0.45rem;
@@ -383,6 +383,13 @@ select:focus {
   margin-bottom: 0.45rem;
   font-size: 0.84rem;
   overflow-wrap: anywhere;
+}
+
+.memory-actions {
+  display: flex;
+  gap: 0.45rem;
+  justify-content: flex-end;
+  margin-top: 0.55rem;
 }
 
 .baseline-text,

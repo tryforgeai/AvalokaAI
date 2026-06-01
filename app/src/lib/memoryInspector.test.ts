@@ -20,6 +20,7 @@ describe("buildMemoryInspectorReport", () => {
           updatedAt: "2026-05-26T10:10:00.000Z",
           lastSeenAt: "2026-05-26T10:10:00.000Z",
           occurrences: 2,
+          status: "active",
         },
         {
           id: "tone-short-body",
@@ -28,10 +29,22 @@ describe("buildMemoryInspectorReport", () => {
           confidence: 0.82,
           evidenceIds: ["feedback-2"],
           tags: ["tone", "body_grounding"],
-          createdAt: "2026-05-26T10:05:00.000Z",
-          updatedAt: "2026-05-26T10:05:00.000Z",
-          lastSeenAt: "2026-05-26T10:05:00.000Z",
+          createdAt: "2025-01-01T10:05:00.000Z",
+          updatedAt: "2025-01-01T10:05:00.000Z",
+          lastSeenAt: "2025-01-01T10:05:00.000Z",
           occurrences: 1,
+          status: "superseded",
+          supersededBy: "new-tone-short-body",
+          supersededAt: "2026-05-26T10:06:00.000Z",
+        },
+      ],
+      lifecycleEvents: [
+        {
+          type: "delete",
+          memoryId: "deleted-memory",
+          createdAt: "2026-05-26T10:07:00.000Z",
+          memoryKind: "tone_preference",
+          memoryText: "Deleted stale tone preference.",
         },
       ],
     };
@@ -72,10 +85,14 @@ describe("buildMemoryInspectorReport", () => {
       },
     ];
 
-    const report = buildMemoryInspectorReport({ careCard, messages });
+    const report = buildMemoryInspectorReport({ careCard, messages, now: "2026-05-26T10:10:00.000Z" });
 
     expect(report.summary).toMatchObject({
       careMemoryCount: 2,
+      activeMemoryCount: 1,
+      supersededMemoryCount: 1,
+      deletedMemoryCount: 1,
+      staleMemoryCount: 1,
       writerReadyCount: 1,
       writerCandidateCount: 1,
       latestRetrievedCareFactCount: 1,
@@ -93,9 +110,24 @@ describe("buildMemoryInspectorReport", () => {
     expect(report.memories[0]).toMatchObject({
       id: "avoid-debt-frame",
       source: "care_card",
+      status: "active",
       occurrences: 2,
       evidenceCount: 1,
     });
+    expect(report.memories[1]).toMatchObject({
+      id: "tone-short-body",
+      status: "superseded",
+      supersededBy: "new-tone-short-body",
+      stale: true,
+    });
+    expect(report.lifecycleEvents).toEqual([
+      {
+        type: "delete",
+        memoryId: "deleted-memory",
+        createdAt: "2026-05-26T10:07:00.000Z",
+        memoryKind: "tone_preference",
+      },
+    ]);
     expect(report.latestWriter).toMatchObject({
       status: "ready",
       model: "gpt-5.2",
