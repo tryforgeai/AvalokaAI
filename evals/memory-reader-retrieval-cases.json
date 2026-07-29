@@ -1,0 +1,2672 @@
+[
+  {
+    "id": "reader_exact_01",
+    "group": "exact_tag_alias",
+    "description": "Exact tag or deterministic alias match for illness_fear.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_exact_01_target",
+          "kind": "helpful_response_move",
+          "text": "When illness fear appears, validate fear and return to one body-grounding step before reflection.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_exact_01_target"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_01_secondary",
+          "kind": "tone_preference",
+          "text": "Shorter replies are easier to receive during low moments.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_exact_01_secondary"
+          ],
+          "tags": [
+            "tone",
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_01_distractor",
+          "kind": "helpful_response_move",
+          "text": "Use role reflection when self-worth is tied to usefulness.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_exact_01_distractor"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "复查结果还没出来，我怕自己真的完了。",
+      "tags": [
+        "illness_fear"
+      ]
+    },
+    "relevance": {
+      "reader_exact_01_target": 2,
+      "reader_exact_01_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_exact_02",
+    "group": "exact_tag_alias",
+    "description": "Exact tag or deterministic alias match for self_blame.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_exact_02_target",
+          "kind": "safety_note",
+          "text": "Do not validate punishment, karmic debt, or blame framing.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_exact_02_target"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_02_secondary",
+          "kind": "tone_preference",
+          "text": "Shorter replies are easier to receive during low moments.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_exact_02_secondary"
+          ],
+          "tags": [
+            "tone",
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_02_distractor",
+          "kind": "helpful_response_move",
+          "text": "Use role reflection when self-worth is tied to usefulness.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_exact_02_distractor"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我是不是报应？是不是以前太自私了？",
+      "tags": [
+        "self_blame"
+      ]
+    },
+    "relevance": {
+      "reader_exact_02_target": 2,
+      "reader_exact_02_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_exact_03",
+    "group": "exact_tag_alias",
+    "description": "Exact tag or deterministic alias match for tone.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_exact_03_target",
+          "kind": "tone_preference",
+          "text": "User prefers short body-grounded responses over long analysis.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_exact_03_target"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_03_secondary",
+          "kind": "tone_preference",
+          "text": "Shorter replies are easier to receive during low moments.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_exact_03_secondary"
+          ],
+          "tags": [
+            "tone",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_03_distractor",
+          "kind": "helpful_response_move",
+          "text": "Use role reflection when self-worth is tied to usefulness.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_exact_03_distractor"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我现在胸口很紧，不想听大道理。",
+      "tags": [
+        "tone"
+      ]
+    },
+    "relevance": {
+      "reader_exact_03_target": 2,
+      "reader_exact_03_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_exact_04",
+    "group": "exact_tag_alias",
+    "description": "Exact tag or deterministic alias match for body_grounding.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_exact_04_target",
+          "kind": "helpful_response_move",
+          "text": "Offer one simple body-grounding step before reflection.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_exact_04_target"
+          ],
+          "tags": [
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_04_secondary",
+          "kind": "tone_preference",
+          "text": "Shorter replies are easier to receive during low moments.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_exact_04_secondary"
+          ],
+          "tags": [
+            "tone",
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_04_distractor",
+          "kind": "helpful_response_move",
+          "text": "Use role reflection when self-worth is tied to usefulness.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_exact_04_distractor"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "My chest is tight and I need one physical step.",
+      "tags": [
+        "body_grounding"
+      ]
+    },
+    "relevance": {
+      "reader_exact_04_target": 2,
+      "reader_exact_04_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_exact_05",
+    "group": "exact_tag_alias",
+    "description": "Exact tag or deterministic alias match for role_loss.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_exact_05_target",
+          "kind": "recurring_pain_pattern",
+          "text": "Role loss can turn into whole-person worth collapse.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_exact_05_target"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_05_secondary",
+          "kind": "tone_preference",
+          "text": "Shorter replies are easier to receive during low moments.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_exact_05_secondary"
+          ],
+          "tags": [
+            "tone",
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_05_distractor",
+          "kind": "helpful_response_move",
+          "text": "Use role reflection when self-worth is tied to usefulness.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_exact_05_distractor"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "孩子都走了，我好像已经不是一个有用的人了。",
+      "tags": [
+        "role_loss"
+      ]
+    },
+    "relevance": {
+      "reader_exact_05_target": 2,
+      "reader_exact_05_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_exact_06",
+    "group": "exact_tag_alias",
+    "description": "Exact tag or deterministic alias match for aging.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_exact_06_target",
+          "kind": "recurring_pain_pattern",
+          "text": "Aging fear needs separation between changing body and whole-person worth.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_exact_06_target"
+          ],
+          "tags": [
+            "aging"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_06_secondary",
+          "kind": "tone_preference",
+          "text": "Shorter replies are easier to receive during low moments.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_exact_06_secondary"
+          ],
+          "tags": [
+            "tone",
+            "aging"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_06_distractor",
+          "kind": "helpful_response_move",
+          "text": "Use role reflection when self-worth is tied to usefulness.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_exact_06_distractor"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I keep thinking that getting older means I am disappearing.",
+      "tags": [
+        "aging"
+      ]
+    },
+    "relevance": {
+      "reader_exact_06_target": 2,
+      "reader_exact_06_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_exact_07",
+    "group": "exact_tag_alias",
+    "description": "Exact tag or deterministic alias match for death_anxiety.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_exact_07_target",
+          "kind": "helpful_response_move",
+          "text": "When death anxiety appears, ground before meaning reflection.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_exact_07_target"
+          ],
+          "tags": [
+            "death_anxiety"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_07_secondary",
+          "kind": "tone_preference",
+          "text": "Shorter replies are easier to receive during low moments.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_exact_07_secondary"
+          ],
+          "tags": [
+            "tone",
+            "death_anxiety"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_07_distractor",
+          "kind": "helpful_response_move",
+          "text": "Use role reflection when self-worth is tied to usefulness.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_exact_07_distractor"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "夜里想到死亡，我整个人都僵住了。",
+      "tags": [
+        "death_anxiety"
+      ]
+    },
+    "relevance": {
+      "reader_exact_07_target": 2,
+      "reader_exact_07_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_exact_08",
+    "group": "exact_tag_alias",
+    "description": "Exact tag or deterministic alias match for isolation.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_exact_08_target",
+          "kind": "safety_note",
+          "text": "When isolation appears, gently encourage one trusted human contact without pressure.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_exact_08_target"
+          ],
+          "tags": [
+            "isolation"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_08_secondary",
+          "kind": "tone_preference",
+          "text": "Shorter replies are easier to receive during low moments.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_exact_08_secondary"
+          ],
+          "tags": [
+            "tone",
+            "isolation"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_exact_08_distractor",
+          "kind": "helpful_response_move",
+          "text": "Use role reflection when self-worth is tied to usefulness.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_exact_08_distractor"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I do not want to burden anyone, but I feel alone tonight.",
+      "tags": [
+        "isolation"
+      ]
+    },
+    "relevance": {
+      "reader_exact_08_target": 2,
+      "reader_exact_08_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_semantic_01",
+    "group": "semantic_paraphrase",
+    "description": "semantic paraphrase for illness fear",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_01_target",
+          "kind": "helpful_response_move",
+          "text": "For illness_fear, respond with the established care move before analysis.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_semantic_01_target"
+          ],
+          "tags": [
+            "illness_fear",
+            "care_move"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_01_secondary",
+          "kind": "avoid_response_move",
+          "text": "Avoid over-explaining when illness_fear is active.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_semantic_01_secondary"
+          ],
+          "tags": [
+            "illness_fear",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_01_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work frustration needs practical prioritization, not body fear support.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_semantic_01_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我还没拿到报告，但脑子一直往最坏处跑。",
+      "tags": [
+        "illness_fear"
+      ]
+    },
+    "relevance": {
+      "reader_semantic_01_target": 2,
+      "reader_semantic_01_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_semantic_02",
+    "group": "semantic_paraphrase",
+    "description": "semantic paraphrase for self-blame",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_02_target",
+          "kind": "helpful_response_move",
+          "text": "For self_blame, respond with the established care move before analysis.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_semantic_02_target"
+          ],
+          "tags": [
+            "self_blame",
+            "care_move"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_02_secondary",
+          "kind": "avoid_response_move",
+          "text": "Avoid over-explaining when self_blame is active.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_semantic_02_secondary"
+          ],
+          "tags": [
+            "self_blame",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_02_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work frustration needs practical prioritization, not body fear support.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_semantic_02_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I keep treating this pain like proof that I did something wrong.",
+      "tags": [
+        "self_blame"
+      ]
+    },
+    "relevance": {
+      "reader_semantic_02_target": 2,
+      "reader_semantic_02_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_semantic_03",
+    "group": "semantic_paraphrase",
+    "description": "semantic paraphrase for tone preference",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_03_target",
+          "kind": "helpful_response_move",
+          "text": "For tone, respond with the established care move before analysis.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_semantic_03_target"
+          ],
+          "tags": [
+            "tone",
+            "care_move"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_03_secondary",
+          "kind": "avoid_response_move",
+          "text": "Avoid over-explaining when tone is active.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_semantic_03_secondary"
+          ],
+          "tags": [
+            "tone",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_03_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work frustration needs practical prioritization, not body fear support.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_semantic_03_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "请短一点，我现在没有力气听分析。",
+      "tags": [
+        "tone"
+      ]
+    },
+    "relevance": {
+      "reader_semantic_03_target": 2,
+      "reader_semantic_03_secondary": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_semantic_04",
+    "group": "semantic_paraphrase",
+    "description": "semantic paraphrase for role loss",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_04_target",
+          "kind": "helpful_response_move",
+          "text": "For role_loss, respond with the established care move before analysis.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_semantic_04_target"
+          ],
+          "tags": [
+            "role_loss",
+            "care_move"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_04_secondary",
+          "kind": "avoid_response_move",
+          "text": "Avoid over-explaining when role_loss is active.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_semantic_04_secondary"
+          ],
+          "tags": [
+            "role_loss",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_04_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work frustration needs practical prioritization, not body fear support.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_semantic_04_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Now that nobody needs me every day, I feel erased.",
+      "tags": [
+        "role_loss"
+      ]
+    },
+    "relevance": {
+      "reader_semantic_04_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_semantic_05",
+    "group": "semantic_paraphrase",
+    "description": "semantic paraphrase for body grounding",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_05_target",
+          "kind": "helpful_response_move",
+          "text": "For body_grounding, respond with the established care move before analysis.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_semantic_05_target"
+          ],
+          "tags": [
+            "body_grounding",
+            "care_move"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_05_secondary",
+          "kind": "avoid_response_move",
+          "text": "Avoid over-explaining when body_grounding is active.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_semantic_05_secondary"
+          ],
+          "tags": [
+            "body_grounding",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_05_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work frustration needs practical prioritization, not body fear support.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_semantic_05_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我想先让身体停下来，不想解释原因。",
+      "tags": [
+        "body_grounding"
+      ]
+    },
+    "relevance": {
+      "reader_semantic_05_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_semantic_06",
+    "group": "semantic_paraphrase",
+    "description": "semantic paraphrase for isolation",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_06_target",
+          "kind": "helpful_response_move",
+          "text": "For isolation, respond with the established care move before analysis.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_semantic_06_target"
+          ],
+          "tags": [
+            "isolation",
+            "care_move"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_06_secondary",
+          "kind": "avoid_response_move",
+          "text": "Avoid over-explaining when isolation is active.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_semantic_06_secondary"
+          ],
+          "tags": [
+            "isolation",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_06_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work frustration needs practical prioritization, not body fear support.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_semantic_06_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Everyone is asleep and I do not want to wake them, but I am scared.",
+      "tags": [
+        "isolation"
+      ]
+    },
+    "relevance": {
+      "reader_semantic_06_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_semantic_07",
+    "group": "semantic_paraphrase",
+    "description": "semantic paraphrase for aging fear",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_07_target",
+          "kind": "helpful_response_move",
+          "text": "For aging, respond with the established care move before analysis.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_semantic_07_target"
+          ],
+          "tags": [
+            "aging",
+            "care_move"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_07_secondary",
+          "kind": "avoid_response_move",
+          "text": "Avoid over-explaining when aging is active.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_semantic_07_secondary"
+          ],
+          "tags": [
+            "aging",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_07_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work frustration needs practical prioritization, not body fear support.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_semantic_07_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "照镜子时我突然觉得自己正在失去位置。",
+      "tags": [
+        "aging"
+      ]
+    },
+    "relevance": {
+      "reader_semantic_07_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_semantic_08",
+    "group": "semantic_paraphrase",
+    "description": "semantic paraphrase for death anxiety",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_08_target",
+          "kind": "helpful_response_move",
+          "text": "For death_anxiety, respond with the established care move before analysis.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_semantic_08_target"
+          ],
+          "tags": [
+            "death_anxiety",
+            "care_move"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_08_secondary",
+          "kind": "avoid_response_move",
+          "text": "Avoid over-explaining when death_anxiety is active.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_semantic_08_secondary"
+          ],
+          "tags": [
+            "death_anxiety",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_semantic_08_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work frustration needs practical prioritization, not body fear support.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_semantic_08_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I cannot stop picturing not being here anymore someday.",
+      "tags": [
+        "death_anxiety"
+      ]
+    },
+    "relevance": {
+      "reader_semantic_08_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_hard_negative_01",
+    "group": "hard_negative",
+    "description": "Similar body language but work completion is not illness fear.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_hard_negative_01_hard_negative",
+          "kind": "helpful_response_move",
+          "text": "Care move for illness_fear should not fire for this hard negative.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_01_hard_negative"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_negative_01_target",
+          "kind": "helpful_response_move",
+          "text": "Use a practical one-step response for ordinary non-care logistics.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_01_target"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I finished the work and my brain feels done.",
+      "tags": [
+        "work_stress"
+      ]
+    },
+    "relevance": {
+      "reader_hard_negative_01_target": 2,
+      "reader_hard_negative_01_hard_negative": 0
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_hard_negative_02",
+    "group": "hard_negative",
+    "description": "Similar guilt words but logistics apology is not self-blame care.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_hard_negative_02_hard_negative",
+          "kind": "helpful_response_move",
+          "text": "Care move for self_blame should not fire for this hard negative.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_02_hard_negative"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_negative_02_target",
+          "kind": "helpful_response_move",
+          "text": "Use a practical one-step response for ordinary non-care logistics.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_02_target"
+          ],
+          "tags": [
+            "ordinary_regret"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I forgot to reply to a text and feel a little bad.",
+      "tags": [
+        "ordinary_regret"
+      ]
+    },
+    "relevance": {
+      "reader_hard_negative_02_target": 2,
+      "reader_hard_negative_02_hard_negative": 0
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_hard_negative_03",
+    "group": "hard_negative",
+    "description": "Similar alone words but quiet preference is not isolation distress.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_hard_negative_03_hard_negative",
+          "kind": "helpful_response_move",
+          "text": "Care move for isolation should not fire for this hard negative.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_03_hard_negative"
+          ],
+          "tags": [
+            "isolation"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_negative_03_target",
+          "kind": "helpful_response_move",
+          "text": "Use a practical one-step response for ordinary non-care logistics.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_03_target"
+          ],
+          "tags": [
+            "quiet_preference"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I want to be alone for a quiet hour.",
+      "tags": [
+        "quiet_preference"
+      ]
+    },
+    "relevance": {
+      "reader_hard_negative_03_target": 2,
+      "reader_hard_negative_03_hard_negative": 0
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_hard_negative_04",
+    "group": "hard_negative",
+    "description": "Similar age words but birthday planning is not aging fear.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_hard_negative_04_hard_negative",
+          "kind": "helpful_response_move",
+          "text": "Care move for aging should not fire for this hard negative.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_04_hard_negative"
+          ],
+          "tags": [
+            "aging"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_negative_04_target",
+          "kind": "helpful_response_move",
+          "text": "Use a practical one-step response for ordinary non-care logistics.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_04_target"
+          ],
+          "tags": [
+            "planning"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I need ideas for a calm birthday dinner.",
+      "tags": [
+        "planning"
+      ]
+    },
+    "relevance": {
+      "reader_hard_negative_04_target": 2,
+      "reader_hard_negative_04_hard_negative": 0
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_hard_negative_05",
+    "group": "hard_negative",
+    "description": "Similar death word in media context is not death anxiety.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_hard_negative_05_hard_negative",
+          "kind": "helpful_response_move",
+          "text": "Care move for death_anxiety should not fire for this hard negative.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_05_hard_negative"
+          ],
+          "tags": [
+            "death_anxiety"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_negative_05_target",
+          "kind": "helpful_response_move",
+          "text": "Use a practical one-step response for ordinary non-care logistics.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_05_target"
+          ],
+          "tags": [
+            "media_reflection"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "The movie about death was beautifully written.",
+      "tags": [
+        "media_reflection"
+      ]
+    },
+    "relevance": {
+      "reader_hard_negative_05_target": 2,
+      "reader_hard_negative_05_hard_negative": 0
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_hard_negative_06",
+    "group": "hard_negative",
+    "description": "Similar chest word in exercise context is not body fear.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_hard_negative_06_hard_negative",
+          "kind": "helpful_response_move",
+          "text": "Care move for illness_fear should not fire for this hard negative.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_06_hard_negative"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_negative_06_target",
+          "kind": "helpful_response_move",
+          "text": "Use a practical one-step response for ordinary non-care logistics.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_hard_negative_06_target"
+          ],
+          "tags": [
+            "exercise"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "My chest workout made me sore in a normal gym way.",
+      "tags": [
+        "exercise"
+      ]
+    },
+    "relevance": {
+      "reader_hard_negative_06_target": 2,
+      "reader_hard_negative_06_hard_negative": 0
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_no_match_01",
+    "group": "no_match",
+    "description": "Neutral or out-of-scope turn should retrieve no care memory.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_no_match_01_illness",
+          "kind": "helpful_response_move",
+          "text": "Illness fear needs grounding.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_01_illness"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_no_match_01_self_blame",
+          "kind": "safety_note",
+          "text": "Do not validate blame framing.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_01_self_blame"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "今天只是想安静一下。",
+      "tags": []
+    },
+    "relevance": {},
+    "expectedNoMatch": true,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_no_match_02",
+    "group": "no_match",
+    "description": "Neutral or out-of-scope turn should retrieve no care memory.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_no_match_02_illness",
+          "kind": "helpful_response_move",
+          "text": "Illness fear needs grounding.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_02_illness"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_no_match_02_self_blame",
+          "kind": "safety_note",
+          "text": "Do not validate blame framing.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_02_self_blame"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I am testing the app layout with a neutral sentence.",
+      "tags": []
+    },
+    "relevance": {},
+    "expectedNoMatch": true,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_no_match_03",
+    "group": "no_match",
+    "description": "Neutral or out-of-scope turn should retrieve no care memory.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_no_match_03_illness",
+          "kind": "helpful_response_move",
+          "text": "Illness fear needs grounding.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_03_illness"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_no_match_03_self_blame",
+          "kind": "safety_note",
+          "text": "Do not validate blame framing.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_03_self_blame"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "请帮我记一下明天买牛奶。",
+      "tags": []
+    },
+    "relevance": {},
+    "expectedNoMatch": true,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_no_match_04",
+    "group": "no_match",
+    "description": "Neutral or out-of-scope turn should retrieve no care memory.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_no_match_04_illness",
+          "kind": "helpful_response_move",
+          "text": "Illness fear needs grounding.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_04_illness"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_no_match_04_self_blame",
+          "kind": "safety_note",
+          "text": "Do not validate blame framing.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_04_self_blame"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "The weather is nice and I am going for a walk.",
+      "tags": []
+    },
+    "relevance": {},
+    "expectedNoMatch": true,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_no_match_05",
+    "group": "no_match",
+    "description": "Neutral or out-of-scope turn should retrieve no care memory.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_no_match_05_illness",
+          "kind": "helpful_response_move",
+          "text": "Illness fear needs grounding.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_05_illness"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_no_match_05_self_blame",
+          "kind": "safety_note",
+          "text": "Do not validate blame framing.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_no_match_05_self_blame"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我想看看这个输入框能不能正常工作。",
+      "tags": []
+    },
+    "relevance": {},
+    "expectedNoMatch": true,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_stale_01",
+    "group": "stale_memory",
+    "description": "Stale illness_fear memory must be forbidden while fresh memory remains relevant.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_stale_01_stale",
+          "kind": "helpful_response_move",
+          "text": "Old care move should not be retrieved after stale cutoff.",
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence-reader_stale_01_stale"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2025-01-01T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_stale_01_fresh",
+          "kind": "helpful_response_move",
+          "text": "Fresh care move should be used for the same context.",
+          "confidence": 0.82,
+          "evidenceIds": [
+            "evidence-reader_stale_01_fresh"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "复查结果让我很怕。",
+      "tags": [
+        "illness_fear"
+      ]
+    },
+    "relevance": {
+      "reader_stale_01_fresh": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_stale_01_stale"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_stale_02",
+    "group": "stale_memory",
+    "description": "Stale tone memory must be forbidden while fresh memory remains relevant.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_stale_02_stale",
+          "kind": "helpful_response_move",
+          "text": "Old care move should not be retrieved after stale cutoff.",
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence-reader_stale_02_stale"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2025-01-01T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_stale_02_fresh",
+          "kind": "helpful_response_move",
+          "text": "Fresh care move should be used for the same context.",
+          "confidence": 0.82,
+          "evidenceIds": [
+            "evidence-reader_stale_02_fresh"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Please keep it short and grounded.",
+      "tags": [
+        "tone"
+      ]
+    },
+    "relevance": {
+      "reader_stale_02_fresh": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_stale_02_stale"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_stale_03",
+    "group": "stale_memory",
+    "description": "Stale body_grounding memory must be forbidden while fresh memory remains relevant.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_stale_03_stale",
+          "kind": "helpful_response_move",
+          "text": "Old care move should not be retrieved after stale cutoff.",
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence-reader_stale_03_stale"
+          ],
+          "tags": [
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2025-01-01T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_stale_03_fresh",
+          "kind": "helpful_response_move",
+          "text": "Fresh care move should be used for the same context.",
+          "confidence": 0.82,
+          "evidenceIds": [
+            "evidence-reader_stale_03_fresh"
+          ],
+          "tags": [
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Please keep it short and grounded.",
+      "tags": [
+        "body_grounding"
+      ]
+    },
+    "relevance": {
+      "reader_stale_03_fresh": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_stale_03_stale"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_inactive_01",
+    "group": "superseded_deleted",
+    "description": "Superseded and deleted memory IDs must not be treated as permitted retrieval evidence.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_inactive_01_old",
+          "kind": "tone_preference",
+          "text": "User prefers long analytical explanations.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_inactive_01_old"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "superseded",
+          "supersededBy": "reader_inactive_01_new",
+          "supersededAt": "2026-07-26T00:00:00.000Z"
+        },
+        {
+          "id": "reader_inactive_01_new",
+          "kind": "tone_preference",
+          "text": "User prefers short body-grounded responses.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_inactive_01_new"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ],
+      "lifecycleEvents": [
+        {
+          "type": "delete",
+          "memoryId": "reader_inactive_01_deleted",
+          "createdAt": "2026-07-26T00:00:00.000Z",
+          "memoryKind": "tone_preference",
+          "memoryText": "Deleted obsolete tone preference."
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我现在不想听大道理。",
+      "tags": [
+        "tone"
+      ]
+    },
+    "relevance": {
+      "reader_inactive_01_new": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_inactive_01_old",
+      "reader_inactive_01_deleted"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_inactive_02",
+    "group": "superseded_deleted",
+    "description": "Superseded and deleted memory IDs must not be treated as permitted retrieval evidence.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_inactive_02_old",
+          "kind": "tone_preference",
+          "text": "User prefers long analytical explanations.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_inactive_02_old"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "superseded",
+          "supersededBy": "reader_inactive_02_new",
+          "supersededAt": "2026-07-26T00:00:00.000Z"
+        },
+        {
+          "id": "reader_inactive_02_new",
+          "kind": "tone_preference",
+          "text": "User prefers short body-grounded responses.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_inactive_02_new"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ],
+      "lifecycleEvents": [
+        {
+          "type": "delete",
+          "memoryId": "reader_inactive_02_deleted",
+          "createdAt": "2026-07-26T00:00:00.000Z",
+          "memoryKind": "tone_preference",
+          "memoryText": "Deleted obsolete tone preference."
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我现在不想听大道理。",
+      "tags": [
+        "tone"
+      ]
+    },
+    "relevance": {
+      "reader_inactive_02_new": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_inactive_02_old",
+      "reader_inactive_02_deleted"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_inactive_03",
+    "group": "superseded_deleted",
+    "description": "Superseded and deleted memory IDs must not be treated as permitted retrieval evidence.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_inactive_03_old",
+          "kind": "tone_preference",
+          "text": "User prefers long analytical explanations.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_inactive_03_old"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "superseded",
+          "supersededBy": "reader_inactive_03_new",
+          "supersededAt": "2026-07-26T00:00:00.000Z"
+        },
+        {
+          "id": "reader_inactive_03_new",
+          "kind": "tone_preference",
+          "text": "User prefers short body-grounded responses.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_inactive_03_new"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ],
+      "lifecycleEvents": [
+        {
+          "type": "delete",
+          "memoryId": "reader_inactive_03_deleted",
+          "createdAt": "2026-07-26T00:00:00.000Z",
+          "memoryKind": "tone_preference",
+          "memoryText": "Deleted obsolete tone preference."
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我现在不想听大道理。",
+      "tags": [
+        "tone"
+      ]
+    },
+    "relevance": {
+      "reader_inactive_03_new": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_inactive_03_old",
+      "reader_inactive_03_deleted"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_safety_priority_01",
+    "group": "safety_priority",
+    "description": "Safety note should outrank generic helpful move in risk context.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_safety_priority_01_safety",
+          "kind": "safety_note",
+          "text": "Safety-sensitive turn needs boundary and human support before reflection.",
+          "confidence": 0.82,
+          "evidenceIds": [
+            "evidence-reader_safety_priority_01_safety"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_safety_priority_01_helpful",
+          "kind": "helpful_response_move",
+          "text": "A generally helpful reflective move for the same tag.",
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence-reader_safety_priority_01_helpful"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我怕检查结果，也怕自己活不久。",
+      "tags": [
+        "illness_fear"
+      ]
+    },
+    "relevance": {
+      "reader_safety_priority_01_safety": 2,
+      "reader_safety_priority_01_helpful": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_safety_priority_02",
+    "group": "safety_priority",
+    "description": "Safety note should outrank generic helpful move in risk context.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_safety_priority_02_safety",
+          "kind": "safety_note",
+          "text": "Safety-sensitive turn needs boundary and human support before reflection.",
+          "confidence": 0.82,
+          "evidenceIds": [
+            "evidence-reader_safety_priority_02_safety"
+          ],
+          "tags": [
+            "safety"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_safety_priority_02_helpful",
+          "kind": "helpful_response_move",
+          "text": "A generally helpful reflective move for the same tag.",
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence-reader_safety_priority_02_helpful"
+          ],
+          "tags": [
+            "safety"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I feel unsafe being alone with this fear tonight.",
+      "tags": [
+        "safety"
+      ]
+    },
+    "relevance": {
+      "reader_safety_priority_02_safety": 2,
+      "reader_safety_priority_02_helpful": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_safety_priority_03",
+    "group": "safety_priority",
+    "description": "Safety note should outrank generic helpful move in risk context.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_safety_priority_03_safety",
+          "kind": "safety_note",
+          "text": "Safety-sensitive turn needs boundary and human support before reflection.",
+          "confidence": 0.82,
+          "evidenceIds": [
+            "evidence-reader_safety_priority_03_safety"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_safety_priority_03_helpful",
+          "kind": "helpful_response_move",
+          "text": "A generally helpful reflective move for the same tag.",
+          "confidence": 0.95,
+          "evidenceIds": [
+            "evidence-reader_safety_priority_03_helpful"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "我又开始觉得痛苦是不是惩罚。",
+      "tags": [
+        "self_blame"
+      ]
+    },
+    "relevance": {
+      "reader_safety_priority_03_safety": 2,
+      "reader_safety_priority_03_helpful": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_tone_01",
+    "group": "tone_preference",
+    "description": "Tone preference should be retrieved when tone is explicitly active.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_tone_01_tone",
+          "kind": "tone_preference",
+          "text": "User prefers short, plain, body-grounded replies in low moments.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_tone_01_tone"
+          ],
+          "tags": [
+            "tone",
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_tone_01_meaning",
+          "kind": "helpful_response_move",
+          "text": "Meaning reflection can help only after the body settles.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_tone_01_meaning"
+          ],
+          "tags": [
+            "meaning"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "请短一点，我现在听不进去。",
+      "tags": [
+        "tone"
+      ]
+    },
+    "relevance": {
+      "reader_tone_01_tone": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_tone_02",
+    "group": "tone_preference",
+    "description": "Tone preference should be retrieved when tone is explicitly active.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_tone_02_tone",
+          "kind": "tone_preference",
+          "text": "User prefers short, plain, body-grounded replies in low moments.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_tone_02_tone"
+          ],
+          "tags": [
+            "tone",
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_tone_02_meaning",
+          "kind": "helpful_response_move",
+          "text": "Meaning reflection can help only after the body settles.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_tone_02_meaning"
+          ],
+          "tags": [
+            "meaning"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I need fewer words and one steady instruction.",
+      "tags": [
+        "tone"
+      ]
+    },
+    "relevance": {
+      "reader_tone_02_tone": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_avoid_move_01",
+    "group": "avoid_response_move",
+    "description": "Avoid-response-move memory should be retrieved for matching context.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_avoid_move_01_avoid",
+          "kind": "avoid_response_move",
+          "text": "Avoid asking why or teaching doctrine when the user needs immediate steadiness.",
+          "confidence": 0.87,
+          "evidenceIds": [
+            "evidence-reader_avoid_move_01_avoid"
+          ],
+          "tags": [
+            "body_grounding",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_avoid_move_01_helpful",
+          "kind": "helpful_response_move",
+          "text": "Offer one grounding step before any interpretation.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_avoid_move_01_helpful"
+          ],
+          "tags": [
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "不要问我为什么，我现在只想先稳住。",
+      "tags": [
+        "body_grounding"
+      ]
+    },
+    "relevance": {
+      "reader_avoid_move_01_avoid": 2,
+      "reader_avoid_move_01_helpful": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_avoid_move_02",
+    "group": "avoid_response_move",
+    "description": "Avoid-response-move memory should be retrieved for matching context.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_avoid_move_02_avoid",
+          "kind": "avoid_response_move",
+          "text": "Avoid asking why or teaching doctrine when the user needs immediate steadiness.",
+          "confidence": 0.87,
+          "evidenceIds": [
+            "evidence-reader_avoid_move_02_avoid"
+          ],
+          "tags": [
+            "self_blame",
+            "tone"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_avoid_move_02_helpful",
+          "kind": "helpful_response_move",
+          "text": "Offer one grounding step before any interpretation.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_avoid_move_02_helpful"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-01T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Please do not turn this into a lesson about karma.",
+      "tags": [
+        "self_blame"
+      ]
+    },
+    "relevance": {
+      "reader_avoid_move_02_avoid": 2,
+      "reader_avoid_move_02_helpful": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  }
+]

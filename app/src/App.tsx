@@ -32,6 +32,7 @@ import type {
   ChatMessage,
   CompassionMove,
   FeedbackEntry,
+  MemoryClaimGroundingResultV0,
   MemoryCandidate,
   MemoryGuardianResult,
   RetrievedCareFact,
@@ -519,6 +520,8 @@ export default function App() {
                 <dd>{latestDebugMessage.orchestratorV2.repairAttempted ? "yes" : "no"}</dd>
                 <dt>care facts</dt>
                 <dd>{formatRetrievedCareFacts(latestDebugMessage.orchestratorV2.retrievedCareFacts)}</dd>
+                <dt>claim grounding</dt>
+                <dd>{formatMemoryClaimGrounding(latestDebugMessage.orchestratorV2.memoryClaimGrounding)}</dd>
               </dl>
               {latestDebugMessage.orchestratorV2.error ? (
                 <p className="soft-note">{latestDebugMessage.orchestratorV2.error}</p>
@@ -623,6 +626,8 @@ export default function App() {
                 <dd>{formatCountMap(memoryInspectorReport.tagCounts)}</dd>
                 <dt>latest read</dt>
                 <dd>{formatDebugList(memoryInspectorReport.latestRetrievedCareFacts)}</dd>
+                <dt>claim grounding</dt>
+                <dd>{formatMemoryClaimGroundingReport(memoryInspectorReport.latestMemoryClaimGrounding)}</dd>
               </dl>
               {memoryInspectorReport.memories.length > 0 ? (
                 <div className="memory-list">
@@ -679,6 +684,11 @@ export default function App() {
                 <dd>{formatCountMap(memoryInspectorReport.latestWriter.guardianStatusCounts)}</dd>
                 <dt>latest ids</dt>
                 <dd>{formatDebugList(memoryInspectorReport.latestWriter.candidateIds)}</dd>
+                <dt>claim grounding</dt>
+                <dd>
+                  {memoryInspectorReport.summary.latestMemoryClaimCount} claims /{" "}
+                  {memoryInspectorReport.summary.latestUnsupportedMemoryClaimCount} unsupported
+                </dd>
                 <dt>commands</dt>
                 <dd>{memoryInspectorReport.evalCommands.join(" | ")}</dd>
                 <dt>events</dt>
@@ -780,6 +790,22 @@ function formatMemoryGuardian(results?: MemoryGuardianResult[]): string {
 function formatRetrievedCareFacts(facts?: RetrievedCareFact[]): string {
   if (!facts || facts.length === 0) return "none";
   return facts.map((fact) => `${fact.memoryId} ${fact.kind}: ${fact.text}`).join(" | ");
+}
+
+function formatMemoryClaimGrounding(result?: MemoryClaimGroundingResultV0): string {
+  if (!result) return "none";
+  const unsupported = result.claims.filter((claim) => claim.status === "unsupported").length;
+  return `${result.verdict}: ${result.claims.length} claims / ${unsupported} unsupported`;
+}
+
+function formatMemoryClaimGroundingReport(report: {
+  verdict: string;
+  claimStatuses: string[];
+  supportingMemoryIds: string[];
+}): string {
+  const statuses = report.claimStatuses.length ? report.claimStatuses.join(", ") : "no claims";
+  const support = report.supportingMemoryIds.length ? ` | support ${report.supportingMemoryIds.join(", ")}` : "";
+  return `${report.verdict}: ${statuses}${support}`;
 }
 
 function formatCountMap(counts: Record<string, number>): string {

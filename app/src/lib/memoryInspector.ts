@@ -11,6 +11,8 @@ export interface MemoryInspectorReport {
     writerErrorCount: number;
     writerCandidateCount: number;
     latestRetrievedCareFactCount: number;
+    latestMemoryClaimCount: number;
+    latestUnsupportedMemoryClaimCount: number;
   };
   kindCounts: Record<string, number>;
   tagCounts: Record<string, number>;
@@ -45,6 +47,11 @@ export interface MemoryInspectorReport {
     guardianStatusCounts: Record<string, number>;
   };
   latestRetrievedCareFacts: string[];
+  latestMemoryClaimGrounding: {
+    verdict: "pass" | "warn" | "fail" | "error" | "skipped" | "none";
+    claimStatuses: string[];
+    supportingMemoryIds: string[];
+  };
   evalCommands: string[];
 }
 
@@ -62,6 +69,10 @@ export function buildMemoryInspectorReport({
   const latestWriter = [...writerResults].reverse()[0];
   const latestV2WithRetrieval = [...messages].reverse().find((message) => message.orchestratorV2?.retrievedCareFacts);
   const latestRetrievedCareFacts = latestV2WithRetrieval?.orchestratorV2?.retrievedCareFacts || [];
+  const latestV2WithClaimGrounding = [...messages]
+    .reverse()
+    .find((message) => message.orchestratorV2?.memoryClaimGrounding);
+  const latestClaimGrounding = latestV2WithClaimGrounding?.orchestratorV2?.memoryClaimGrounding;
 
   return {
     summary: {
@@ -74,6 +85,9 @@ export function buildMemoryInspectorReport({
       writerErrorCount: writerResults.filter((result) => result.status === "error").length,
       writerCandidateCount: writerResults.reduce((total, result) => total + result.candidates.length, 0),
       latestRetrievedCareFactCount: latestRetrievedCareFacts.length,
+      latestMemoryClaimCount: latestClaimGrounding?.claims.length || 0,
+      latestUnsupportedMemoryClaimCount:
+        latestClaimGrounding?.claims.filter((claim) => claim.status === "unsupported").length || 0,
     },
     kindCounts: countBy(careCard.memories.map((memory) => memory.kind)),
     tagCounts: countBy(careCard.memories.flatMap((memory) => memory.tags)),
@@ -99,7 +113,24 @@ export function buildMemoryInspectorReport({
           guardianStatusCounts: {},
         },
     latestRetrievedCareFacts: latestRetrievedCareFacts.map((fact) => fact.memoryId),
-    evalCommands: ["npm run eval:sage", "npm run eval:sage:writer", "npm run eval:memory"],
+    latestMemoryClaimGrounding: latestClaimGrounding
+      ? {
+          verdict: latestClaimGrounding.verdict,
+          claimStatuses: latestClaimGrounding.claims.map((claim) => claim.status),
+          supportingMemoryIds: unique(latestClaimGrounding.claims.flatMap((claim) => claim.supportingMemoryIds)),
+        }
+      : {
+          verdict: "none",
+          claimStatuses: [],
+          supportingMemoryIds: [],
+        },
+    evalCommands: [
+      "npm run eval:sage",
+      "npm run eval:sage:writer",
+      "npm run eval:memory",
+      "npm run eval:memory:reader",
+      "npm run eval:memory:claim-grounding",
+    ],
   };
 }
 
@@ -139,4 +170,8 @@ function countBy(items: string[]): Record<string, number> {
     counts[item] = (counts[item] || 0) + 1;
     return counts;
   }, {});
+}
+
+function unique(items: string[]): string[] {
+  return Array.from(new Set(items));
 }

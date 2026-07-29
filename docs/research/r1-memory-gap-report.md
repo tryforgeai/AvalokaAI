@@ -1,8 +1,8 @@
 # R1 Memory Gap Report
 
-Status: Active research gap report, updated after Memory Lifecycle Control V0
-Date: 2026-05-27
-Source-of-truth touched: `docs/research/sage-memory-research-plan.md`
+Status: Active research gap report, updated after R1 Retrieval Grounding Tasks 1-7
+Date: 2026-07-26
+Source-of-truth touched: `docs/research/sage-memory-research-plan.md`, `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md`
 
 ## Purpose
 
@@ -30,8 +30,14 @@ The existing system can:
 - run a memory response eval that compares with-memory and without-memory V2 responses
 - run a SAGE end-to-end eval that exercises writer fixtures through guardian, store, and deterministic reader
 - run a live Memory Writer eval against `evals/sage-memory-cases.json`
+- run a deterministic Memory Reader benchmark against `evals/memory-reader-retrieval-cases.json`
 - inspect the local Care Card and copy a developer memory report in `?dev=1`
 - delete or supersede individual local Care Card memories in developer mode
+- measure deterministic Memory Reader quality with retrieval metrics and a 40-case privacy-safe gold dataset
+- emit redacted `RetrievalTraceV1` summaries for reader diagnosis without raw private text
+- check explicit personal-memory claims against retrieved care facts with deterministic Claim Grounding V0
+- keep claim-grounding diagnostics visible in developer mode and export summaries
+- fall back to the local baseline when a V2 response contains unsupported personal-memory claims
 
 The missing core is:
 
@@ -53,6 +59,10 @@ conversation + feedback
 -> live Memory Writer eval V0
 -> Care Card Inspector / Eval Report V0
 -> Memory Lifecycle Control V0
+-> Retrieval Metrics + Reader Benchmark V0
+-> RetrievalTraceV1
+-> Claim Grounding V0
+-> unsupported memory claim fallback policy
 -> developer diagnostics / export
 ```
 
@@ -206,8 +216,10 @@ Implemented:
 - `buildMemoryInspectorReport(...)` summarizes Care Card memories, writer output, latest retrieval, and eval commands for developer inspection
 - `runMemoryResponseEval(...)` compares without-memory and with-memory V2 outputs and returns verdict counts
 - `runSageMemoryEndToEndEval(...)` runs fixture writer candidates through guardian, in-memory Care Card storage, and deterministic retrieval
-- `runSageMemoryWriterEval(...)` runs the live Memory Writer endpoint against allow/reject cases in `evals/sage-memory-cases.json`
+- `runSageMemoryWriterEval(...)` runs the live Memory Writer endpoint against `evals/sage-memory-cases.json`
+- `runMemoryReaderBenchmark(...)` runs the unchanged deterministic Memory Reader against `evals/memory-reader-retrieval-cases.json`
 - `npm run eval:memory` runs `scripts/run-memory-response-eval.mjs`
+- `npm run eval:memory:reader` runs `scripts/run-memory-reader-benchmark.mjs`
 - `npm run eval:sage` runs the SAGE end-to-end eval test suite
 - `npm run eval:sage:writer` runs `scripts/run-sage-memory-writer-eval.mjs`
 
@@ -218,6 +230,181 @@ Gap:
 - no live eval verifies LLM-generated accepted candidates are persisted correctly
 - memory response eval is deterministic/heuristic and still needs real model-run baselines
 
+### 8.1 Memory Reader Benchmark Baseline
+
+Source-of-truth touched: `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md`
+
+Implemented on 2026-07-26:
+
+- `app/src/lib/retrievalMetrics.ts`
+- `app/src/lib/retrievalMetrics.test.ts`
+- `evals/memory-reader-retrieval-cases.json`
+- `scripts/memory-reader-benchmark-runner.mjs`
+- `scripts/memory-reader-benchmark-runner.test.mjs`
+- `scripts/run-memory-reader-benchmark.mjs`
+- `npm run eval:memory:reader`
+
+Baseline command:
+
+```bash
+cd app
+npm run eval:memory:reader
+```
+
+Baseline result from the unchanged deterministic Memory Reader V0:
+
+| Metric | Result |
+|---|---:|
+| Cases | 40 |
+| Passed | 40 |
+| Failed | 0 |
+| Recall@3 | 1.000 |
+| Recall@5 | 1.000 |
+| MRR | 0.875 |
+| NDCG@5 | 0.979 |
+| No-match precision | 1.000 |
+| Unsafe retrieval count | 0 |
+| Stale retrieval count | 0 |
+| Deleted retrieval count | 0 |
+| Superseded retrieval count | 0 |
+| p50 latency | 0.010ms |
+| p95 latency | 0.074ms |
+
+Failure taxonomy:
+
+```text
+none=40, missing_tag_or_alias=0, semantic_paraphrase_miss=0,
+hard_negative_false_hit=0, correct_candidate_ranked_low=0,
+no_match_false_positive=0, stale_or_inactive_leak=0,
+safety_priority_failure=0, fixture_or_contract_error=0
+```
+
+Interpretation:
+
+- The current deterministic reader clears the first privacy-safe gold dataset.
+- Ranking is not perfect: MRR is below 1.0 and NDCG@5 is below 1.0 because several multi-grade cases retrieve a secondary relevant memory before the strongest memory.
+- This baseline should not be used to claim production RAG quality. The dataset is intentionally small, synthetic, and contract-oriented.
+- RetrievalTraceV1 now exposes redacted developer/research diagnostics for why each memory was selected or rejected. The next improvement should be claim-level grounding, not graph/vector RAG.
+
+### RetrievalTraceV1 Baseline
+
+Implemented on 2026-07-26 for the deterministic Memory Reader path.
+
+Trace contract:
+
+- versioned as `retrieval_trace_v1`
+- records `readerVersion`, `policyVersion`, requested limit, confidence/stale policy, latency, active tags, selected memory IDs, candidate decisions, scores, matched tags, and rejection reasons
+- hashes reader input into a 64-character hex `inputHash`
+- does not persist raw user text, raw memory text, raw evidence text, or evidence IDs
+- remains a developer/research diagnostic artifact, not user-mode response content
+
+Current rejection reasons:
+
+```text
+tag_overlap, risk_kind_boost, low_confidence, inactive_or_superseded,
+missing_evidence, stale, no_tag_overlap, ranked_below_limit
+```
+
+Verification evidence:
+
+```bash
+cd app
+npx vitest run src/lib/sageMemory.test.ts src/lib/retrievalMetrics.test.ts
+node --test ../scripts/memory-reader-benchmark-runner.test.mjs
+npm run eval:memory:reader -- --json
+npm run content:check
+npm test
+npm run build
+```
+
+Observed result: 40/40 reader benchmark cases passed, 20 Vitest files passed, 88 tests passed, build passed. A focused leak check asserted the JSON benchmark trace does not contain `evidenceIds`, sample raw memory text, or sample raw user text.
+
+### Claim Grounding V0 Baseline
+
+Implemented on 2026-07-26 as a deterministic first-pass guard for explicit memory claims in generated answers.
+
+Scope:
+
+- detects explicit memory-claim language such as `我记得你...`, `你之前...`, `你以前...`, and English `I remember you...`
+- compares each detected claim against the retrieved care facts available to the response
+- marks claims as `supported` or `unsupported`; generic supportive text with no memory-claim marker abstains by producing no claims
+- hashes claim text into `claimTextHash` and does not persist raw answer text or raw retrieved memory text in the grounding result
+- reports `pass` when no unsupported memory claims are found and `warn` when one or more unsupported claims appear
+
+Current deterministic eval:
+
+| Metric | Result |
+|---|---:|
+| Cases | 8 |
+| Passed | 8 |
+| Failed | 0 |
+| Pass verdicts | 4 |
+| Warn verdicts | 4 |
+| Supported claims | 3 |
+| Unsupported claims | 4 |
+| Raw leak count | 0 |
+
+Fixture coverage:
+
+```text
+supported_claim, unsupported_claim, abstain_non_memory,
+stale_deleted_boundary, safety_sensitive
+```
+
+Verification evidence:
+
+```bash
+cd app
+npx vitest run src/lib/memoryClaimGrounding.test.ts
+node --test ../scripts/memory-claim-grounding-runner.test.mjs
+npm run eval:memory:claim-grounding -- --json
+npm run content:check
+```
+
+This is intentionally V0. It is not an LLM judge, does not extract all possible factual claims, and does not enforce response rewrite. It gives R1 a deterministic, privacy-safe tripwire for the most dangerous pattern: a generated answer claiming personal memory that was not retrieved.
+
+### Claim Grounding Shadow Diagnostics
+
+Implemented on 2026-07-26 as a developer-only response-path diagnostic.
+
+Scope:
+
+- `applyAvalokaV2Result(...)` now attaches `memoryClaimGrounding` to ready V2 orchestrator results
+- the visible response text and `responseSource` are unchanged; unsupported claims warn only in diagnostics
+- the LLM Orchestrator V2 debug panel shows claim-grounding verdict/counts
+- the Care Card Inspector memory report includes latest claim-grounding summary and claim-grounding eval command
+- export summary records `memoryClaimGroundingWarnCount` and `unsupportedMemoryClaimCount`
+
+Verification evidence:
+
+```bash
+cd app
+npx vitest run src/lib/llmPipeline.test.ts src/lib/memoryInspector.test.ts src/lib/storage.test.ts
+```
+
+This diagnostic step was originally shadow-only. It is now paired with the fallback policy below: unsupported personal-memory claims no longer reach user-visible text, but no automatic rewrite or user-visible warning is shown.
+
+### Unsupported Memory Claim Fallback Policy V0
+
+Implemented on 2026-07-26 as the first enforcement step after shadow diagnostics.
+
+Scope:
+
+- ready V2 responses still run `MemoryClaimGroundingResultV0` before becoming visible
+- if any claim is `unsupported`, the user-visible response falls back to the existing local baseline text
+- `orchestratorV2.candidateText` and `orchestratorV2.memoryClaimGrounding` are preserved for developer inspection
+- `responseSource` becomes `local_claim_grounding_fallback` so exports can count the intervention
+- supported memory claims and responses with no memory claims still use the V2 candidate text
+
+Verification evidence:
+
+```bash
+cd app
+npx vitest run src/lib/llmPipeline.test.ts src/lib/storage.test.ts src/lib/memoryInspector.test.ts src/lib/memoryClaimGrounding.test.ts
+```
+
+This policy intentionally chooses fallback over deterministic text surgery. It prevents unsupported personal-memory claims from reaching the user while preserving the rejected V2 candidate for diagnosis.
+
 ## Requirement Coverage Matrix
 
 | R1 Requirement | Current State | Evidence | Gap |
@@ -226,12 +413,12 @@ Gap:
 | Memory Guardian rejection rules | Partial | server guardian, `app/src/lib/sageMemory.ts` | duplicated logic, narrow coverage, no revise behavior |
 | Care Card / memory store | Partial | `CareCard`, `CareMemory`, localStorage persistence, export/clear/delete/supersede tests | no graph store; lifecycle is local developer-only |
 | Graph-memory schema experiments | Not started | docs only | no graph node/edge representation in runtime |
-| Deterministic Memory Reader | Partial | `readCareFactsFromCard(...)`, tag derivation, priority/stale tests | small alias map; no standalone reader diagnostic |
+| Deterministic Memory Reader | Partial | `readCareFactsFromCard(...)`, `readCareFactsFromCardWithTrace(...)`, tag derivation, priority/stale tests, RetrievalTraceV1 benchmark output | small alias map; trace is developer/research-only and not yet wired into UI inspection |
 | Response injection with 3-5 care facts | Partial | developer-only `retrievedCareFacts` -> V2 prompt `careFacts` | no production memory retrieval |
-| Extraction/rejection/retrieval evals | Partial | seed cases, unit tests, `evals/sage-end-to-end-cases.json`, `npm run eval:sage`, `npm run eval:sage:writer` | no persisted live eval report artifact |
-| Response/privacy evals for memory | Partial | `evals/memory-response-cases.json`, `npm run eval:memory` | heuristic verdicts; needs real model baselines / judge |
-| Developer diagnostics | Partial | SAGE Memory Writer panel, V2 retrieved care facts, Care Card Inspector, copyable memory report | no before/after memory-injection comparison |
-| Local-first export/clear | Partial | export includes turn-level writer output, top-level `careCard`, and lifecycle events; clear removes Care Card | no durable lifecycle review workflow |
+| Extraction/rejection/retrieval evals | Partial | seed cases, unit tests, `evals/sage-end-to-end-cases.json`, `evals/memory-reader-retrieval-cases.json`, `evals/memory-claim-grounding-cases.json`, `npm run eval:sage`, `npm run eval:sage:writer`, `npm run eval:memory:reader`, `npm run eval:memory:claim-grounding`, RetrievalTraceV1 | no persisted live eval report artifact; claim grounding is deterministic V0 only |
+| Response/privacy evals for memory | Partial | `evals/memory-response-cases.json`, `evals/memory-claim-grounding-cases.json`, `npm run eval:memory`, `npm run eval:memory:claim-grounding`, response-path claim-grounding diagnostics, `local_claim_grounding_fallback` | heuristic verdicts; needs real model baselines / judge and safer rewrite policy beyond fallback |
+| Developer diagnostics | Partial | SAGE Memory Writer panel, V2 retrieved care facts, Claim Grounding V0 warning counts, Care Card Inspector, copyable memory report | no before/after memory-injection comparison; unsupported claims fallback rather than rewrite |
+| Local-first export/clear | Partial | export includes turn-level writer output, top-level `careCard`, lifecycle events, claim-grounding warning counts, and claim-grounding fallback count; clear removes Care Card | no durable lifecycle review workflow |
 
 ## Main Risks
 
@@ -257,7 +444,7 @@ Gap:
 
 ## Recommended Next Slice
 
-The smallest useful Care Card loop, deterministic reader, developer-only response injection, memory response eval V0, SAGE end-to-end fixture eval, live Memory Writer eval V0, Care Card Inspector / Eval Report V0, and Memory Lifecycle Control V0 are now real in code; the next gap is a very small graph-schema experiment or a durable lifecycle review report.
+The smallest useful Care Card loop, deterministic reader, redacted RetrievalTraceV1, deterministic Claim Grounding V0, developer-only response injection, shadow claim-grounding diagnostics, unsupported-claim fallback policy, memory response eval V0, SAGE end-to-end fixture eval, live Memory Writer eval V0, Care Card Inspector / Eval Report V0, Memory Lifecycle Control V0, and deterministic Memory Reader benchmark V0 are now real in code. The next gap is a safer rewrite policy and live-model memory response baseline before any graph/vector RAG work.
 
 ### Slice 1: Care Card Store V0
 
@@ -428,23 +615,66 @@ Acceptance criteria:
 - stale memory review is visible in the inspector
 - tests cover delete, supersede, stale filtering, export, and clear behavior
 
-### Slice 9: Graph Memory Schema V0
+### Slice 9: Retrieval Measurement And Trace V1
 
-Status: next recommended slice.
+Status: measurement implemented on 2026-07-26; retrieval trace remains next.
 
 Goal:
 
 ```text
-Care Card memories + lifecycle events
--> minimal node/edge representation
--> compare deterministic reader with graph-shaped retrieval
+privacy-safe gold dataset
+-> unchanged deterministic Memory Reader
+-> Recall@k / MRR / NDCG@k / no-match / privacy / latency baseline
+-> versioned redacted retrieval trace
 ```
 
 Acceptance criteria:
 
-- define a local graph projection for current Care Card memories without adding a database
-- represent `evidenced_by`, `supersedes`, `tagged_as`, and `supports_response_move` edges
-- add fixture tests for graph projection and graph-aware retrieval candidates
+- add at least 40 retrieval cases including hard negatives, no-match, stale,
+  superseded, deleted, safety-priority, tone, and avoid-move cases
+- report Recall@3, Recall@5, MRR, NDCG@5, no-match precision, forbidden
+  retrieval counts, and p50/p95 latency
+- preserve the first unchanged reader result as the baseline
+- trace selected and rejected memory IDs without storing raw user text
+- classify failures before changing reader architecture
+
+### Slice 10: Claim-Level Evidence Grounding V1
+
+Status: follows Slice 9.
+
+Goal:
+
+```text
+candidate response + permitted evidence
+-> claim classification
+-> claim-to-evidence support decision
+-> allow | hedge | retrieve again | revise | abstain | safe fallback
+```
+
+Acceptance criteria:
+
+- distinguish personal-memory, health/safety, external-fact, and ordinary
+  compassionate-expression claims
+- distinguish direct support, inference, uncertainty, contradiction, and
+  unsupported claims
+- run in shadow mode until eval targets pass
+- use a reversible `off|shadow|enforce` feature flag
+- preserve crisis-gate priority, one bounded repair attempt, and safe fallback
+- never expose evidence IDs, memory scores, or hidden policy in user mode
+
+### Deferred Slice: Graph Memory Schema V0
+
+Status: gated by Slice 9 evidence.
+
+Start only if the benchmark shows relationship or multi-hop failures that cannot
+be fixed by deterministic tags, thresholds, or a smaller retrieval experiment.
+
+If justified:
+
+- define a local graph projection without adding a production database
+- represent `evidenced_by`, `supersedes`, `tagged_as`, and
+  `supports_response_move` edges
+- compare graph retrieval against the same deterministic-reader gold dataset
 - keep prompt injection capped at 3-5 care facts
 
 ## Explicit Non-Goals For The Next Slice
@@ -461,4 +691,7 @@ Acceptance criteria:
 
 The current implementation is a good R1 foothold: it proves the project can run a Memory Writer shadow path, reject obviously unsafe candidates, persist allowed candidates into a local Care Card, retrieve relevant facts, feed them into the developer-only V2 response path, run a V0 memory response eval, exercise the writer-fixture/guardian/store/reader loop end to end, run a live writer eval against committed fixtures, inspect/copy the local memory state in developer mode, and delete or supersede one memory with an exportable lifecycle trail.
 
-The next real milestone is not "better prompt wording." It is testing whether the Care Card should grow a graph-shaped projection before making memory behavior broader or more user-visible.
+The next real milestone is not "better prompt wording" or a graph database. It
+is measuring the current Memory Reader, making retrieval traceable, and testing
+claim-level evidence grounding. Graph-shaped retrieval becomes the next
+experiment only if those measurements expose relationship or multi-hop failures.

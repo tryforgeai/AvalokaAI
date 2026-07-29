@@ -38,7 +38,12 @@ export interface ChatMessage {
   baifa?: BaifaMapResult;
 }
 
-export type ResponseSource = "local" | "openai_primary_dev" | "local_guardian_fallback" | "llm_orchestrator_v2";
+export type ResponseSource =
+  | "local"
+  | "openai_primary_dev"
+  | "local_guardian_fallback"
+  | "local_claim_grounding_fallback"
+  | "llm_orchestrator_v2";
 
 export interface LlmShadowResult {
   status: "idle" | "loading" | "ready" | "skipped" | "error";
@@ -125,6 +130,7 @@ export interface AvalokaV2Result {
   compassionPlan?: CompassionPlanResult;
   guardian?: LlmGuardianReview;
   retrievedCareFacts?: RetrievedCareFact[];
+  memoryClaimGrounding?: MemoryClaimGroundingResultV0;
   repairAttempted?: boolean;
   error?: string;
 }
@@ -180,6 +186,87 @@ export interface RetrievedCareFact {
   text: string;
   confidence: number;
   tags: string[];
+}
+
+export type RetrievalRelevanceGrade = 0 | 1 | 2;
+
+export interface RetrievalEvalResult {
+  precisionAtK: number;
+  recallAtK: number;
+  reciprocalRank: number;
+  ndcgAtK: number;
+  noMatchCorrect: boolean;
+  unsafeRetrievalCount: number;
+  staleRetrievalCount: number;
+  deletedRetrievalCount: number;
+  supersededRetrievalCount: number;
+  latencyMs: number;
+}
+
+export type RetrievalTraceDecision = "selected" | "rejected";
+
+export type RetrievalTraceReason =
+  | "tag_overlap"
+  | "risk_kind_boost"
+  | "low_confidence"
+  | "inactive_or_superseded"
+  | "missing_evidence"
+  | "stale"
+  | "no_tag_overlap"
+  | "ranked_below_limit";
+
+export interface RetrievalTraceCandidateV1 {
+  memoryId: string;
+  kind: SageMemoryCandidateKind;
+  status: "active" | "superseded";
+  tags: string[];
+  matchedTags: string[];
+  score: number;
+  decision: RetrievalTraceDecision;
+  reasons: RetrievalTraceReason[];
+}
+
+export interface RetrievalTraceRejectedV1 {
+  memoryId: string;
+  reasons: RetrievalTraceReason[];
+}
+
+export interface RetrievalTraceV1 {
+  version: "retrieval_trace_v1";
+  readerVersion: "deterministic_memory_reader_v0";
+  policyVersion: "retrieval_policy_v1";
+  inputHash: string;
+  activeTags: string[];
+  requestedLimit: number;
+  minConfidence: number;
+  staleAfterDays: number;
+  candidates: RetrievalTraceCandidateV1[];
+  selectedMemoryIds: string[];
+  rejected: RetrievalTraceRejectedV1[];
+  latencyMs: number;
+}
+
+export type MemoryClaimGroundingStatus = "supported" | "unsupported" | "abstain";
+
+export type MemoryClaimGroundingVerdict = "pass" | "warn";
+
+export type MemoryClaimGroundingReason =
+  | "matched_retrieved_fact"
+  | "no_retrieved_fact_support"
+  | "not_memory_claim";
+
+export interface MemoryClaimGroundingClaimV0 {
+  claimId: string;
+  claimTextHash: string;
+  status: MemoryClaimGroundingStatus;
+  supportingMemoryIds: string[];
+  reason: MemoryClaimGroundingReason;
+}
+
+export interface MemoryClaimGroundingResultV0 {
+  version: "memory_claim_grounding_v0";
+  verdict: MemoryClaimGroundingVerdict;
+  claims: MemoryClaimGroundingClaimV0[];
 }
 
 export interface MemoryGuardianResult {

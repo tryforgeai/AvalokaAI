@@ -200,9 +200,19 @@ function buildSummary(
     baifaErrorCount: turns.filter((turn) => turn.baifa?.status === "error").length,
     openaiPrimaryReadyCount: turns.filter((turn) => turn.openaiPrimary?.status === "ready").length,
     openaiPrimaryFallbackCount: turns.filter((turn) => turn.responseSource === "local_guardian_fallback").length,
+    claimGroundingFallbackCount: turns.filter((turn) => turn.responseSource === "local_claim_grounding_fallback").length,
     orchestratorV2ReadyCount: turns.filter((turn) => turn.orchestratorV2?.status === "ready").length,
     orchestratorV2ErrorCount: turns.filter((turn) => turn.orchestratorV2?.status === "error").length,
     orchestratorV2RepairCount: turns.filter((turn) => turn.orchestratorV2?.repairAttempted).length,
+    memoryClaimGroundingWarnCount: turns.filter((turn) => turn.orchestratorV2?.memoryClaimGrounding?.verdict === "warn")
+      .length,
+    unsupportedMemoryClaimCount: turns.reduce(
+      (total, turn) =>
+        total +
+        (turn.orchestratorV2?.memoryClaimGrounding?.claims.filter((claim) => claim.status === "unsupported").length ||
+          0),
+      0,
+    ),
     compassionReadyCount: turns.filter((turn) => turn.compassionPlan?.status === "ready").length,
     compassionErrorCount: turns.filter((turn) => turn.compassionPlan?.status === "error").length,
     compassionMoveCounts: countBy(turns.flatMap((turn) => turn.compassionPlan?.moves.map((move) => move.id) || [])),

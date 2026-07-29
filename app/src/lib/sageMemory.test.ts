@@ -4,6 +4,7 @@ import {
   createEmptyCareCard,
   guardMemoryCandidate,
   readCareFactsFromCard,
+  readCareFactsFromCardWithTrace,
   selectCareFacts,
   upsertCareMemory,
 } from "./sageMemory";
@@ -412,6 +413,151 @@ describe("SAGE Lite memory core", () => {
     );
 
     expect(facts).toEqual([]);
+  });
+
+  it("returns a redacted RetrievalTraceV1 without raw user or memory text", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "selected-safety",
+          kind: "safety_note" as const,
+          text: "Private memory text that must not appear in trace.",
+          confidence: 0.82,
+          evidenceIds: ["feedback-1"],
+          tags: ["illness_fear", "safety"],
+          createdAt: "2026-05-26T10:00:00.000Z",
+          updatedAt: "2026-05-26T10:00:00.000Z",
+          lastSeenAt: "2026-05-26T10:00:00.000Z",
+          occurrences: 1,
+        },
+      ],
+    };
+
+    const result = readCareFactsFromCardWithTrace(
+      card,
+      { userText: "复查结果还没出来，我怕自己真的完了。" },
+      { now: "2026-05-26T10:10:00.000Z", limit: 3 },
+    );
+
+    expect(result.facts.map((fact) => fact.id)).toEqual(["selected-safety"]);
+    expect(result.trace.version).toBe("retrieval_trace_v1");
+    expect(result.trace.readerVersion).toBe("deterministic_memory_reader_v0");
+    expect(result.trace.inputHash).toMatch(/^[a-f0-9]{64}$/);
+    expect(result.trace.activeTags).toContain("illness_fear");
+    expect(result.trace.selectedMemoryIds).toEqual(["selected-safety"]);
+    expect(result.trace.candidates[0]).toMatchObject({
+      memoryId: "selected-safety",
+      kind: "safety_note",
+      status: "active",
+      matchedTags: ["illness_fear"],
+      decision: "selected",
+    });
+
+    const serializedTrace = JSON.stringify(result.trace);
+    expect(serializedTrace).not.toContain("复查结果");
+    expect(serializedTrace).not.toContain("Private memory text");
+    expect(serializedTrace).not.toContain("feedback-1");
+    expect(serializedTrace).not.toContain("evidenceIds");
+  });
+
+  it("records redacted rejection reasons for stale, low-confidence, inactive, missing-evidence, and no-match memories", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "fresh",
+          kind: "helpful_response_move" as const,
+          text: "Return to one breath.",
+          confidence: 0.74,
+          evidenceIds: ["feedback-1"],
+          tags: ["body_grounding"],
+          createdAt: "2026-05-20T10:00:00.000Z",
+          updatedAt: "2026-05-20T10:00:00.000Z",
+          lastSeenAt: "2026-05-20T10:00:00.000Z",
+          occurrences: 1,
+        },
+        {
+          id: "stale",
+          kind: "helpful_response_move" as const,
+          text: "Old body note.",
+          confidence: 0.95,
+          evidenceIds: ["feedback-2"],
+          tags: ["body_grounding"],
+          createdAt: "2025-01-01T10:00:00.000Z",
+          updatedAt: "2025-01-01T10:00:00.000Z",
+          lastSeenAt: "2025-01-01T10:00:00.000Z",
+          occurrences: 9,
+        },
+        {
+          id: "low-confidence",
+          kind: "tone_preference" as const,
+          text: "Low-confidence note.",
+          confidence: 0.49,
+          evidenceIds: ["feedback-3"],
+          tags: ["body_grounding"],
+          createdAt: "2026-05-25T10:00:00.000Z",
+          updatedAt: "2026-05-25T10:00:00.000Z",
+          lastSeenAt: "2026-05-25T10:00:00.000Z",
+          occurrences: 1,
+        },
+        {
+          id: "superseded",
+          kind: "tone_preference" as const,
+          text: "Superseded note.",
+          confidence: 0.9,
+          evidenceIds: ["feedback-4"],
+          tags: ["body_grounding"],
+          createdAt: "2026-05-25T10:00:00.000Z",
+          updatedAt: "2026-05-25T10:00:00.000Z",
+          lastSeenAt: "2026-05-25T10:00:00.000Z",
+          occurrences: 1,
+          status: "superseded" as const,
+        },
+        {
+          id: "missing-evidence",
+          kind: "tone_preference" as const,
+          text: "Missing evidence note.",
+          confidence: 0.9,
+          evidenceIds: [],
+          tags: ["body_grounding"],
+          createdAt: "2026-05-25T10:00:00.000Z",
+          updatedAt: "2026-05-25T10:00:00.000Z",
+          lastSeenAt: "2026-05-25T10:00:00.000Z",
+          occurrences: 1,
+        },
+        {
+          id: "no-match",
+          kind: "tone_preference" as const,
+          text: "Unrelated note.",
+          confidence: 0.9,
+          evidenceIds: ["feedback-5"],
+          tags: ["tone"],
+          createdAt: "2026-05-25T10:00:00.000Z",
+          updatedAt: "2026-05-25T10:00:00.000Z",
+          lastSeenAt: "2026-05-25T10:00:00.000Z",
+          occurrences: 1,
+        },
+      ],
+    };
+
+    const result = readCareFactsFromCardWithTrace(
+      card,
+      { tags: ["body_grounding"] },
+      { now: "2026-05-26T10:10:00.000Z", staleAfterDays: 180 },
+    );
+
+    expect(result.facts.map((fact) => fact.id)).toEqual(["fresh"]);
+    const reasonsById = Object.fromEntries(result.trace.rejected.map((entry) => [entry.memoryId, entry.reasons]));
+    expect(reasonsById.stale).toContain("stale");
+    expect(reasonsById["low-confidence"]).toContain("low_confidence");
+    expect(reasonsById.superseded).toContain("inactive_or_superseded");
+    expect(reasonsById["missing-evidence"]).toContain("missing_evidence");
+    expect(reasonsById["no-match"]).toContain("no_tag_overlap");
   });
 
   it("formats retrieved care facts for prompt injection without evidence ids", () => {

@@ -98,4 +98,98 @@ describe("default LLM pipeline", () => {
     });
     expect(next.shadow).toBeUndefined();
   });
+
+  it("attaches redacted memory claim grounding diagnostics without changing visible V2 text", () => {
+    const message: ChatMessage = {
+      id: "avaloka-1",
+      role: "avaloka",
+      text: "local baseline",
+      createdAt: "2026-05-19T00:00:00.000Z",
+      responseSource: "local",
+      orchestratorV2: { status: "loading" },
+    };
+
+    const next = applyAvalokaV2Result(message, {
+      status: "ready",
+      candidateText: "我记得你偏好短一点、身体落地的回应，所以我们先回到脚和呼吸。",
+      responseSource: "llm_orchestrator_v2",
+      retrievedCareFacts: [
+        {
+          memoryId: "tone-short-body",
+          kind: "tone_preference",
+          text: "User prefers short body-grounded responses over long analysis.",
+          confidence: 0.92,
+          tags: ["tone", "body_grounding"],
+        },
+      ],
+    });
+
+    expect(next.text).toBe("我记得你偏好短一点、身体落地的回应，所以我们先回到脚和呼吸。");
+    expect(next.orchestratorV2?.memoryClaimGrounding).toMatchObject({
+      version: "memory_claim_grounding_v0",
+      verdict: "pass",
+      claims: [
+        {
+          status: "supported",
+          supportingMemoryIds: ["tone-short-body"],
+          reason: "matched_retrieved_fact",
+        },
+      ],
+    });
+
+    const serialized = JSON.stringify(next.orchestratorV2?.memoryClaimGrounding);
+    expect(serialized).not.toContain("我记得你偏好");
+    expect(serialized).not.toContain("User prefers short body-grounded responses");
+  });
+
+  it("falls back to the local baseline when V2 contains unsupported memory claims", () => {
+    const message: ChatMessage = {
+      id: "avaloka-1",
+      role: "avaloka",
+      text: "local baseline",
+      createdAt: "2026-05-19T00:00:00.000Z",
+      responseSource: "local",
+      orchestratorV2: { status: "loading" },
+    };
+
+    const next = applyAvalokaV2Result(message, {
+      status: "ready",
+      candidateText: "我记得你之前说复查让你很害怕。",
+      responseSource: "llm_orchestrator_v2",
+      retrievedCareFacts: [],
+    });
+
+    expect(next.text).toBe("local baseline");
+    expect(next.responseSource).toBe("local_claim_grounding_fallback");
+    expect(next.orchestratorV2?.memoryClaimGrounding).toMatchObject({
+      verdict: "warn",
+      claims: [{ status: "unsupported", supportingMemoryIds: [] }],
+    });
+    expect(next.orchestratorV2?.candidateText).toBe("我记得你之前说复查让你很害怕。");
+  });
+
+  it("uses V2 text when the candidate has no memory claims", () => {
+    const message: ChatMessage = {
+      id: "avaloka-1",
+      role: "avaloka",
+      text: "local baseline",
+      createdAt: "2026-05-19T00:00:00.000Z",
+      responseSource: "local",
+      orchestratorV2: { status: "loading" },
+    };
+
+    const next = applyAvalokaV2Result(message, {
+      status: "ready",
+      candidateText: "我们先把脚踩在地上，慢慢呼一口气。",
+      responseSource: "llm_orchestrator_v2",
+      retrievedCareFacts: [],
+    });
+
+    expect(next.text).toBe("我们先把脚踩在地上，慢慢呼一口气。");
+    expect(next.responseSource).toBe("llm_orchestrator_v2");
+    expect(next.orchestratorV2?.memoryClaimGrounding).toMatchObject({
+      verdict: "pass",
+      claims: [],
+    });
+  });
 });

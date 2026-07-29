@@ -24,6 +24,7 @@ If documents conflict, follow this order:
 | Primary artifact | Local SAGE Lite pipeline with Memory Writer, Memory Guardian, Graph/Care Memory Store, Memory Reader, response injection, and evals |
 | Research plan | `docs/research/sage-memory-research-plan.md` |
 | Memory design | `docs/engineering/avaloka-memory-engine-v1.md` / `docs/engineering/avaloka-memory-engine-v1.zh.md` |
+| Active execution plan | `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md` |
 
 ### R1 Entry Context
 
@@ -45,8 +46,12 @@ The prior V0/V1 work remains useful because it supplies:
 - Memory Guardian rejection rules
 - Care Card and graph-memory schema experiments
 - deterministic Memory Reader prototype
+- formal Memory Reader retrieval baseline with Recall@k, MRR, NDCG@k, no-match, privacy, stale-memory, and latency measures
+- versioned, redacted retrieval traces for developer diagnosis
 - optional LLM Memory Writer shadow test
 - response injection with 3-5 care facts
+- claim-level evidence grounding in shadow mode before reversible enforcement
+- fallback enforcement for unsupported personal-memory claims before any safer rewrite policy
 - extraction, rejection, retrieval, response, and privacy evals
 - developer-mode diagnostics for memory experiments
 - local-first data storage and export/clear support
@@ -75,6 +80,9 @@ R1 passes if:
 - every saved memory is sparse, evidence-backed, exportable, and clearable
 - Memory Guardian rejects private, medical, crisis, revenge, karma-blame, and speculative memory candidates
 - retrieval can select relevant care facts for a future turn
+- the deterministic reader has a reproducible gold-set baseline and returns zero private, deleted, superseded, or stale memories
+- personal-memory and health/safety claims can be checked against permitted evidence without treating ordinary compassion as a factual claim
+- unsupported personal-memory claims cannot reach user-visible output without fallback or an approved rewrite policy
 - response evals show memory improves personalization without creepiness
 - existing crisis, guardian, prompt-injection, and response-quality gates still pass
 - no user-facing UI exposes hidden memory logic, scores, prompts, or private logs

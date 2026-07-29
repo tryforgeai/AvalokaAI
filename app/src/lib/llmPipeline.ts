@@ -1,4 +1,5 @@
 import type { AvalokaV2Result, ChatMessage } from "../types";
+import { evaluateMemoryClaimGrounding } from "./memoryClaimGrounding";
 
 export const DEFAULT_AUTO_LLM_ENDPOINTS = ["/api/avaloka-v2"] as const;
 
@@ -22,19 +23,33 @@ export function applyAvalokaV2Result(message: ChatMessage, orchestratorV2: Avalo
   if (orchestratorV2.status !== "ready" || !orchestratorV2.candidateText) {
     return { ...message, orchestratorV2 };
   }
+  const candidateText = orchestratorV2.candidateText;
+
+  const memoryClaimGrounding =
+    orchestratorV2.memoryClaimGrounding ||
+    evaluateMemoryClaimGrounding({
+      answerText: candidateText,
+      retrievedCareFacts: orchestratorV2.retrievedCareFacts || [],
+    });
+  const orchestratorWithDiagnostics: AvalokaV2Result = {
+    ...orchestratorV2,
+    memoryClaimGrounding,
+  };
+  const hasUnsupportedMemoryClaim = memoryClaimGrounding.claims.some((claim) => claim.status === "unsupported");
+  const visibleText = hasUnsupportedMemoryClaim ? message.localBaselineText || message.text : candidateText;
 
   return {
     ...message,
-    text: orchestratorV2.candidateText,
-    responseSource: "llm_orchestrator_v2",
-    orchestratorV2,
+    text: visibleText,
+    responseSource: hasUnsupportedMemoryClaim ? "local_claim_grounding_fallback" : "llm_orchestrator_v2",
+    orchestratorV2: orchestratorWithDiagnostics,
     baifa:
-      orchestratorV2.baifa && orchestratorV2.model
+      orchestratorWithDiagnostics.baifa && orchestratorWithDiagnostics.model
         ? {
             status: "ready",
-            baifa: orchestratorV2.baifa,
-            model: orchestratorV2.model,
-            latencyMs: orchestratorV2.latencyMs,
+            baifa: orchestratorWithDiagnostics.baifa,
+            model: orchestratorWithDiagnostics.model,
+            latencyMs: orchestratorWithDiagnostics.latencyMs,
           }
         : message.baifa,
   };

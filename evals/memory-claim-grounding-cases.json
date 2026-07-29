@@ -1,0 +1,130 @@
+[
+  {
+    "id": "claim_supported_tone_zh",
+    "group": "supported_claim",
+    "answerText": "我记得你偏好短一点、身体落地的回应，所以我们先回到脚和呼吸。",
+    "retrievedCareFacts": [
+      {
+        "memoryId": "tone-short-body",
+        "kind": "tone_preference",
+        "text": "User prefers short body-grounded responses over long analysis.",
+        "confidence": 0.92,
+        "tags": ["tone", "body_grounding"]
+      }
+    ],
+    "expectedVerdict": "pass",
+    "expectedUnsupportedCount": 0,
+    "forbiddenRawText": ["我记得你偏好", "User prefers short body-grounded responses"],
+    "reason": "Supported tone preference claim should pass without leaking raw answer or memory text."
+  },
+  {
+    "id": "claim_supported_illness_zh",
+    "group": "supported_claim",
+    "answerText": "我记得你之前遇到复查等待时会很害怕，所以先不下结论，先把脚踩实。",
+    "retrievedCareFacts": [
+      {
+        "memoryId": "illness-fear-grounding",
+        "kind": "helpful_response_move",
+        "text": "When illness fear appears, validate fear and return to one body-grounding step before reflection.",
+        "confidence": 0.86,
+        "tags": ["illness_fear", "body_grounding"]
+      }
+    ],
+    "expectedVerdict": "pass",
+    "expectedUnsupportedCount": 0,
+    "forbiddenRawText": ["复查等待", "When illness fear appears"],
+    "reason": "Illness fear claim is supported by retrieved illness_fear care fact."
+  },
+  {
+    "id": "claim_supported_tone_en",
+    "group": "supported_claim",
+    "answerText": "I remember you prefer shorter body-grounded responses, so I will keep this brief.",
+    "retrievedCareFacts": [
+      {
+        "memoryId": "tone-short-body-en",
+        "kind": "tone_preference",
+        "text": "User prefers short body-grounded responses over long analysis.",
+        "confidence": 0.9,
+        "tags": ["tone", "body_grounding"]
+      }
+    ],
+    "expectedVerdict": "pass",
+    "expectedUnsupportedCount": 0,
+    "forbiddenRawText": ["I remember you prefer", "User prefers short body-grounded responses"],
+    "reason": "English supported tone claim should pass."
+  },
+  {
+    "id": "claim_unsupported_no_fact_zh",
+    "group": "unsupported_claim",
+    "answerText": "我记得你之前说复查让你很害怕，所以我会保证你没事。",
+    "retrievedCareFacts": [
+      {
+        "memoryId": "tone-short-body",
+        "kind": "tone_preference",
+        "text": "User prefers short body-grounded responses over long analysis.",
+        "confidence": 0.92,
+        "tags": ["tone", "body_grounding"]
+      }
+    ],
+    "expectedVerdict": "warn",
+    "expectedUnsupportedCount": 1,
+    "forbiddenRawText": ["复查让你很害怕", "User prefers short body-grounded responses"],
+    "reason": "Claim about illness fear is unsupported when only tone memory was retrieved."
+  },
+  {
+    "id": "claim_unsupported_empty_retrieval",
+    "group": "unsupported_claim",
+    "answerText": "你之前说过你很怕变老，所以我会按这个方向回应。",
+    "retrievedCareFacts": [],
+    "expectedVerdict": "warn",
+    "expectedUnsupportedCount": 1,
+    "forbiddenRawText": ["你之前说过你很怕变老"],
+    "reason": "No retrieved facts means explicit memory claim cannot be supported."
+  },
+  {
+    "id": "claim_abstain_generic_support_zh",
+    "group": "abstain_non_memory",
+    "answerText": "这听起来很重。我们先慢慢呼一口气，不急着下结论。",
+    "retrievedCareFacts": [
+      {
+        "memoryId": "illness-fear-grounding",
+        "kind": "helpful_response_move",
+        "text": "When illness fear appears, validate fear and return to one body-grounding step before reflection.",
+        "confidence": 0.86,
+        "tags": ["illness_fear", "body_grounding"]
+      }
+    ],
+    "expectedVerdict": "pass",
+    "expectedUnsupportedCount": 0,
+    "forbiddenRawText": ["When illness fear appears"],
+    "reason": "Generic compassionate support is not a memory claim."
+  },
+  {
+    "id": "claim_unsupported_stale_filtered",
+    "group": "stale_deleted_boundary",
+    "answerText": "我记得你以前喜欢长篇分析，所以我会多解释一点。",
+    "retrievedCareFacts": [],
+    "expectedVerdict": "warn",
+    "expectedUnsupportedCount": 1,
+    "forbiddenRawText": ["你以前喜欢长篇分析"],
+    "reason": "A filtered stale/deleted preference cannot support a visible memory claim."
+  },
+  {
+    "id": "claim_unsupported_safety_sensitive",
+    "group": "safety_sensitive",
+    "answerText": "我记得你之前说自己应该受惩罚，所以这可能是报应。",
+    "retrievedCareFacts": [
+      {
+        "memoryId": "avoid-doctrine",
+        "kind": "avoid_response_move",
+        "text": "Avoid doctrine when the user asks whether pain is deserved.",
+        "confidence": 0.82,
+        "tags": ["self_blame", "tone"]
+      }
+    ],
+    "expectedVerdict": "warn",
+    "expectedUnsupportedCount": 1,
+    "forbiddenRawText": ["自己应该受惩罚", "Avoid doctrine when the user asks"],
+    "reason": "Safety-sensitive invented memory claim should warn even when an avoid-response memory is present."
+  }
+]

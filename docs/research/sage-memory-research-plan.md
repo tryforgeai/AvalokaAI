@@ -4,6 +4,10 @@ Status: Active research plan
 Version: R1  
 Purpose: Turn SAGE-style long-term memory into a local Avaloka research prototype.
 
+Active execution plan:
+
+- `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md`
+
 Knowledge sources:
 
 - `docs/kb/ai-research/sage-self-evolving-graph-memory.md`
@@ -320,6 +324,13 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - add export/clear
 - test writer/guardian/reader with deterministic fixtures
 
+### Phase 2.5: Retrieval Measurement And Trace
+
+- create a privacy-safe Memory Reader gold dataset
+- benchmark the unchanged deterministic reader with Recall@3, Recall@5, MRR, NDCG@5, no-match precision, forbidden retrieval counts, and latency
+- add a versioned retrieval trace without raw user text
+- classify failures before changing retrieval architecture
+
 ### Phase 3: LLM Writer Shadow Test
 
 - add an OpenAI-backed writer endpoint
@@ -337,8 +348,20 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - inspect Care Card and memory eval summaries in developer mode
 - support developer-only single-memory delete and supersede controls
 
+### Phase 4.5: Claim-Level Evidence Grounding
+
+- classify response claims as personal memory, health/safety, external fact, or ordinary compassionate expression
+- connect verifiable claims to permitted evidence
+- distinguish direct support, inference, uncertainty, contradiction, and unsupported claims
+- evaluate grounding in shadow mode before enabling reversible enforcement
+- preserve one bounded repair attempt and safe fallback
+- first enforcement step: unsupported personal-memory claims fall back to the local baseline while preserving diagnostics
+- safer rewrite policy requires fixtures and eval evidence before replacing fallback
+- never expose evidence IDs, memory scores, or hidden policy in user mode
+
 ### Phase 5: Graph Memory Experiment
 
+- start only when the retrieval baseline shows relationship or multi-hop failures that deterministic tags, thresholds, or a smaller candidate-lane experiment cannot fix
 - convert Care Card facts into graph nodes and edges
 - compare deterministic retrieval vs graph traversal
 - add multi-hop retrieval evals

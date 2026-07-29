@@ -1,4 +1,13 @@
-import type { CareCard, CareMemory, MemoryCandidate, RetrievedCareFact, SageMemoryCandidateKind } from "../types";
+import type {
+  CareCard,
+  CareMemory,
+  MemoryCandidate,
+  RetrievalTraceCandidateV1,
+  RetrievalTraceReason,
+  RetrievalTraceV1,
+  RetrievedCareFact,
+  SageMemoryCandidateKind,
+} from "../types";
 
 export type MemoryCandidateKind = SageMemoryCandidateKind;
 export type { MemoryCandidate };
@@ -37,6 +46,11 @@ export interface MemoryReaderOptions {
   minConfidence?: number;
   now?: string;
   staleAfterDays?: number;
+}
+
+export interface MemoryReaderTraceResult {
+  facts: CareMemory[];
+  trace: RetrievalTraceV1;
 }
 
 const rejectRules: Array<{ reason: MemoryGuardianReason; patterns: RegExp[] }> = [
@@ -182,6 +196,15 @@ export function readCareFactsFromCard(
   context: MemoryReaderContext,
   options: MemoryReaderOptions = {},
 ): CareMemory[] {
+  return readCareFactsFromCardWithTrace(card, context, options).facts;
+}
+
+export function readCareFactsFromCardWithTrace(
+  card: CareCard,
+  context: MemoryReaderContext,
+  options: MemoryReaderOptions = {},
+): MemoryReaderTraceResult {
+  const startedAt = performanceNow();
   const limit = options.limit ?? 5;
   const minConfidence = options.minConfidence ?? 0.5;
   const now = options.now ?? new Date().toISOString();
@@ -190,15 +213,20 @@ export function readCareFactsFromCard(
   const activeTagSet = new Set(activeTags);
   const riskContext = activeTags.some((tag) => riskTags.has(tag));
 
-  if (activeTags.length === 0 || limit <= 0) return [];
+  const candidates = card.memories.map((memory) => {
+    const matchedTags = memory.tags.filter((tag) => activeTagSet.has(tag));
+    const relevance = matchedTags.length;
+    const reasons: RetrievalTraceReason[] = [];
+    const status = memory.status || "active";
 
-  return card.memories
-    .filter((memory) => memory.confidence >= minConfidence)
-    .filter((memory) => (memory.status || "active") === "active")
-    .filter((memory) => memory.evidenceIds.length > 0)
-    .filter((memory) => !isStaleMemory(memory, now, staleAfterDays))
-    .map((memory) => {
-      const relevance = memory.tags.filter((tag) => activeTagSet.has(tag)).length;
+    if (relevance > 0) reasons.push("tag_overlap");
+    if (riskContext && (memory.kind === "safety_note" || memory.kind === "avoid_response_move")) reasons.push("risk_kind_boost");
+    if (memory.confidence < minConfidence) reasons.push("low_confidence");
+    if (status !== "active") reasons.push("inactive_or_superseded");
+    if (memory.evidenceIds.length === 0) reasons.push("missing_evidence");
+    if (isStaleMemory(memory, now, staleAfterDays)) reasons.push("stale");
+    if (relevance === 0) reasons.push("no_tag_overlap");
+
       const riskBoost =
         riskContext && memory.kind === "safety_note"
           ? 200
@@ -207,12 +235,58 @@ export function readCareFactsFromCard(
             : 0;
       const score = relevance * 100 + riskBoost + memory.confidence * 10 + Math.min(memory.occurrences, 5);
 
-      return { memory, relevance, score };
-    })
-    .filter(({ relevance }) => relevance > 0)
-    .sort((a, b) => b.score - a.score || b.memory.updatedAt.localeCompare(a.memory.updatedAt))
-    .slice(0, limit)
-    .map(({ memory }) => memory);
+    return { memory, matchedTags, reasons: unique(reasons) as RetrievalTraceReason[], score };
+  });
+
+  const eligible = activeTags.length === 0 || limit <= 0
+    ? []
+    : candidates
+        .filter(({ reasons }) => !reasons.includes("low_confidence"))
+        .filter(({ reasons }) => !reasons.includes("inactive_or_superseded"))
+        .filter(({ reasons }) => !reasons.includes("missing_evidence"))
+        .filter(({ reasons }) => !reasons.includes("stale"))
+        .filter(({ reasons }) => !reasons.includes("no_tag_overlap"))
+        .sort((a, b) => b.score - a.score || b.memory.updatedAt.localeCompare(a.memory.updatedAt));
+  const selectedMemoryIds = eligible.slice(0, limit).map(({ memory }) => memory.id);
+  const selectedMemoryIdSet = new Set(selectedMemoryIds);
+  const traceCandidates: RetrievalTraceCandidateV1[] = candidates.map(({ memory, matchedTags, reasons, score }) => {
+    const selected = selectedMemoryIdSet.has(memory.id);
+    const finalReasons = selected || reasons.some((reason) => reason !== "tag_overlap" && reason !== "risk_kind_boost")
+      ? reasons
+      : [...reasons, "ranked_below_limit"] as RetrievalTraceReason[];
+
+    return {
+      memoryId: memory.id,
+      kind: memory.kind,
+      status: memory.status || "active",
+      tags: memory.tags,
+      matchedTags,
+      score,
+      decision: selected ? "selected" : "rejected",
+      reasons: unique(finalReasons) as RetrievalTraceReason[],
+    };
+  });
+  const facts = eligible.slice(0, limit).map(({ memory }) => memory);
+
+  return {
+    facts,
+    trace: {
+      version: "retrieval_trace_v1",
+      readerVersion: "deterministic_memory_reader_v0",
+      policyVersion: "retrieval_policy_v1",
+      inputHash: hashTraceInput(context),
+      activeTags,
+      requestedLimit: limit,
+      minConfidence,
+      staleAfterDays,
+      candidates: traceCandidates,
+      selectedMemoryIds,
+      rejected: traceCandidates
+        .filter((candidate) => candidate.decision === "rejected")
+        .map((candidate) => ({ memoryId: candidate.memoryId, reasons: candidate.reasons })),
+      latencyMs: performanceNow() - startedAt,
+    },
+  };
 }
 
 export function buildPromptCareFacts(memories: CareMemory[]): RetrievedCareFact[] {
@@ -223,6 +297,34 @@ export function buildPromptCareFacts(memories: CareMemory[]): RetrievedCareFact[
     confidence: memory.confidence,
     tags: memory.tags,
   }));
+}
+
+function hashTraceInput(context: MemoryReaderContext): string {
+  const payload = JSON.stringify({
+    userText: context.userText || "",
+    scenarioId: context.scenarioId || "",
+    dukkhaTypes: context.dukkhaTypes || [],
+    dukkhaPatterns: context.dukkhaPatterns || [],
+    responseMoves: context.responseMoves || [],
+    tags: context.tags || [],
+  });
+  let hashA = 0x811c9dc5;
+  let hashB = 0x1000193;
+
+  for (let index = 0; index < payload.length; index += 1) {
+    const code = payload.charCodeAt(index);
+    hashA ^= code;
+    hashA = Math.imul(hashA, 0x01000193) >>> 0;
+    hashB ^= code + index;
+    hashB = Math.imul(hashB, 0x85ebca6b) >>> 0;
+  }
+
+  const seed = `${hashA.toString(16).padStart(8, "0")}${hashB.toString(16).padStart(8, "0")}`;
+  return seed.repeat(4).slice(0, 64);
+}
+
+function performanceNow(): number {
+  return typeof performance !== "undefined" ? performance.now() : Date.now();
 }
 
 function unique(values: string[]): string[] {

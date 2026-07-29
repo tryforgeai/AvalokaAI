@@ -13,6 +13,8 @@
     "content:check": "node ../scripts/check-content-ingestion.mjs",
     "eval:v2": "node ../scripts/run-avaloka-v2-eval.mjs",
     "eval:memory": "node ../scripts/run-memory-response-eval.mjs",
+    "eval:memory:claim-grounding": "node ../scripts/run-memory-claim-grounding.mjs",
+    "eval:memory:reader": "node ../scripts/run-memory-reader-benchmark.mjs",
     "eval:sage": "vitest run src/lib/sageMemoryEndToEndEval.test.ts",
     "eval:sage:writer": "node ../scripts/run-sage-memory-writer-eval.mjs"
   },

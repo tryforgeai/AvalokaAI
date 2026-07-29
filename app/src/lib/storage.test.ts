@@ -78,7 +78,7 @@ describe("exportAvalokaData", () => {
         dukkhaTypes: ["story_added_suffering"],
         dukkhaPatterns: ["ignorance"],
         responseMoves: ["reject_punishment_frame", "conditions_not_blame"],
-        responseSource: "openai_primary_dev",
+        responseSource: "local_claim_grounding_fallback",
         localBaselineText: "我不会把生病解释成“还债”或惩罚。",
         orchestratorV2: {
           status: "ready",
@@ -127,6 +127,19 @@ describe("exportAvalokaData", () => {
               tags: ["self_blame"],
             },
           ],
+          memoryClaimGrounding: {
+            version: "memory_claim_grounding_v0",
+            verdict: "warn",
+            claims: [
+              {
+                claimId: "claim_01",
+                claimTextHash: "abcd".repeat(16),
+                status: "unsupported",
+                supportingMemoryIds: [],
+                reason: "no_retrieved_fact_support",
+              },
+            ],
+          },
           repairAttempted: false,
         },
         openaiPrimary: {
@@ -222,7 +235,7 @@ describe("exportAvalokaData", () => {
       guardian: [{ candidateId: "memory-1", status: "allow" }],
     });
     expect(exported.turns[1]).toMatchObject({
-      responseSource: "openai_primary_dev",
+      responseSource: "local_claim_grounding_fallback",
       localBaselineText: "我不会把生病解释成“还债”或惩罚。",
       openaiPrimary: {
         candidateText: "不，我不会把生病说成“还债”或惩罚。",
@@ -246,6 +259,10 @@ describe("exportAvalokaData", () => {
             tags: ["self_blame"],
           },
         ],
+        memoryClaimGrounding: {
+          verdict: "warn",
+          claims: [{ status: "unsupported", supportingMemoryIds: [] }],
+        },
       },
     });
     expect(exported.summary).toMatchObject({
@@ -262,9 +279,12 @@ describe("exportAvalokaData", () => {
       baifaErrorCount: 0,
       openaiPrimaryReadyCount: 1,
       openaiPrimaryFallbackCount: 0,
+      claimGroundingFallbackCount: 1,
       orchestratorV2ReadyCount: 1,
       orchestratorV2ErrorCount: 0,
       orchestratorV2RepairCount: 0,
+      memoryClaimGroundingWarnCount: 1,
+      unsupportedMemoryClaimCount: 1,
       compassionReadyCount: 1,
       compassionErrorCount: 0,
       sageMemoryReadyCount: 1,

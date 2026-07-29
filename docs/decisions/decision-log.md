@@ -4,6 +4,118 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-07-26 — Fall Back On Unsupported Personal-Memory Claims
+
+Status: Accepted
+
+### Context
+
+R1 now has deterministic Memory Reader metrics, a privacy-safe gold dataset,
+RetrievalTraceV1, and Claim Grounding V0. The response path can detect explicit
+personal-memory claims such as "我记得你..." or "you told me before..." and mark
+them unsupported when the current retrieved care facts do not support them.
+
+Leaving those warnings as developer-only diagnostics would still allow a V2
+response to show unsupported personal-history claims to the user.
+
+### Decision
+
+When a ready V2 candidate contains any unsupported personal-memory claim, Avaloka
+must use the existing local baseline as the user-visible response and set:
+
+```text
+responseSource = local_claim_grounding_fallback
+```
+
+The original V2 `candidateText` and `memoryClaimGrounding` result remain in
+developer diagnostics/export for diagnosis. Supported memory claims and responses
+with no memory claims may continue to use the V2 candidate text.
+
+Do not add deterministic text surgery as the first enforcement step. A safer
+rewrite policy may be designed later with fixtures and eval evidence.
+
+### Rationale
+
+Unsupported personal-memory claims are more damaging than ordinary generic
+hallucinations because they imply Avaloka remembers the user incorrectly. A
+conservative fallback preserves safety and trust while keeping the rejected V2
+candidate observable for research.
+
+### Consequences
+
+- `local_claim_grounding_fallback` is part of the response-source contract.
+- Export summaries count claim-grounding fallback interventions.
+- User mode still does not expose claim IDs, memory IDs, evidence IDs, scores,
+  tags, or hidden grounding logic.
+- Future rewrite work must prove it is safer than fallback before becoming
+  user-visible.
+
+### Affected Docs
+
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+- `docs/research/r1-memory-gap-report.md`
+- `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md`
+
+## 2026-07-26 — Measure Retrieval And Ground Claims Before Adding Advanced RAG
+
+Status: Accepted
+
+### Context
+
+The enterprise RAG bootcamp labs demonstrate relevance classifiers, semantic and
+late chunking, Qdrant, response grounding, GraphRAG, MemGraphRAG, and guardrail
+pipelines. Avaloka already has a deterministic Memory Reader, Care Card
+lifecycle, safety gates, response Guardian, and memory eval fixtures, but it
+does not yet have formal retrieval metrics or claim-level evidence checking.
+
+Most bootcamp lab source files are training material with explicit reuse
+restrictions. Their methods can inform Avaloka, but their source code must not be
+copied into this repository without written permission.
+
+### Decision
+
+Keep Avaloka R1 in the existing TypeScript/Node stack and execute:
+
+1. a gold-set benchmark of the unchanged deterministic Memory Reader
+2. a versioned, redacted retrieval trace
+3. claim and evidence contracts
+4. a shadow claim-grounding evaluator
+5. reversible enforcement only after eval targets pass
+6. evidence-driven selection of any later embedding, hybrid, reranking, or graph
+   experiment
+
+Do not add Qdrant, a Python service, a production graph database, ModernBERT
+fine-tuning, Microsoft GraphRAG, or RAPTOR during this plan.
+
+### Rationale
+
+Avaloka cannot know whether advanced retrieval is useful until the current reader
+has a measured baseline. Claim-level grounding addresses a nearer safety gap:
+the existing Guardian can reject unsafe tone and policy violations, but it does
+not prove that personal-history or health-sensitive claims are supported by
+permitted evidence.
+
+This order preserves reversibility, keeps failures attributable, and prevents
+new infrastructure from entering the emotionally sensitive runtime without
+evidence.
+
+### Consequences
+
+- Graph Memory Schema V0 is no longer the immediate next slice.
+- R2 graph work requires measured relationship or multi-hop failures.
+- Bootcamp lab code remains a read-only learning reference.
+- Claim grounding starts in shadow mode and uses an off/shadow/enforce rollback
+  switch.
+- Retrieval and grounding eval results become gates for architecture changes.
+
+### Affected Docs
+
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+- `docs/research/r1-memory-gap-report.md`
+- `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md`
+
 ## 2026-05-26 — Reposition Avaloka As A Research-First AI Companion Lab
 
 Status: Accepted

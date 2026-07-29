@@ -13,6 +13,8 @@ const avalokiteshvaraCasesPath = join(repoRoot, "evals/avalokiteshvara-compassio
 const sageMemoryCasesPath = join(repoRoot, "evals/sage-memory-cases.json");
 const sageEndToEndCasesPath = join(repoRoot, "evals/sage-end-to-end-cases.json");
 const memoryResponseCasesPath = join(repoRoot, "evals/memory-response-cases.json");
+const memoryClaimGroundingCasesPath = join(repoRoot, "evals/memory-claim-grounding-cases.json");
+const memoryReaderRetrievalCasesPath = join(repoRoot, "evals/memory-reader-retrieval-cases.json");
 const promptRegistryPath = join(repoRoot, "prompt/registry.json");
 const kbReadmePath = join(repoRoot, "docs/kb/README.md");
 const sageResearchPlanPath = join(repoRoot, "docs/research/sage-memory-research-plan.md");
@@ -58,6 +60,8 @@ assert(existsSync(avalokiteshvaraCasesPath), "Missing evals/avalokiteshvara-comp
 assert(existsSync(sageMemoryCasesPath), "Missing evals/sage-memory-cases.json.");
 assert(existsSync(sageEndToEndCasesPath), "Missing evals/sage-end-to-end-cases.json.");
 assert(existsSync(memoryResponseCasesPath), "Missing evals/memory-response-cases.json.");
+assert(existsSync(memoryClaimGroundingCasesPath), "Missing evals/memory-claim-grounding-cases.json.");
+assert(existsSync(memoryReaderRetrievalCasesPath), "Missing evals/memory-reader-retrieval-cases.json.");
 assert(existsSync(promptRegistryPath), "Missing prompt/registry.json.");
 assert(existsSync(kbReadmePath), "Missing docs/kb/README.md.");
 assert(existsSync(sageResearchPlanPath), "Missing docs/research/sage-memory-research-plan.md.");
@@ -98,6 +102,12 @@ const avalokiteshvaraCases = existsSync(avalokiteshvaraCasesPath) ? JSON.parse(r
 const sageMemoryCases = existsSync(sageMemoryCasesPath) ? JSON.parse(read(sageMemoryCasesPath)) : [];
 const sageEndToEndCases = existsSync(sageEndToEndCasesPath) ? JSON.parse(read(sageEndToEndCasesPath)) : [];
 const memoryResponseCases = existsSync(memoryResponseCasesPath) ? JSON.parse(read(memoryResponseCasesPath)) : [];
+const memoryClaimGroundingCases = existsSync(memoryClaimGroundingCasesPath)
+  ? JSON.parse(read(memoryClaimGroundingCasesPath))
+  : [];
+const memoryReaderRetrievalCases = existsSync(memoryReaderRetrievalCasesPath)
+  ? JSON.parse(read(memoryReaderRetrievalCasesPath))
+  : [];
 const promptRegistry = existsSync(promptRegistryPath) ? JSON.parse(read(promptRegistryPath)) : { prompts: [] };
 const sageResearchPlan = existsSync(sageResearchPlanPath) ? read(sageResearchPlanPath) : "";
 const memoryEngine = existsSync(memoryEnginePath) ? read(memoryEnginePath) : "";
@@ -123,6 +133,13 @@ assert(Array.isArray(sageEndToEndCases), "sage-end-to-end-cases.json must be an 
 assert(sageEndToEndCases.length >= 2, "sage-end-to-end-cases.json must include at least 2 cases.");
 assert(Array.isArray(memoryResponseCases), "memory-response-cases.json must be an array.");
 assert(memoryResponseCases.length >= 6, "memory-response-cases.json must include at least 6 cases.");
+assert(Array.isArray(memoryClaimGroundingCases), "memory-claim-grounding-cases.json must be an array.");
+assert(memoryClaimGroundingCases.length >= 8, "memory-claim-grounding-cases.json must include at least 8 cases.");
+assert(Array.isArray(memoryReaderRetrievalCases), "memory-reader-retrieval-cases.json must be an array.");
+assert(
+  memoryReaderRetrievalCases.length >= 40,
+  "memory-reader-retrieval-cases.json must include at least 40 cases.",
+);
 assert(Array.isArray(promptRegistry.prompts), "prompt/registry.json must include a prompts array.");
 
 for (const term of ["SAGE Lite", "Memory Writer", "Memory Guardian", "Memory Reader", "eval"]) {
@@ -565,6 +582,172 @@ for (const expectedUse of ["use", "ignore"]) {
   assert(memoryResponseUses.has(expectedUse), `Memory response evals must include expected_use "${expectedUse}".`);
 }
 
+const claimGroundingCaseIds = new Set();
+const claimGroundingGroups = new Set();
+const claimGroundingVerdicts = new Set();
+let claimGroundingChineseCaseCount = 0;
+for (const testCase of memoryClaimGroundingCases) {
+  assert(testCase.id, "Every memory claim grounding case must have an id.");
+  assert(!claimGroundingCaseIds.has(testCase.id), `Duplicate memory claim grounding case id: ${testCase.id}`);
+  claimGroundingCaseIds.add(testCase.id);
+  assert(testCase.group, `Memory claim grounding case ${testCase.id} must include group.`);
+  assert(testCase.answerText, `Memory claim grounding case ${testCase.id} must include answerText.`);
+  assert(
+    Array.isArray(testCase.retrievedCareFacts),
+    `Memory claim grounding case ${testCase.id} must include retrievedCareFacts.`,
+  );
+  assert(
+    ["pass", "warn"].includes(testCase.expectedVerdict),
+    `Memory claim grounding case ${testCase.id} must include expectedVerdict pass|warn.`,
+  );
+  assert(
+    Number.isFinite(testCase.expectedUnsupportedCount),
+    `Memory claim grounding case ${testCase.id} must include expectedUnsupportedCount.`,
+  );
+  assert(
+    Array.isArray(testCase.forbiddenRawText),
+    `Memory claim grounding case ${testCase.id} must include forbiddenRawText.`,
+  );
+  assert(testCase.reason, `Memory claim grounding case ${testCase.id} must include reason.`);
+  claimGroundingGroups.add(testCase.group);
+  claimGroundingVerdicts.add(testCase.expectedVerdict);
+  if (/[^\x00-\x7F]/.test(testCase.answerText)) claimGroundingChineseCaseCount += 1;
+
+  for (const fact of testCase.retrievedCareFacts) {
+    assert(fact.memoryId, `Memory claim grounding case ${testCase.id} fact must include memoryId.`);
+    assert(fact.kind, `Memory claim grounding case ${testCase.id} fact must include kind.`);
+    assert(fact.text, `Memory claim grounding case ${testCase.id} fact must include text.`);
+    assert(Number.isFinite(fact.confidence), `Memory claim grounding case ${testCase.id} fact must include confidence.`);
+    assert(Array.isArray(fact.tags), `Memory claim grounding case ${testCase.id} fact must include tags.`);
+  }
+}
+for (const group of ["supported_claim", "unsupported_claim", "abstain_non_memory", "stale_deleted_boundary", "safety_sensitive"]) {
+  assert(claimGroundingGroups.has(group), `Memory claim grounding cases must include group "${group}".`);
+}
+for (const verdict of ["pass", "warn"]) {
+  assert(claimGroundingVerdicts.has(verdict), `Memory claim grounding cases must include expectedVerdict "${verdict}".`);
+}
+assert(claimGroundingChineseCaseCount >= 5, "Memory claim grounding cases must include at least 5 Chinese-language cases.");
+
+const memoryReaderCaseIds = new Set();
+const memoryReaderGroups = new Map();
+let memoryReaderChineseCaseCount = 0;
+let memoryReaderMultiGradeCaseCount = 0;
+const memoryReaderRequiredGroups = {
+  exact_tag_alias: 8,
+  semantic_paraphrase: 8,
+  hard_negative: 6,
+  no_match: 5,
+  stale_memory: 3,
+  superseded_deleted: 3,
+  safety_priority: 3,
+  tone_preference: 2,
+  avoid_response_move: 2,
+};
+
+for (const testCase of memoryReaderRetrievalCases) {
+  assert(testCase.id, "Every memory reader retrieval case must have an id.");
+  assert(
+    !memoryReaderCaseIds.has(testCase.id),
+    `Duplicate memory reader retrieval case id: ${testCase.id}`,
+  );
+  memoryReaderCaseIds.add(testCase.id);
+  assert(testCase.group, `Memory reader retrieval case ${testCase.id} must include group.`);
+  assert(testCase.description, `Memory reader retrieval case ${testCase.id} must include description.`);
+  assert(testCase.readerContext, `Memory reader retrieval case ${testCase.id} must include readerContext.`);
+  assert(typeof testCase.expectedNoMatch === "boolean", `Memory reader retrieval case ${testCase.id} must include expectedNoMatch boolean.`);
+  assert(testCase.now, `Memory reader retrieval case ${testCase.id} must include now.`);
+  assert(!Number.isNaN(Date.parse(testCase.now || "")), `Memory reader retrieval case ${testCase.id} has invalid now.`);
+
+  memoryReaderGroups.set(testCase.group, (memoryReaderGroups.get(testCase.group) || 0) + 1);
+  if (/[^\x00-\x7F]/.test(JSON.stringify(testCase.readerContext))) {
+    memoryReaderChineseCaseCount += 1;
+  }
+
+  const careCard = testCase.careCard;
+  assert(careCard?.version === "care_card_v1", `Memory reader retrieval case ${testCase.id} must include care_card_v1.`);
+  assert(Array.isArray(careCard?.memories), `Memory reader retrieval case ${testCase.id} careCard.memories must be an array.`);
+  const memoryById = new Map();
+  for (const memory of careCard?.memories || []) {
+    assert(memory.id, `Memory reader retrieval case ${testCase.id} has a memory without id.`);
+    assert(!memoryById.has(memory.id), `Memory reader retrieval case ${testCase.id} has duplicate memory id ${memory.id}.`);
+    memoryById.set(memory.id, memory);
+    assert(memory.kind, `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include kind.`);
+    assert(memory.text, `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include text.`);
+    assert(Number.isFinite(memory.confidence), `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include confidence.`);
+    assert(Array.isArray(memory.evidenceIds), `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include evidenceIds.`);
+    assert(memory.evidenceIds.length > 0, `Memory reader retrieval case ${testCase.id} memory ${memory.id} is missing evidence IDs.`);
+    assert(Array.isArray(memory.tags), `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include tags.`);
+    assert(memory.createdAt, `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include createdAt.`);
+    assert(memory.updatedAt, `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include updatedAt.`);
+    assert(memory.lastSeenAt, `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include lastSeenAt.`);
+    assert(Number.isFinite(memory.occurrences), `Memory reader retrieval case ${testCase.id} memory ${memory.id} must include occurrences.`);
+  }
+
+  const relevance = testCase.relevance || {};
+  assert(
+    relevance && typeof relevance === "object" && !Array.isArray(relevance),
+    `Memory reader retrieval case ${testCase.id} must include relevance object.`,
+  );
+  const positiveRelevanceEntries = Object.entries(relevance).filter(([, grade]) => grade > 0);
+  const positiveGrades = new Set(positiveRelevanceEntries.map(([, grade]) => grade));
+  if (positiveRelevanceEntries.length > 1 && positiveGrades.size > 1) {
+    memoryReaderMultiGradeCaseCount += 1;
+  }
+  if (testCase.expectedNoMatch) {
+    assert(positiveRelevanceEntries.length === 0, `No-match memory reader case ${testCase.id} must not include positive relevance.`);
+  }
+  for (const [memoryId, grade] of Object.entries(relevance)) {
+    assert([0, 1, 2].includes(grade), `Memory reader retrieval case ${testCase.id} has invalid relevance grade for ${memoryId}.`);
+    assert(memoryById.has(memoryId), `Memory reader retrieval case ${testCase.id} relevance points to missing memory ${memoryId}.`);
+    const memory = memoryById.get(memoryId);
+    if (grade > 0 && memory) {
+      assert(
+        (memory.status || "active") === "active",
+        `Memory reader retrieval case ${testCase.id} gives positive relevance to inactive memory ${memoryId}.`,
+      );
+      assert(
+        !isStaleFixtureMemory(memory, testCase.now),
+        `Memory reader retrieval case ${testCase.id} gives positive relevance to stale memory ${memoryId}.`,
+      );
+    }
+  }
+
+  assert(
+    Array.isArray(testCase.forbiddenMemoryIds),
+    `Memory reader retrieval case ${testCase.id} must include forbiddenMemoryIds array.`,
+  );
+  const deletedMemoryIds = new Set(
+    (careCard?.lifecycleEvents || [])
+      .filter((event) => event.type === "delete")
+      .map((event) => event.memoryId),
+  );
+  for (const memoryId of testCase.forbiddenMemoryIds || []) {
+    const memory = memoryById.get(memoryId);
+    assert(memory || deletedMemoryIds.has(memoryId), `Memory reader retrieval case ${testCase.id} forbids missing memory ${memoryId}.`);
+    if (memory) {
+      const inactive = (memory.status || "active") !== "active";
+      const stale = isStaleFixtureMemory(memory, testCase.now);
+      assert(
+        inactive || stale,
+        `Memory reader retrieval case ${testCase.id} forbids active memory ${memoryId}; forbidden IDs must be stale, superseded, or deleted.`,
+      );
+    }
+  }
+}
+
+for (const [group, minimum] of Object.entries(memoryReaderRequiredGroups)) {
+  assert(
+    (memoryReaderGroups.get(group) || 0) >= minimum,
+    `Memory reader retrieval cases must include at least ${minimum} "${group}" cases.`,
+  );
+}
+assert(memoryReaderChineseCaseCount >= 10, "Memory reader retrieval cases must include at least 10 Chinese-language cases.");
+assert(
+  memoryReaderMultiGradeCaseCount >= 5,
+  "Memory reader retrieval cases must include at least 5 cases with multiple relevant memories and different relevance grades.",
+);
+
 const dukkhaMap = existsSync(dukkhaMapPath) ? read(dukkhaMapPath) : "";
 const mapperTest = existsSync(dukkhaMapperTestPath) ? read(dukkhaMapperTestPath) : "";
 const responseTest = existsSync(dukkhaResponseTestPath) ? read(dukkhaResponseTestPath) : "";
@@ -615,6 +798,13 @@ for (const file of episodeFiles) {
   }
 }
 
+function isStaleFixtureMemory(memory, now, staleAfterDays = 180) {
+  const nowMs = Date.parse(now || "");
+  const lastSeenMs = Date.parse(memory?.lastSeenAt || memory?.updatedAt || memory?.createdAt || "");
+  if (!Number.isFinite(nowMs) || !Number.isFinite(lastSeenMs)) return false;
+  return nowMs - lastSeenMs > staleAfterDays * 24 * 60 * 60 * 1000;
+}
+
 if (errors.length > 0) {
   console.error("Content ingestion check failed:\n");
   for (const error of errors) {
@@ -624,5 +814,5 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases, ${sageMemoryCases.length} SAGE memory cases, ${sageEndToEndCases.length} SAGE end-to-end cases, ${memoryResponseCases.length} memory response cases.`,
+  `Content ingestion check passed: ${episodeFiles.length} episode notes, ${wisdomCases.length} wisdom eval cases, ${baifaCases.length} Baifa eval cases, ${baifaUnwholesomeCases.length} Baifa unwholesome cases, ${avalokaV2Cases.length} Avaloka V2 cases, ${avalokaV2GoldenCases.length} Avaloka V2 golden cases, ${avalokiteshvaraCases.length} Avalokiteshvara compassion cases, ${sageMemoryCases.length} SAGE memory cases, ${sageEndToEndCases.length} SAGE end-to-end cases, ${memoryResponseCases.length} memory response cases, ${memoryClaimGroundingCases.length} memory claim grounding cases, ${memoryReaderRetrievalCases.length} memory reader retrieval cases.`,
 );

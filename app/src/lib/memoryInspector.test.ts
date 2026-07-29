@@ -81,6 +81,19 @@ describe("buildMemoryInspectorReport", () => {
               tags: ["self_blame", "illness_fear"],
             },
           ],
+          memoryClaimGrounding: {
+            version: "memory_claim_grounding_v0",
+            verdict: "warn",
+            claims: [
+              {
+                claimId: "claim_01",
+                claimTextHash: "abcd".repeat(16),
+                status: "unsupported",
+                supportingMemoryIds: [],
+                reason: "no_retrieved_fact_support",
+              },
+            ],
+          },
         },
       },
     ];
@@ -96,6 +109,8 @@ describe("buildMemoryInspectorReport", () => {
       writerReadyCount: 1,
       writerCandidateCount: 1,
       latestRetrievedCareFactCount: 1,
+      latestMemoryClaimCount: 1,
+      latestUnsupportedMemoryClaimCount: 1,
     });
     expect(report.kindCounts).toMatchObject({
       avoid_response_move: 1,
@@ -135,6 +150,17 @@ describe("buildMemoryInspectorReport", () => {
       guardianStatusCounts: { allow: 1 },
     });
     expect(report.latestRetrievedCareFacts).toEqual(["avoid-debt-frame"]);
-    expect(report.evalCommands).toEqual(["npm run eval:sage", "npm run eval:sage:writer", "npm run eval:memory"]);
+    expect(report.latestMemoryClaimGrounding).toMatchObject({
+      verdict: "warn",
+      claimStatuses: ["unsupported"],
+      supportingMemoryIds: [],
+    });
+    expect(report.evalCommands).toEqual([
+      "npm run eval:sage",
+      "npm run eval:sage:writer",
+      "npm run eval:memory",
+      "npm run eval:memory:reader",
+      "npm run eval:memory:claim-grounding",
+    ]);
   });
 });
