@@ -4,6 +4,56 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-07-28 — Add Developer-Mode Durable Memory Lifecycle Review Queue V0
+
+Status: Accepted
+
+### Context
+
+R1 has a local Care Card Store V0, deterministic Memory Reader benchmark,
+RetrievalTraceV1, Claim Grounding V0, and fallback enforcement for unsupported
+personal-memory claims. The remaining governance gap is that allowed, rejected,
+superseded, and deleted memory decisions are not yet visible as one durable review
+trail beyond raw Care Card state and lifecycle events.
+
+### Decision
+
+Add a local, developer-mode Memory Lifecycle Review Queue V0 to the Care Card
+export/diagnostic contract.
+
+The queue records review items for:
+
+- allowed writer candidates
+- rejected writer candidates
+- superseded memories
+- deleted memories
+
+Each item records candidate/memory identifiers, action, status, timestamps,
+memory kind, redaction-aware memory text for developer inspection, guardian or
+developer action reasons, evidence count, and tags. It remains local and
+developer-oriented.
+
+### Rationale
+
+Memory governance should become observable before adding graph or embedding
+retrieval complexity. A durable review queue lets R1 inspect how memories enter,
+leave, or change state without exposing hidden review internals to user mode.
+
+### Consequences
+
+- Export summaries include lifecycle review counts.
+- Developer memory reports include lifecycle review queue counts and recent items.
+- Existing delete/supersede lifecycle events remain for backward compatibility.
+- The queue is not a user-facing memory-management surface.
+- User mode must still not expose memory IDs, evidence IDs, scores, tags, or
+  hidden lifecycle review logic.
+
+### Affected Docs
+
+- `docs/product/version-roadmap.md`
+- `docs/research/r1-memory-gap-report.md`
+- `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md`
+
 ## 2026-07-26 — Fall Back On Unsupported Personal-Memory Claims
 
 Status: Accepted

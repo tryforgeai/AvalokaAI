@@ -1,8 +1,8 @@
 # R1 Memory Gap Report
 
-Status: Active research gap report, updated after R1 Retrieval Grounding Tasks 1-7
-Date: 2026-07-26
-Source-of-truth touched: `docs/research/sage-memory-research-plan.md`, `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md`
+Status: Active research gap report, updated after Memory Lifecycle Review Queue V0
+Date: 2026-07-28
+Source-of-truth touched: `docs/research/sage-memory-research-plan.md`, `docs/superpowers/plans/2026-07-26-r1-retrieval-grounding-implementation-plan.md`, `docs/decisions/decision-log.md`
 
 ## Purpose
 
@@ -38,12 +38,13 @@ The existing system can:
 - check explicit personal-memory claims against retrieved care facts with deterministic Claim Grounding V0
 - keep claim-grounding diagnostics visible in developer mode and export summaries
 - fall back to the local baseline when a V2 response contains unsupported personal-memory claims
+- record allowed, rejected, superseded, and deleted memory decisions in a local developer-mode Memory Lifecycle Review Queue V0
 
 The missing core is:
 
 - no production/user-facing memory management surface
 - no graph-memory schema/runtime experiment
-- no durable memory lifecycle review workflow beyond local developer controls
+- no user-facing lifecycle review surface beyond local developer controls
 
 In roadmap terms, R1 is roughly at:
 
@@ -63,6 +64,7 @@ conversation + feedback
 -> RetrievalTraceV1
 -> Claim Grounding V0
 -> unsupported memory claim fallback policy
+-> Memory Lifecycle Review Queue V0
 -> developer diagnostics / export
 ```
 
@@ -70,7 +72,6 @@ It is not yet at:
 
 ```text
 graph-memory schema experiment
--> durable memory lifecycle review
 -> user-facing memory controls
 ```
 
@@ -120,19 +121,20 @@ Implemented:
 - `app/src/lib/sageMemory.ts` can create a Care Card and upsert allowed memory candidates
 - duplicate memories merge by `kind` plus normalized text, preserving evidence IDs/tags and incrementing occurrence count
 - `app/src/lib/storage.ts` persists the local Care Card under `avaloka:v1:careCard`
-- export includes a top-level `careCard` object and care-memory summary counts
+- export includes top-level `careCard` object and care-memory summary counts
+- export includes top-level `memoryLifecycleReviewQueue` and review-count summary fields
 - local data clear removes the Care Card together with messages and feedback
-- tests cover save, reject, export, clear, duplicate/merge, delete, supersede, and lifecycle event behavior
+- tests cover save, reject, export, clear, duplicate/merge, delete, supersede, lifecycle events, and lifecycle review queue behavior
 
 Gap:
 
 - There is no graph-memory store.
 - The Care Card is localStorage-only and developer-path-only.
-- Supersede/delete are local developer controls only; there is no user-facing memory-management surface.
+- Supersede/delete are local developer controls only; review decisions are durable in developer export/diagnostics, but there is no user-facing memory-management surface.
 - Conflict resolution beyond manual supersede is not mature.
 - The Care Card is read back into the developer-mode V2 response flow.
 
-The remaining storage gap is lifecycle maturity beyond local developer controls; the largest R1 gap has moved toward graph-memory schema experiments and durable review workflow.
+The remaining storage gap is user-facing lifecycle maturity beyond local developer controls; the largest R1 gap has moved toward graph-memory schema experiments and user-facing memory controls.
 
 ### 4. Memory Reader
 
@@ -181,8 +183,9 @@ Implemented:
 Gap:
 
 - diagnostics now include Care Card inspection and a copyable memory report, but still only in developer mode
+- diagnostics now include Memory Lifecycle Review Queue V0 counts and recent allowed/rejected/superseded/deleted review items
 - there is no before/after memory-injection comparison
-- there is no per-memory delete, supersede, or edit surface
+- there is no per-memory edit surface
 
 ### 7. Export And Clear
 
@@ -191,7 +194,9 @@ Implemented:
 - `app/src/lib/storage.ts` exports per-turn `sageMemory`
 - export summary includes ready/error counts, candidate counts, kind counts, and guardian status counts
 - export includes top-level `careCard`
+- export includes top-level `memoryLifecycleReviewQueue`
 - export summary includes `careMemoryCount` and `careMemoryKindCounts`
+- export summary includes `memoryLifecycleReview*Count` fields for pending, allowed, rejected, superseded, and deleted review items
 - per-turn `orchestratorV2` export can include `retrievedCareFacts`
 - normal local data clear removes messages, feedback, and the Care Card
 

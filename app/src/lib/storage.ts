@@ -1,5 +1,12 @@
 import { addAllowedMemoryCandidates, createEmptyCareCard, guardMemoryCandidate } from "./sageMemory";
-import type { CareCard, ChatMessage, FeedbackEntry, MemoryCandidate } from "../types";
+import type {
+  CareCard,
+  CareMemoryLifecycleEvent,
+  ChatMessage,
+  FeedbackEntry,
+  MemoryCandidate,
+  MemoryLifecycleReviewItemV0,
+} from "../types";
 
 const messagesKey = "avaloka:v1:messages";
 const feedbackKey = "avaloka:v1:feedback";
@@ -53,7 +60,16 @@ export function saveCareCard(card: CareCard): void {
 }
 
 export function saveMemoryCandidates(candidates: MemoryCandidate[], now = new Date().toISOString()): CareCard {
-  const careCard = addAllowedMemoryCandidates(loadCareCard(), candidates, now);
+  const current = loadCareCard();
+  const reviewItems = candidates.map((candidate) => buildCandidateReviewItem(candidate, now));
+  const careCard = addAllowedMemoryCandidates(
+    {
+      ...current,
+      lifecycleReviewQueue: [...buildMemoryLifecycleReviewQueue(current), ...reviewItems],
+    },
+    candidates,
+    now,
+  );
   saveCareCard(careCard);
   return careCard;
 }
@@ -63,19 +79,21 @@ export function deleteCareMemory(memoryId: string, now = new Date().toISOString(
   const memory = careCard.memories.find((item) => item.id === memoryId);
   if (!memory) return careCard;
 
+  const lifecycleEvent: CareMemoryLifecycleEvent = {
+    type: "delete",
+    memoryId,
+    createdAt: now,
+    memoryKind: memory.kind,
+    memoryText: memory.text,
+  };
   const updated: CareCard = {
     ...careCard,
     updatedAt: now,
     memories: careCard.memories.filter((item) => item.id !== memoryId),
-    lifecycleEvents: [
-      ...(careCard.lifecycleEvents || []),
-      {
-        type: "delete",
-        memoryId,
-        createdAt: now,
-        memoryKind: memory.kind,
-        memoryText: memory.text,
-      },
+    lifecycleEvents: [...(careCard.lifecycleEvents || []), lifecycleEvent],
+    lifecycleReviewQueue: [
+      ...buildMemoryLifecycleReviewQueue(careCard),
+      buildLifecycleEventReviewItem(lifecycleEvent, now),
     ],
   };
   saveCareCard(updated);
@@ -92,6 +110,14 @@ export function supersedeCareMemory(
   if (!memory) return careCard;
   if (guardMemoryCandidate(replacement).status !== "allow") return careCard;
 
+  const lifecycleEvent: CareMemoryLifecycleEvent = {
+    type: "supersede",
+    memoryId,
+    replacementMemoryId: replacement.id,
+    createdAt: now,
+    memoryKind: memory.kind,
+    memoryText: memory.text,
+  };
   const markedCard: CareCard = {
     ...careCard,
     updatedAt: now,
@@ -106,16 +132,11 @@ export function supersedeCareMemory(
           }
         : item,
     ),
-    lifecycleEvents: [
-      ...(careCard.lifecycleEvents || []),
-      {
-        type: "supersede",
-        memoryId,
-        replacementMemoryId: replacement.id,
-        createdAt: now,
-        memoryKind: memory.kind,
-        memoryText: memory.text,
-      },
+    lifecycleEvents: [...(careCard.lifecycleEvents || []), lifecycleEvent],
+    lifecycleReviewQueue: [
+      ...buildMemoryLifecycleReviewQueue(careCard),
+      buildLifecycleEventReviewItem(lifecycleEvent, now),
+      buildCandidateReviewItem(replacement, now),
     ],
   };
   const updated = addAllowedMemoryCandidates(markedCard, [replacement], now);
@@ -178,6 +199,7 @@ function buildSummary(
   const scoredFeedback = feedback.filter((entry) => Number.isFinite(entry.settlingScore));
   const totalScore = scoredFeedback.reduce((total, entry) => total + entry.settlingScore, 0);
   const averageSettlingScore = scoredFeedback.length > 0 ? Number((totalScore / scoredFeedback.length).toFixed(2)) : null;
+  const memoryLifecycleReviewQueue = buildMemoryLifecycleReviewQueue(careCard);
 
   return {
     turnCount: turns.length,
@@ -226,6 +248,11 @@ function buildSummary(
     careMemorySupersededCount: careCard.memories.filter((memory) => memory.status === "superseded").length,
     careMemoryDeletedCount: (careCard.lifecycleEvents || []).filter((event) => event.type === "delete").length,
     careMemoryKindCounts: countBy(careCard.memories.map((memory) => memory.kind)),
+    memoryLifecycleReviewPendingCount: memoryLifecycleReviewQueue.filter((item) => item.status === "pending").length,
+    memoryLifecycleReviewAllowedCount: memoryLifecycleReviewQueue.filter((item) => item.status === "allowed").length,
+    memoryLifecycleReviewRejectedCount: memoryLifecycleReviewQueue.filter((item) => item.status === "rejected").length,
+    memoryLifecycleReviewSupersededCount: memoryLifecycleReviewQueue.filter((item) => item.status === "superseded").length,
+    memoryLifecycleReviewDeletedCount: memoryLifecycleReviewQueue.filter((item) => item.status === "deleted").length,
   };
 }
 
@@ -234,12 +261,14 @@ export function exportAvalokaData(): string {
   const feedback = loadFeedback();
   const careCard = loadCareCard();
   const turns = buildTurns(messages, feedback);
+  const memoryLifecycleReviewQueue = buildMemoryLifecycleReviewQueue(careCard);
 
   return JSON.stringify(
     {
       exportedAt: new Date().toISOString(),
       summary: buildSummary(messages, feedback, turns, careCard),
       turns,
+      memoryLifecycleReviewQueue,
       careCard,
       messages,
       feedback,
@@ -253,4 +282,46 @@ export function clearAvalokaData(): void {
   window.localStorage.removeItem(messagesKey);
   window.localStorage.removeItem(feedbackKey);
   window.localStorage.removeItem(careCardKey);
+}
+
+export function buildMemoryLifecycleReviewQueue(careCard: CareCard): MemoryLifecycleReviewItemV0[] {
+  if (careCard.lifecycleReviewQueue) return careCard.lifecycleReviewQueue;
+  return (careCard.lifecycleEvents || []).map((event) => buildLifecycleEventReviewItem(event, event.createdAt));
+}
+
+function buildCandidateReviewItem(candidate: MemoryCandidate, now: string): MemoryLifecycleReviewItemV0 {
+  const guardian = guardMemoryCandidate(candidate);
+  const allowed = guardian.status === "allow";
+
+  return {
+    id: `review-${candidate.id}-${allowed ? "allow" : "reject"}`,
+    candidateId: candidate.id,
+    memoryId: allowed ? candidate.id : undefined,
+    status: allowed ? "allowed" : "rejected",
+    action: allowed ? "allow" : "reject",
+    createdAt: now,
+    updatedAt: now,
+    memoryKind: candidate.kind,
+    memoryText: candidate.text,
+    reasons: guardian.reasons,
+    evidenceCount: candidate.evidenceIds.length,
+    tags: candidate.tags || [],
+  };
+}
+
+function buildLifecycleEventReviewItem(event: CareMemoryLifecycleEvent, now: string): MemoryLifecycleReviewItemV0 {
+  return {
+    id: `review-${event.memoryId}-${event.type}-${event.createdAt}`,
+    memoryId: event.memoryId,
+    replacementMemoryId: event.replacementMemoryId,
+    status: event.type === "delete" ? "deleted" : "superseded",
+    action: event.type,
+    createdAt: event.createdAt,
+    updatedAt: now,
+    memoryKind: event.memoryKind,
+    memoryText: event.memoryText,
+    reasons: [event.type === "delete" ? "developer_deleted" : "developer_superseded"],
+    evidenceCount: 0,
+    tags: [],
+  };
 }

@@ -1,4 +1,11 @@
-import type { CareCard, CareMemory, CareMemoryLifecycleEvent, ChatMessage, SageMemoryWriterResult } from "../types";
+import type {
+  CareCard,
+  CareMemory,
+  CareMemoryLifecycleEvent,
+  ChatMessage,
+  MemoryLifecycleReviewItemV0,
+  SageMemoryWriterResult,
+} from "../types";
 
 export interface MemoryInspectorReport {
   summary: {
@@ -13,6 +20,10 @@ export interface MemoryInspectorReport {
     latestRetrievedCareFactCount: number;
     latestMemoryClaimCount: number;
     latestUnsupportedMemoryClaimCount: number;
+    memoryLifecycleReviewAllowedCount: number;
+    memoryLifecycleReviewRejectedCount: number;
+    memoryLifecycleReviewSupersededCount: number;
+    memoryLifecycleReviewDeletedCount: number;
   };
   kindCounts: Record<string, number>;
   tagCounts: Record<string, number>;
@@ -39,6 +50,7 @@ export interface MemoryInspectorReport {
     createdAt: string;
     memoryKind: string;
   }>;
+  memoryLifecycleReviewQueue: MemoryLifecycleReviewItemV0[];
   latestWriter: {
     status: SageMemoryWriterResult["status"] | "none";
     model?: string;
@@ -73,6 +85,7 @@ export function buildMemoryInspectorReport({
     .reverse()
     .find((message) => message.orchestratorV2?.memoryClaimGrounding);
   const latestClaimGrounding = latestV2WithClaimGrounding?.orchestratorV2?.memoryClaimGrounding;
+  const memoryLifecycleReviewQueue = buildMemoryLifecycleReviewQueue(careCard);
 
   return {
     summary: {
@@ -88,6 +101,10 @@ export function buildMemoryInspectorReport({
       latestMemoryClaimCount: latestClaimGrounding?.claims.length || 0,
       latestUnsupportedMemoryClaimCount:
         latestClaimGrounding?.claims.filter((claim) => claim.status === "unsupported").length || 0,
+      memoryLifecycleReviewAllowedCount: memoryLifecycleReviewQueue.filter((item) => item.status === "allowed").length,
+      memoryLifecycleReviewRejectedCount: memoryLifecycleReviewQueue.filter((item) => item.status === "rejected").length,
+      memoryLifecycleReviewSupersededCount: memoryLifecycleReviewQueue.filter((item) => item.status === "superseded").length,
+      memoryLifecycleReviewDeletedCount: memoryLifecycleReviewQueue.filter((item) => item.status === "deleted").length,
     },
     kindCounts: countBy(careCard.memories.map((memory) => memory.kind)),
     tagCounts: countBy(careCard.memories.flatMap((memory) => memory.tags)),
@@ -99,6 +116,7 @@ export function buildMemoryInspectorReport({
       createdAt: event.createdAt,
       memoryKind: event.memoryKind,
     })),
+    memoryLifecycleReviewQueue,
     latestWriter: latestWriter
       ? {
           status: latestWriter.status,
@@ -132,6 +150,23 @@ export function buildMemoryInspectorReport({
       "npm run eval:memory:claim-grounding",
     ],
   };
+}
+
+function buildMemoryLifecycleReviewQueue(careCard: CareCard): MemoryLifecycleReviewItemV0[] {
+  if (careCard.lifecycleReviewQueue) return careCard.lifecycleReviewQueue;
+  return (careCard.lifecycleEvents || []).map((event) => ({
+    id: `review-${event.memoryId}-${event.type}-${event.createdAt}`,
+    memoryId: event.memoryId,
+    replacementMemoryId: event.replacementMemoryId,
+    status: event.type === "delete" ? "deleted" : "superseded",
+    action: event.type,
+    createdAt: event.createdAt,
+    updatedAt: event.createdAt,
+    memoryKind: event.memoryKind,
+    reasons: [event.type === "delete" ? "developer_deleted" : "developer_superseded"],
+    evidenceCount: 0,
+    tags: [],
+  }));
 }
 
 function formatMemoryForInspector(memory: CareMemory, now: string): MemoryInspectorReport["memories"][number] {

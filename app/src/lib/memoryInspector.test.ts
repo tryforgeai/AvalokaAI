@@ -111,6 +111,10 @@ describe("buildMemoryInspectorReport", () => {
       latestRetrievedCareFactCount: 1,
       latestMemoryClaimCount: 1,
       latestUnsupportedMemoryClaimCount: 1,
+      memoryLifecycleReviewAllowedCount: 0,
+      memoryLifecycleReviewRejectedCount: 0,
+      memoryLifecycleReviewSupersededCount: 0,
+      memoryLifecycleReviewDeletedCount: 1,
     });
     expect(report.kindCounts).toMatchObject({
       avoid_response_move: 1,
@@ -141,6 +145,20 @@ describe("buildMemoryInspectorReport", () => {
         memoryId: "deleted-memory",
         createdAt: "2026-05-26T10:07:00.000Z",
         memoryKind: "tone_preference",
+      },
+    ]);
+    expect(report.memoryLifecycleReviewQueue).toEqual([
+      {
+        id: "review-deleted-memory-delete-2026-05-26T10:07:00.000Z",
+        memoryId: "deleted-memory",
+        status: "deleted",
+        action: "delete",
+        createdAt: "2026-05-26T10:07:00.000Z",
+        updatedAt: "2026-05-26T10:07:00.000Z",
+        memoryKind: "tone_preference",
+        reasons: ["developer_deleted"],
+        evidenceCount: 0,
+        tags: [],
       },
     ]);
     expect(report.latestWriter).toMatchObject({

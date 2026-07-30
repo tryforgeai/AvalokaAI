@@ -356,7 +356,41 @@ describe("exportAvalokaData", () => {
       careMemoryKindCounts: {
         tone_preference: 1,
       },
+      memoryLifecycleReviewPendingCount: 0,
+      memoryLifecycleReviewAllowedCount: 1,
+      memoryLifecycleReviewRejectedCount: 1,
+      memoryLifecycleReviewSupersededCount: 0,
+      memoryLifecycleReviewDeletedCount: 0,
     });
+    expect(exported.memoryLifecycleReviewQueue).toEqual([
+      {
+        id: "review-memory-allowed-allow",
+        candidateId: "memory-allowed",
+        memoryId: "memory-allowed",
+        status: "allowed",
+        action: "allow",
+        createdAt: "2026-05-26T10:00:00.000Z",
+        updatedAt: "2026-05-26T10:00:00.000Z",
+        memoryKind: "tone_preference",
+        memoryText: "User prefers short body-grounded responses.",
+        reasons: [],
+        evidenceCount: 1,
+        tags: ["tone"],
+      },
+      {
+        id: "review-memory-rejected-reject",
+        candidateId: "memory-rejected",
+        status: "rejected",
+        action: "reject",
+        createdAt: "2026-05-26T10:00:00.000Z",
+        updatedAt: "2026-05-26T10:00:00.000Z",
+        memoryKind: "safety_note",
+        memoryText: "User may have cancer because of karmic debt.",
+        reasons: ["medical_or_spiritual_claim"],
+        evidenceCount: 1,
+        tags: ["unsafe"],
+      },
+    ]);
   });
 
   it("clears the care card with local Avaloka data", () => {
@@ -414,6 +448,17 @@ describe("exportAvalokaData", () => {
       careMemoryCount: 0,
       careMemoryDeletedCount: 1,
       careMemorySupersededCount: 0,
+      memoryLifecycleReviewDeletedCount: 1,
+    });
+    expect(exported.memoryLifecycleReviewQueue.at(-1)).toMatchObject({
+      id: "review-memory-delete-me-delete-2026-05-26T10:05:00.000Z",
+      memoryId: "memory-delete-me",
+      status: "deleted",
+      action: "delete",
+      createdAt: "2026-05-26T10:05:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memoryKind: "tone_preference",
+      reasons: ["developer_deleted"],
     });
   });
 
@@ -470,6 +515,24 @@ describe("exportAvalokaData", () => {
       careMemoryCount: 2,
       careMemoryActiveCount: 1,
       careMemorySupersededCount: 1,
+      memoryLifecycleReviewAllowedCount: 2,
+      memoryLifecycleReviewSupersededCount: 1,
+    });
+    expect(exported.memoryLifecycleReviewQueue.at(-2)).toMatchObject({
+      id: "review-old-tone-supersede-2026-05-26T10:05:00.000Z",
+      memoryId: "old-tone",
+      replacementMemoryId: "new-tone",
+      status: "superseded",
+      action: "supersede",
+      memoryKind: "tone_preference",
+      reasons: ["developer_superseded"],
+    });
+    expect(exported.memoryLifecycleReviewQueue.at(-1)).toMatchObject({
+      id: "review-new-tone-allow",
+      candidateId: "new-tone",
+      memoryId: "new-tone",
+      status: "allowed",
+      action: "allow",
     });
   });
 

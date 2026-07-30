@@ -296,6 +296,7 @@ Memory lifecycle behavior must also be covered:
 - supersede one memory with a replacement
 - exclude superseded memories from reader results
 - preserve delete/supersede lifecycle events in export
+- preserve allowed, rejected, superseded, and deleted decisions in a developer-mode Memory Lifecycle Review Queue V0
 
 ### Developer Memory Diagnostics
 
@@ -305,6 +306,7 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - show writer candidate and guardian summaries
 - show latest retrieved care fact IDs
 - show active, superseded, deleted, and stale memory counts
+- show lifecycle review queue counts and recent review items
 - provide a copyable memory report for research review
 
 ## 12. Implementation Phases

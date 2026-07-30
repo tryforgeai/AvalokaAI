@@ -1,6 +1,6 @@
 # R1 Retrieval Measurement And Claim Grounding Implementation Plan
 
-Status: Implemented through fallback policy V0; next work is rewrite/live-baseline hardening
+Status: Implemented through fallback policy V0 and Memory Lifecycle Review Queue V0; next work is user-facing lifecycle design or graph-schema spike
 Owner: Hermes Soar, supervised by the Avaloka founder
 Date: 2026-07-26
 Source of truth: `docs/research/sage-memory-research-plan.md`
@@ -39,12 +39,14 @@ Implemented in Tasks 1-7:
 - deterministic Claim Grounding V0 and `npm run eval:memory:claim-grounding`
 - response-path developer diagnostics for claim grounding
 - `local_claim_grounding_fallback` enforcement for unsupported personal-memory claims
+- developer-mode Memory Lifecycle Review Queue V0 for allowed/rejected/superseded/deleted decisions
 
 Deferred from this plan:
 
 - LLM claim extractor / LLM judge
 - deterministic or model-assisted safe rewrite
 - vector, graph, reranker, or learned retrieval experiments
+- user-facing memory-management surface
 
 ## Architecture
 

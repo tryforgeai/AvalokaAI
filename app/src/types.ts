@@ -172,12 +172,33 @@ export interface CareMemoryLifecycleEvent {
   memoryText: string;
 }
 
+export type MemoryLifecycleReviewStatus = "pending" | "allowed" | "rejected" | "superseded" | "deleted";
+
+export type MemoryLifecycleReviewAction = "allow" | "reject" | "supersede" | "delete";
+
+export interface MemoryLifecycleReviewItemV0 {
+  id: string;
+  candidateId?: string;
+  memoryId?: string;
+  replacementMemoryId?: string;
+  status: MemoryLifecycleReviewStatus;
+  action: MemoryLifecycleReviewAction;
+  createdAt: string;
+  updatedAt: string;
+  memoryKind: SageMemoryCandidateKind;
+  memoryText?: string;
+  reasons: string[];
+  evidenceCount: number;
+  tags: string[];
+}
+
 export interface CareCard {
   version: "care_card_v1";
   createdAt: string;
   updatedAt: string;
   memories: CareMemory[];
   lifecycleEvents?: CareMemoryLifecycleEvent[];
+  lifecycleReviewQueue?: MemoryLifecycleReviewItemV0[];
 }
 
 export interface RetrievedCareFact {

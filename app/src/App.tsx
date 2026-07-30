@@ -689,6 +689,13 @@ export default function App() {
                   {memoryInspectorReport.summary.latestMemoryClaimCount} claims /{" "}
                   {memoryInspectorReport.summary.latestUnsupportedMemoryClaimCount} unsupported
                 </dd>
+                <dt>review queue</dt>
+                <dd>
+                  {memoryInspectorReport.summary.memoryLifecycleReviewAllowedCount} allowed /{" "}
+                  {memoryInspectorReport.summary.memoryLifecycleReviewRejectedCount} rejected /{" "}
+                  {memoryInspectorReport.summary.memoryLifecycleReviewSupersededCount} superseded /{" "}
+                  {memoryInspectorReport.summary.memoryLifecycleReviewDeletedCount} deleted
+                </dd>
                 <dt>commands</dt>
                 <dd>{memoryInspectorReport.evalCommands.join(" | ")}</dd>
                 <dt>events</dt>
@@ -700,6 +707,15 @@ export default function App() {
                             ? `${event.type}:${event.memoryId}->${event.replacementMemoryId}`
                             : `${event.type}:${event.memoryId}`,
                         )
+                        .join(" | ")
+                    : "none"}
+                </dd>
+                <dt>review items</dt>
+                <dd>
+                  {memoryInspectorReport.memoryLifecycleReviewQueue.length
+                    ? memoryInspectorReport.memoryLifecycleReviewQueue
+                        .slice(-5)
+                        .map((item) => `${item.status}:${item.memoryId || item.candidateId || "none"}`)
                         .join(" | ")
                     : "none"}
                 </dd>

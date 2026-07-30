@@ -54,6 +54,7 @@ The prior V0/V1 work remains useful because it supplies:
 - fallback enforcement for unsupported personal-memory claims before any safer rewrite policy
 - extraction, rejection, retrieval, response, and privacy evals
 - developer-mode diagnostics for memory experiments
+- developer-mode durable Memory Lifecycle Review Queue V0 for allowed/rejected/superseded/deleted decisions
 - local-first data storage and export/clear support
 - preserving current safety and response-quality gates
 
@@ -83,6 +84,7 @@ R1 passes if:
 - the deterministic reader has a reproducible gold-set baseline and returns zero private, deleted, superseded, or stale memories
 - personal-memory and health/safety claims can be checked against permitted evidence without treating ordinary compassion as a factual claim
 - unsupported personal-memory claims cannot reach user-visible output without fallback or an approved rewrite policy
+- memory lifecycle decisions are reviewable in developer exports/diagnostics before any user-facing memory surface
 - response evals show memory improves personalization without creepiness
 - existing crisis, guardian, prompt-injection, and response-quality gates still pass
 - no user-facing UI exposes hidden memory logic, scores, prompts, or private logs
