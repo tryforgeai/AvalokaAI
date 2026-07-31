@@ -300,6 +300,12 @@ export function clearAvalokaData(): void {
   window.localStorage.removeItem(careCardKey);
 }
 
+export function clearCareMemories(now = new Date().toISOString()): CareCard {
+  const emptyCareCard = createEmptyCareCard(now);
+  saveCareCard(emptyCareCard);
+  return emptyCareCard;
+}
+
 export function buildMemoryLifecycleReviewQueue(careCard: CareCard): MemoryLifecycleReviewItemV0[] {
   if (careCard.lifecycleReviewQueue) return careCard.lifecycleReviewQueue;
   return (careCard.lifecycleEvents || []).map((event) => buildLifecycleEventReviewItem(event, event.createdAt));

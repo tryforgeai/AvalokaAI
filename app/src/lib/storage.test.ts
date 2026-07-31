@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   clearAvalokaData,
+  clearCareMemories,
   deleteCareMemory,
   exportAvalokaData,
   loadMemoryWriteStatus,
@@ -635,5 +636,72 @@ describe("exportAvalokaData", () => {
       "existing-tone",
       "resumed-candidate",
     ]);
+  });
+
+  it("clears only care memories while preserving messages, feedback, and memory write status", () => {
+    saveMessages([
+      {
+        id: "user-keep",
+        role: "user",
+        text: "请记得回答短一点。",
+        createdAt: "2026-05-26T09:59:00.000Z",
+      },
+      {
+        id: "avaloka-keep",
+        role: "avaloka",
+        text: "我会短一点，也会先照顾身体感受。",
+        createdAt: "2026-05-26T09:59:01.000Z",
+      },
+    ]);
+    saveFeedback([
+      {
+        id: "feedback-keep",
+        messageId: "avaloka-keep",
+        createdAt: "2026-05-26T09:59:02.000Z",
+        realLowMoment: "yes",
+        openedUnprompted: "yes",
+        settlingScore: 5,
+        mostHelpfulLine: "短一点",
+        failedLine: "",
+        wantsTomorrow: "yes",
+      },
+    ]);
+    saveMemoryCandidates(
+      [
+        {
+          id: "memory-clear-me",
+          kind: "tone_preference",
+          text: "User prefers short body-grounded responses.",
+          confidence: 0.82,
+          evidenceIds: ["feedback-keep"],
+          tags: ["tone"],
+        },
+      ],
+      "2026-05-26T10:00:00.000Z",
+    );
+    pauseMemoryWrites();
+
+    const cleared = clearCareMemories("2026-05-26T10:05:00.000Z");
+    const exported = JSON.parse(exportAvalokaData());
+
+    expect(cleared).toMatchObject({
+      version: "care_card_v1",
+      createdAt: "2026-05-26T10:05:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [],
+    });
+    expect(cleared.lifecycleEvents || []).toEqual([]);
+    expect(cleared.lifecycleReviewQueue || []).toEqual([]);
+    expect(exported.messages).toHaveLength(2);
+    expect(exported.feedback).toHaveLength(1);
+    expect(exported.careCard.memories).toEqual([]);
+    expect(exported.memoryLifecycleReviewQueue).toEqual([]);
+    expect(exported.summary).toMatchObject({
+      messageCount: 2,
+      feedbackCount: 1,
+      careMemoryCount: 0,
+      memoryLifecycleReviewAllowedCount: 0,
+    });
+    expect(loadMemoryWriteStatus()).toBe("paused");
   });
 });

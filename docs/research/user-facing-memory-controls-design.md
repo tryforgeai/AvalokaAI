@@ -396,7 +396,7 @@ Implementation status as of 2026-07-29:
 ```text
 Slice 1: sanitized projection helper — implemented
 Slice 2: memory write pause setting — implemented
-Slice 3: memory-only clear helper — not started
+Slice 3: memory-only clear helper — implemented
 Slice 4: small user-mode UI surface — not started
 ```
 
