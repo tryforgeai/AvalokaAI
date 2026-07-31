@@ -391,6 +391,15 @@ If a UI testing layer is added, verify:
 
 ## 13. Recommended Implementation Slice After This Design
 
+Implementation status as of 2026-07-29:
+
+```text
+Slice 1: sanitized projection helper — implemented
+Slice 2: memory write pause setting — not started
+Slice 3: memory-only clear helper — not started
+Slice 4: small user-mode UI surface — not started
+```
+
 Once accepted, implement in four small slices:
 
 1. **Sanitized projection helper**
