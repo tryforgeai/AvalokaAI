@@ -3,7 +3,10 @@ import {
   clearAvalokaData,
   deleteCareMemory,
   exportAvalokaData,
+  loadMemoryWriteStatus,
   loadCareCard,
+  pauseMemoryWrites,
+  resumeMemoryWrites,
   saveFeedback,
   saveMemoryCandidates,
   saveMessages,
@@ -575,5 +578,62 @@ describe("exportAvalokaData", () => {
       careMemoryActiveCount: 1,
       careMemorySupersededCount: 0,
     });
+  });
+
+  it("pauses future memory writes without removing existing memories", () => {
+    saveMemoryCandidates(
+      [
+        {
+          id: "existing-tone",
+          kind: "tone_preference",
+          text: "User prefers short body-grounded responses.",
+          confidence: 0.82,
+          evidenceIds: ["feedback-1"],
+          tags: ["tone"],
+        },
+      ],
+      "2026-05-26T10:00:00.000Z",
+    );
+
+    pauseMemoryWrites();
+    const paused = saveMemoryCandidates(
+      [
+        {
+          id: "paused-candidate",
+          kind: "helpful_response_move",
+          text: "Body grounding helped before reflection.",
+          confidence: 0.8,
+          evidenceIds: ["feedback-2"],
+          tags: ["body_grounding"],
+        },
+      ],
+      "2026-05-26T10:05:00.000Z",
+    );
+
+    expect(loadMemoryWriteStatus()).toBe("paused");
+    expect(paused.memories.map((memory) => memory.id)).toEqual(["existing-tone"]);
+    expect(paused.lifecycleReviewQueue?.map((item) => item.candidateId)).toEqual(["existing-tone"]);
+
+    resumeMemoryWrites();
+    const resumed = saveMemoryCandidates(
+      [
+        {
+          id: "resumed-candidate",
+          kind: "helpful_response_move",
+          text: "Body grounding helped before reflection.",
+          confidence: 0.8,
+          evidenceIds: ["feedback-3"],
+          tags: ["body_grounding"],
+        },
+      ],
+      "2026-05-26T10:10:00.000Z",
+    );
+
+    expect(loadMemoryWriteStatus()).toBe("on");
+    expect(resumed.memories.map((memory) => memory.id)).toEqual(["existing-tone", "resumed-candidate"]);
+    expect(resumed.lifecycleReviewQueue?.map((item) => item.candidateId)).toEqual([
+      "existing-tone",
+      "resumed-candidate",
+    ]);
   });
 });

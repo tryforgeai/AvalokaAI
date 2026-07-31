@@ -12,6 +12,9 @@ const messagesKey = "avaloka:v1:messages";
 const feedbackKey = "avaloka:v1:feedback";
 const consentKey = "avaloka:v1:consent";
 const careCardKey = "avaloka:v1:careCard";
+const memoryWriteStatusKey = "avaloka:v1:memoryConsent";
+
+export type MemoryWriteStatus = "on" | "paused";
 
 function readJson<T>(key: string, fallback: T): T {
   const raw = window.localStorage.getItem(key);
@@ -59,8 +62,21 @@ export function saveCareCard(card: CareCard): void {
   writeJson(careCardKey, card);
 }
 
+export function loadMemoryWriteStatus(): MemoryWriteStatus {
+  return window.localStorage.getItem(memoryWriteStatusKey) === "paused" ? "paused" : "on";
+}
+
+export function pauseMemoryWrites(): void {
+  window.localStorage.setItem(memoryWriteStatusKey, "paused");
+}
+
+export function resumeMemoryWrites(): void {
+  window.localStorage.setItem(memoryWriteStatusKey, "on");
+}
+
 export function saveMemoryCandidates(candidates: MemoryCandidate[], now = new Date().toISOString()): CareCard {
   const current = loadCareCard();
+  if (loadMemoryWriteStatus() === "paused") return current;
   const reviewItems = candidates.map((candidate) => buildCandidateReviewItem(candidate, now));
   const careCard = addAllowedMemoryCandidates(
     {
