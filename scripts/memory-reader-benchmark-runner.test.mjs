@@ -151,4 +151,32 @@ describe("memory reader fixture policy", () => {
       assert.equal(testCase.relevance[helpfulMemory.id], 1);
     }
   });
+
+  it("includes harder retrieval fixtures across paraphrase, hard-negative, temporal, and user-control classes", () => {
+    const cases = loadMemoryReaderCases();
+    const caseById = new Map(cases.map((testCase) => [testCase.id, testCase]));
+    const requiredGroups = new Set([
+      "adversarial_paraphrase",
+      "hard_negative_surface_overlap",
+      "temporal_conflict",
+      "user_control_lifecycle",
+    ]);
+
+    assert(cases.length >= 48);
+    for (const group of requiredGroups) {
+      assert(cases.some((testCase) => testCase.group === group), `missing group ${group}`);
+    }
+    for (const id of [
+      "reader_adv_para_01",
+      "reader_adv_para_02",
+      "reader_hard_surface_01",
+      "reader_hard_surface_02",
+      "reader_temporal_01",
+      "reader_temporal_02",
+      "reader_user_control_01",
+      "reader_user_control_02",
+    ]) {
+      assert(caseById.has(id), `missing fixture ${id}`);
+    }
+  });
 });

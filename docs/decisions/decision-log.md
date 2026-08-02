@@ -4,6 +4,53 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Expand Memory Reader Benchmark With Harder Retrieval Fixtures
+
+Status: Accepted
+
+### Context
+
+After the risk-kind fixture policy review, Retrieval Failure Mining V0 and Ranking
+Trace Inspection V0 reported no pressure signals in the 40-case deterministic
+Memory Reader benchmark. The next risk was false confidence from an overly easy
+fixture set.
+
+### Decision
+
+Expand `evals/memory-reader-retrieval-cases.json` from 40 to 48 cases by adding
+four harder fixture classes:
+
+- adversarial paraphrase;
+- hard negatives with surface overlap;
+- temporal conflicts;
+- user-control lifecycle cases.
+
+Keep reader scoring unchanged.
+
+### Rationale
+
+Retrieval architecture should be justified by measured failure, not by imagined
+future complexity. The expansion increases benchmark pressure while preserving
+deterministic, auditable fixtures.
+
+### Consequences
+
+- Reader benchmark now reports `48/48` passed.
+- Aggregate metrics are `recall@3=1.000`, `recall@5=1.000`, `mrr=0.896`,
+  `ndcg@5=0.999`, and `no-match=1.000`.
+- Unsafe, stale, deleted, and superseded retrieval counts remain `0`.
+- Failure mining still reports no pressure signals.
+- Ranking trace inspection still reports zero low-rank-quality passing cases.
+- Embeddings, vector DB, reranking, and graph memory remain deferred.
+
+### Affected Docs
+
+- `docs/research/harder-retrieval-fixture-expansion-v0.md`
+- `docs/research/retrieval-failure-mining-v0-report.md`
+- `docs/research/ranking-trace-inspection-v0-report.md`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+
 ## 2026-08-01 — Align Risk-Kind Fixture Relevance With Avoid-Response Boost
 
 Status: Accepted

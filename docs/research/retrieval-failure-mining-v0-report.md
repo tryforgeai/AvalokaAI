@@ -1,6 +1,6 @@
 # Retrieval Failure Mining V0 Report
 
-Date: 2026-08-01 19:29 PDT
+Date: 2026-08-01 19:34 PDT
 Status: Active R1 research artifact
 
 ## Verdict
@@ -16,12 +16,12 @@ npm run eval:memory:reader
 ## Aggregate Metrics
 
 ```text
-total: 40
-passed: 40
+total: 48
+passed: 48
 failed: 0
 recall@3: 1.000
 recall@5: 1.000
-mrr: 0.875
+mrr: 0.896
 ndcg@5: 0.999
 no-match precision: 1.000
 unsafe retrieval count: 0
@@ -32,19 +32,23 @@ superseded retrieval count: 0
 
 ## Failure Taxonomy
 
-- none: 40
+- none: 48
 
 ## Group Summary
 
+- adversarial_paraphrase: 2/2 passed, 0 failed
 - avoid_response_move: 2/2 passed, 0 failed
 - exact_tag_alias: 8/8 passed, 0 failed
 - hard_negative: 6/6 passed, 0 failed
+- hard_negative_surface_overlap: 2/2 passed, 0 failed
 - no_match: 5/5 passed, 0 failed
 - safety_priority: 3/3 passed, 0 failed
 - semantic_paraphrase: 8/8 passed, 0 failed
 - stale_memory: 3/3 passed, 0 failed
 - superseded_deleted: 3/3 passed, 0 failed
+- temporal_conflict: 2/2 passed, 0 failed
 - tone_preference: 2/2 passed, 0 failed
+- user_control_lifecycle: 2/2 passed, 0 failed
 
 ## Pressure Signals
 

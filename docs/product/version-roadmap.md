@@ -51,6 +51,7 @@ The prior V0/V1 work remains useful because it supplies:
 - Ranking Trace Inspection V0 for low-rank-quality passing cases before changing reader scoring or fixture relevance
 - duplicate tag normalization before Memory Reader scoring so repeated memory tags do not inflate relevance
 - risk-kind fixture policy alignment so matching avoid-response memories outrank generic helpful moves in risk contexts without changing reader scoring
+- harder retrieval fixture expansion for adversarial paraphrase, surface-overlap hard negatives, temporal conflicts, and user-control lifecycle cases
 - versioned, redacted retrieval traces for developer diagnosis
 - optional LLM Memory Writer shadow test
 - response injection with 3-5 care facts
@@ -91,6 +92,7 @@ R1 passes if:
 - ranking trace inspection can explain low-NDCG passing cases with trace evidence before reranking, embeddings, graph memory, or scoring changes are proposed
 - duplicate memory tags do not inflate reader score, matched tag count, or redacted trace matchedTags
 - risk-kind fixture relevance agrees with the safety policy that concrete avoid-response hazards can outrank generic helpful moves in active risk contexts
+- the deterministic Memory Reader benchmark includes at least 48 cases and harder fixture classes before heavier retrieval architecture is proposed
 - personal-memory and health/safety claims can be checked against permitted evidence without treating ordinary compassion as a factual claim
 - unsupported personal-memory claims cannot reach user-visible output without fallback or an approved rewrite policy
 - memory lifecycle decisions are reviewable in developer exports/diagnostics before any user-facing memory surface

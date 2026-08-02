@@ -2668,5 +2668,630 @@
     "expectedNoMatch": false,
     "forbiddenMemoryIds": [],
     "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_adv_para_01",
+    "group": "adversarial_paraphrase",
+    "description": "User text implies illness fear without explicit readerContext tags; text rule should derive the target tag.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_adv_para_01_target",
+          "kind": "helpful_response_move",
+          "text": "When medical uncertainty appears, validate fear and offer one body-grounding step.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_adv_para_01_target"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_adv_para_01_surface_distractor",
+          "kind": "helpful_response_move",
+          "text": "Work report anxiety needs practical prioritization, not medical fear support.",
+          "confidence": 0.9,
+          "evidenceIds": [
+            "evidence-reader_adv_para_01_surface_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_adv_para_01_tone",
+          "kind": "tone_preference",
+          "text": "Keep replies brief when fear is high.",
+          "confidence": 0.75,
+          "evidenceIds": [
+            "evidence-reader_adv_para_01_tone"
+          ],
+          "tags": [
+            "tone"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "报告还没有出来，我脑子一直往最坏的地方跑。",
+      "tags": []
+    },
+    "relevance": {
+      "reader_adv_para_01_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_adv_para_02",
+    "group": "adversarial_paraphrase",
+    "description": "Response-move alias should retrieve self-blame care even without explicit tags.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_adv_para_02_target",
+          "kind": "safety_note",
+          "text": "Do not validate blame or deserved-pain framing before care.",
+          "confidence": 0.89,
+          "evidenceIds": [
+            "evidence-reader_adv_para_02_target"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_adv_para_02_helpful",
+          "kind": "helpful_response_move",
+          "text": "Offer one steadying step before analysis.",
+          "confidence": 0.84,
+          "evidenceIds": [
+            "evidence-reader_adv_para_02_helpful"
+          ],
+          "tags": [
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_adv_para_02_distractor",
+          "kind": "recurring_pain_pattern",
+          "text": "Work conflict can create anxious urgency.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_adv_para_02_distractor"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Maybe this is all my fault somehow.",
+      "responseMoves": [
+        "protect_from_self_blame"
+      ]
+    },
+    "relevance": {
+      "reader_adv_para_02_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_hard_surface_01",
+    "group": "hard_negative_surface_overlap",
+    "description": "Medical-report surface words should not retrieve illness memory when the active care tag is work_stress.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_hard_surface_01_target",
+          "kind": "helpful_response_move",
+          "text": "For work stress, prioritize the next concrete task and lower the scope.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_hard_surface_01_target"
+          ],
+          "tags": [
+            "work_stress"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_surface_01_distractor",
+          "kind": "helpful_response_move",
+          "text": "When illness fear appears, validate fear before reflection.",
+          "confidence": 0.93,
+          "evidenceIds": [
+            "evidence-reader_hard_surface_01_distractor"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_surface_01_tone",
+          "kind": "tone_preference",
+          "text": "Keep operational planning concise.",
+          "confidence": 0.72,
+          "evidenceIds": [
+            "evidence-reader_hard_surface_01_tone"
+          ],
+          "tags": [
+            "work_stress",
+            "tone"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "The status report at work is due and I keep catastrophizing about the project.",
+      "tags": [
+        "work_stress"
+      ]
+    },
+    "relevance": {
+      "reader_hard_surface_01_target": 2,
+      "reader_hard_surface_01_tone": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_hard_surface_02",
+    "group": "hard_negative_surface_overlap",
+    "description": "Self-blame surface words should not retrieve risk memory when the active care tag is role_loss.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_hard_surface_02_target",
+          "kind": "recurring_pain_pattern",
+          "text": "Role loss can turn into whole-person worth collapse.",
+          "confidence": 0.88,
+          "evidenceIds": [
+            "evidence-reader_hard_surface_02_target"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_surface_02_distractor",
+          "kind": "safety_note",
+          "text": "Do not validate punishment or blame framing.",
+          "confidence": 0.94,
+          "evidenceIds": [
+            "evidence-reader_hard_surface_02_distractor"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_hard_surface_02_helpful",
+          "kind": "helpful_response_move",
+          "text": "Separate usefulness from whole-person worth.",
+          "confidence": 0.82,
+          "evidenceIds": [
+            "evidence-reader_hard_surface_02_helpful"
+          ],
+          "tags": [
+            "role_loss",
+            "self_worth"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I blame myself for not being useful at home anymore, but this is mostly about losing my role.",
+      "tags": [
+        "role_loss"
+      ]
+    },
+    "relevance": {
+      "reader_hard_surface_02_target": 2,
+      "reader_hard_surface_02_helpful": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_temporal_01",
+    "group": "temporal_conflict",
+    "description": "Fresh illness-fear memory should outrank and exclude a stale matching memory.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_temporal_01_fresh",
+          "kind": "helpful_response_move",
+          "text": "Use the current grounding-first care move for illness fear.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_temporal_01_fresh"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_temporal_01_stale",
+          "kind": "helpful_response_move",
+          "text": "Old advice: analyze the fear in detail before grounding.",
+          "confidence": 0.96,
+          "evidenceIds": [
+            "evidence-reader_temporal_01_stale"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2025-01-01T00:00:00.000Z",
+          "updatedAt": "2025-01-01T00:00:00.000Z",
+          "lastSeenAt": "2025-01-01T00:00:00.000Z",
+          "occurrences": 5,
+          "status": "active"
+        },
+        {
+          "id": "reader_temporal_01_tone",
+          "kind": "tone_preference",
+          "text": "Keep support short and steady.",
+          "confidence": 0.74,
+          "evidenceIds": [
+            "evidence-reader_temporal_01_tone"
+          ],
+          "tags": [
+            "tone",
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "复查报告没出来，我又开始怕。",
+      "tags": [
+        "illness_fear"
+      ]
+    },
+    "relevance": {
+      "reader_temporal_01_fresh": 2,
+      "reader_temporal_01_tone": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_temporal_01_stale"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_temporal_02",
+    "group": "temporal_conflict",
+    "description": "Fresh role-loss memory should exclude a stale higher-confidence role-loss memory.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_temporal_02_fresh",
+          "kind": "recurring_pain_pattern",
+          "text": "Recent care notes separate role loss from whole-person worth.",
+          "confidence": 0.84,
+          "evidenceIds": [
+            "evidence-reader_temporal_02_fresh"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_temporal_02_stale",
+          "kind": "recurring_pain_pattern",
+          "text": "Old note: push productivity reflection immediately.",
+          "confidence": 0.98,
+          "evidenceIds": [
+            "evidence-reader_temporal_02_stale"
+          ],
+          "tags": [
+            "role_loss"
+          ],
+          "createdAt": "2025-01-01T00:00:00.000Z",
+          "updatedAt": "2025-01-01T00:00:00.000Z",
+          "lastSeenAt": "2025-01-01T00:00:00.000Z",
+          "occurrences": 5,
+          "status": "active"
+        },
+        {
+          "id": "reader_temporal_02_helpful",
+          "kind": "helpful_response_move",
+          "text": "Use a small self-worth distinction before planning.",
+          "confidence": 0.8,
+          "evidenceIds": [
+            "evidence-reader_temporal_02_helpful"
+          ],
+          "tags": [
+            "role_loss",
+            "self_worth"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Since retirement I feel like I stopped mattering.",
+      "tags": [
+        "role_loss"
+      ]
+    },
+    "relevance": {
+      "reader_temporal_02_fresh": 2,
+      "reader_temporal_02_helpful": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_temporal_02_stale"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_user_control_01",
+    "group": "user_control_lifecycle",
+    "description": "Deleted matching memory must not be retrieved; active replacement should be used.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_user_control_01_deleted",
+          "kind": "helpful_response_move",
+          "text": "Deleted note: give long analysis for illness fear.",
+          "confidence": 0.99,
+          "evidenceIds": [
+            "evidence-reader_user_control_01_deleted"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "deleted"
+        },
+        {
+          "id": "reader_user_control_01_active",
+          "kind": "helpful_response_move",
+          "text": "Active replacement: validate fear and use one grounding step.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_user_control_01_active"
+          ],
+          "tags": [
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_user_control_01_tone",
+          "kind": "tone_preference",
+          "text": "Keep the reply short.",
+          "confidence": 0.7,
+          "evidenceIds": [
+            "evidence-reader_user_control_01_tone"
+          ],
+          "tags": [
+            "tone",
+            "illness_fear"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ],
+      "lifecycleEvents": [
+        {
+          "type": "delete",
+          "memoryId": "reader_user_control_01_deleted",
+          "at": "2026-07-20T00:00:00.000Z"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "检查结果还没出来，我很害怕。",
+      "tags": [
+        "illness_fear"
+      ]
+    },
+    "relevance": {
+      "reader_user_control_01_active": 2,
+      "reader_user_control_01_tone": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_user_control_01_deleted"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_user_control_02",
+    "group": "user_control_lifecycle",
+    "description": "Superseded matching memory must not be retrieved; current replacement should be used.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_user_control_02_old",
+          "kind": "avoid_response_move",
+          "text": "Superseded note: avoid all discussion of blame.",
+          "confidence": 0.99,
+          "evidenceIds": [
+            "evidence-reader_user_control_02_old"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "superseded"
+        },
+        {
+          "id": "reader_user_control_02_current",
+          "kind": "avoid_response_move",
+          "text": "Current note: avoid validating blame, then offer one concrete next step.",
+          "confidence": 0.86,
+          "evidenceIds": [
+            "evidence-reader_user_control_02_current"
+          ],
+          "tags": [
+            "self_blame"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_user_control_02_helpful",
+          "kind": "helpful_response_move",
+          "text": "Offer one grounding step before interpretation.",
+          "confidence": 0.78,
+          "evidenceIds": [
+            "evidence-reader_user_control_02_helpful"
+          ],
+          "tags": [
+            "self_blame",
+            "body_grounding"
+          ],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I keep treating pain like proof I did something wrong.",
+      "responseMoves": [
+        "protect_from_self_blame"
+      ]
+    },
+    "relevance": {
+      "reader_user_control_02_current": 2,
+      "reader_user_control_02_helpful": 1
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [
+      "reader_user_control_02_old"
+    ],
+    "now": "2026-07-26T00:00:00.000Z"
   }
 ]

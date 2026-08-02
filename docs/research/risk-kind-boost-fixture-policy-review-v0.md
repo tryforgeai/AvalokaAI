@@ -117,15 +117,17 @@ The policy is limited to risk-kind contexts where the avoid-response memory dire
 
 Do not change retrieval architecture yet.
 
-The next useful slice is benchmark expansion:
+The immediate follow-up slice was benchmark expansion:
 
 ```text
 Harder Retrieval Fixture Expansion V0
 ```
 
-Suggested fixture classes:
+It added eight fixtures across:
 
-- adversarial paraphrases where tags are absent but meaning is close;
+- adversarial paraphrases where explicit tags are absent but deterministic text/alias signals exist;
 - hard negatives sharing surface words but wrong care context;
 - temporal conflicts between old and fresh care memories;
-- user-control cases proving pause, clear, delete, and supersede remain respected.
+- user-control lifecycle cases proving deleted and superseded memories remain excluded.
+
+The expanded benchmark passed `48/48` with no pressure signals, so heavier retrieval architecture remains deferred.

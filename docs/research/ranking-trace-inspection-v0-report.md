@@ -1,6 +1,6 @@
 # Ranking Trace Inspection V0 Report
 
-Date: 2026-08-01 19:29 PDT
+Date: 2026-08-01 19:34 PDT
 Status: Active R1 research artifact
 
 ## Verdict
@@ -16,7 +16,7 @@ npm run eval:memory:reader:ranking
 ## Summary
 
 ```text
-total cases: 40
+total cases: 48
 inspected low-rank cases: 0
 ndcg threshold: 0.950
 ```
