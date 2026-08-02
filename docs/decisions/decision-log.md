@@ -4,6 +4,52 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Record Cross-Lingual / No-Tag Memory Reader Recall Gap
+
+Status: Accepted
+
+### Context
+
+The 48-case committed Memory Reader benchmark remained green after harder fixture
+expansion, but those fixtures still relied on explicit tags, response-move aliases,
+scenario aliases, or known deterministic text rules. The remaining question was
+whether untagged cross-lingual and implicit user language creates a measurable
+recall gap.
+
+### Decision
+
+Create a separate probe fixture file for cross-lingual / no-tag recall gaps:
+
+```text
+evals/memory-reader-cross-lingual-no-tag-probe-cases.json
+```
+
+Keep these cases out of the committed benchmark gate because they intentionally
+capture current deterministic recall failures.
+
+### Rationale
+
+The project should not add embeddings, vector DB, reranking, or graph memory
+without measured failure evidence. This probe provides that evidence while keeping
+the canonical benchmark green.
+
+### Consequences
+
+- Probe result is `1/6` passed and `5/6` failed.
+- Aggregate probe metrics are `recall@3=0.167`, `recall@5=0.167`, `mrr=0.167`,
+  and `ndcg@5=0.167`.
+- All failures are classified as `missing_tag_or_alias`.
+- The committed 48-case benchmark remains the green regression gate.
+- A bounded `Embedding Recall Spike V0` is now justified as a research spike, not
+  a production architecture commitment.
+
+### Affected Docs
+
+- `docs/research/cross-lingual-no-tag-recall-gap-probe-v0.md`
+- `docs/research/cross-lingual-no-tag-recall-gap-probe-v0-summary.json`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+
 ## 2026-08-01 — Expand Memory Reader Benchmark With Harder Retrieval Fixtures
 
 Status: Accepted

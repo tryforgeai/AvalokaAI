@@ -179,4 +179,23 @@ describe("memory reader fixture policy", () => {
       assert(caseById.has(id), `missing fixture ${id}`);
     }
   });
+
+  it("keeps cross-lingual no-tag recall-gap probe fixtures separate from the committed benchmark gate", () => {
+    const committedCases = loadMemoryReaderCases();
+    const probeCases = loadMemoryReaderCases(new URL("../evals/memory-reader-cross-lingual-no-tag-probe-cases.json", import.meta.url));
+    const requiredGroups = new Set(["cross_lingual_no_tag", "implicit_no_tag"]);
+
+    assert.equal(committedCases.some((testCase) => testCase.group === "cross_lingual_no_tag"), false);
+    assert(probeCases.length >= 6);
+    for (const group of requiredGroups) {
+      assert(probeCases.some((testCase) => testCase.group === group), `missing probe group ${group}`);
+    }
+
+    for (const testCase of probeCases) {
+      assert.deepEqual(testCase.readerContext.tags || [], [], `${testCase.id} must not use explicit tags`);
+      assert.deepEqual(testCase.readerContext.responseMoves || [], [], `${testCase.id} must not use response-move aliases`);
+      assert.equal(testCase.readerContext.scenarioId || "", "", `${testCase.id} must not use scenario aliases`);
+      assert(Object.keys(testCase.relevance || {}).length > 0, `${testCase.id} must define expected recall target`);
+    }
+  });
 });

@@ -157,16 +157,12 @@ Uncovered harder classes remain:
 
 Do not add retrieval architecture yet.
 
-The next useful slice is one of:
-
-```text
-Larger Care Card Stress Fixture V0
-```
-
-or
+The immediate follow-up slice was:
 
 ```text
 Cross-Lingual / No-Tag Recall Gap Probe V0
 ```
 
-If those uncover measured missed-recall or low-rank failures, then consider a bounded embedding recall spike. If they remain clean, continue hardening deterministic retrieval and lifecycle controls.
+That probe added a separate non-gating fixture file and found a measured deterministic recall gap: `1/6` passed, `5/6` failed, all failures classified as `missing_tag_or_alias`.
+
+This justifies a bounded `Embedding Recall Spike V0` as a research spike while keeping the committed 48-case benchmark green.

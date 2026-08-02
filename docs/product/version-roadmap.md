@@ -52,6 +52,7 @@ The prior V0/V1 work remains useful because it supplies:
 - duplicate tag normalization before Memory Reader scoring so repeated memory tags do not inflate relevance
 - risk-kind fixture policy alignment so matching avoid-response memories outrank generic helpful moves in risk contexts without changing reader scoring
 - harder retrieval fixture expansion for adversarial paraphrase, surface-overlap hard negatives, temporal conflicts, and user-control lifecycle cases
+- separate cross-lingual / no-tag recall-gap probe showing measured deterministic misses before embedding work
 - versioned, redacted retrieval traces for developer diagnosis
 - optional LLM Memory Writer shadow test
 - response injection with 3-5 care facts
@@ -93,6 +94,7 @@ R1 passes if:
 - duplicate memory tags do not inflate reader score, matched tag count, or redacted trace matchedTags
 - risk-kind fixture relevance agrees with the safety policy that concrete avoid-response hazards can outrank generic helpful moves in active risk contexts
 - the deterministic Memory Reader benchmark includes at least 48 cases and harder fixture classes before heavier retrieval architecture is proposed
+- the cross-lingual / no-tag probe remains separate from the committed benchmark gate and records current `1/6` probe recall as evidence for a bounded embedding recall spike
 - personal-memory and health/safety claims can be checked against permitted evidence without treating ordinary compassion as a factual claim
 - unsupported personal-memory claims cannot reach user-visible output without fallback or an approved rewrite policy
 - memory lifecycle decisions are reviewable in developer exports/diagnostics before any user-facing memory surface

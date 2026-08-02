@@ -1,0 +1,296 @@
+[
+  {
+    "id": "reader_probe_cross_no_tag_01",
+    "group": "cross_lingual_no_tag",
+    "description": "Chinese illness-fear phrasing without explicit tags should recall the illness_fear care memory if deterministic text rules cover it.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_probe_cross_no_tag_01_target",
+          "kind": "helpful_response_move",
+          "text": "When illness fear appears, validate fear and return to one body-grounding step.",
+          "confidence": 0.87,
+          "evidenceIds": ["evidence-reader_probe_cross_no_tag_01_target"],
+          "tags": ["illness_fear"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_probe_cross_no_tag_01_distractor",
+          "kind": "helpful_response_move",
+          "text": "For work stress, choose the next concrete task and lower scope.",
+          "confidence": 0.91,
+          "evidenceIds": ["evidence-reader_probe_cross_no_tag_01_distractor"],
+          "tags": ["work_stress"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 3,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "检查结果还没出来，我一直往最坏的地方想。",
+      "tags": [],
+      "responseMoves": []
+    },
+    "relevance": {
+      "reader_probe_cross_no_tag_01_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_probe_cross_no_tag_02",
+    "group": "cross_lingual_no_tag",
+    "description": "English illness-fear paraphrase without explicit tags probes whether deterministic text rules miss pending lab-result fear.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_probe_cross_no_tag_02_target",
+          "kind": "helpful_response_move",
+          "text": "When illness fear appears, validate fear and return to one body-grounding step.",
+          "confidence": 0.88,
+          "evidenceIds": ["evidence-reader_probe_cross_no_tag_02_target"],
+          "tags": ["illness_fear"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_probe_cross_no_tag_02_distractor",
+          "kind": "tone_preference",
+          "text": "Keep planning replies concise when the topic is work logistics.",
+          "confidence": 0.78,
+          "evidenceIds": ["evidence-reader_probe_cross_no_tag_02_distractor"],
+          "tags": ["work_stress", "tone"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "The lab result is still pending and my mind keeps spiraling into the worst-case scenario.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "relevance": {
+      "reader_probe_cross_no_tag_02_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_probe_cross_no_tag_03",
+    "group": "cross_lingual_no_tag",
+    "description": "English medical-test phrasing without explicit tags probes illness_fear recall when no known deterministic alias is present.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_probe_cross_no_tag_03_target",
+          "kind": "avoid_response_move",
+          "text": "Avoid asking for diagnostic certainty before grounding illness fear.",
+          "confidence": 0.86,
+          "evidenceIds": ["evidence-reader_probe_cross_no_tag_03_target"],
+          "tags": ["illness_fear"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_probe_cross_no_tag_03_distractor",
+          "kind": "helpful_response_move",
+          "text": "For uncertainty about a work decision, list reversible next steps.",
+          "confidence": 0.9,
+          "evidenceIds": ["evidence-reader_probe_cross_no_tag_03_distractor"],
+          "tags": ["work_stress"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 3,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "I know it may be irrational, but every delay in the scan feels like evidence that something is seriously wrong.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "relevance": {
+      "reader_probe_cross_no_tag_03_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_probe_implicit_no_tag_01",
+    "group": "implicit_no_tag",
+    "description": "Implicit self-blame without responseMove alias probes whether blame framing is missed when untagged.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_probe_implicit_no_tag_01_target",
+          "kind": "safety_note",
+          "text": "Do not validate blame or deserved-pain framing before offering care.",
+          "confidence": 0.9,
+          "evidenceIds": ["evidence-reader_probe_implicit_no_tag_01_target"],
+          "tags": ["self_blame"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_probe_implicit_no_tag_01_distractor",
+          "kind": "helpful_response_move",
+          "text": "For role loss, separate usefulness from whole-person worth.",
+          "confidence": 0.86,
+          "evidenceIds": ["evidence-reader_probe_implicit_no_tag_01_distractor"],
+          "tags": ["role_loss", "self_worth"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Maybe the pain is proof that I did something wrong and deserve this.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "relevance": {
+      "reader_probe_implicit_no_tag_01_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_probe_implicit_no_tag_02",
+    "group": "implicit_no_tag",
+    "description": "Chinese role-loss expression without scenario alias probes whether role_loss is missed when untagged.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_probe_implicit_no_tag_02_target",
+          "kind": "recurring_pain_pattern",
+          "text": "Role loss can turn into whole-person worth collapse.",
+          "confidence": 0.87,
+          "evidenceIds": ["evidence-reader_probe_implicit_no_tag_02_target"],
+          "tags": ["role_loss"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_probe_implicit_no_tag_02_distractor",
+          "kind": "helpful_response_move",
+          "text": "For illness fear, validate fear before analysis.",
+          "confidence": 0.9,
+          "evidenceIds": ["evidence-reader_probe_implicit_no_tag_02_distractor"],
+          "tags": ["illness_fear"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "退休以后我好像不再有位置了，感觉自己没用了。",
+      "tags": [],
+      "responseMoves": []
+    },
+    "relevance": {
+      "reader_probe_implicit_no_tag_02_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  },
+  {
+    "id": "reader_probe_implicit_no_tag_03",
+    "group": "implicit_no_tag",
+    "description": "English self-worth collapse phrasing without scenario alias probes role_loss/self_worth recall when untagged.",
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-01T00:00:00.000Z",
+      "updatedAt": "2026-07-20T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_probe_implicit_no_tag_03_target",
+          "kind": "helpful_response_move",
+          "text": "Separate usefulness from whole-person worth before planning.",
+          "confidence": 0.88,
+          "evidenceIds": ["evidence-reader_probe_implicit_no_tag_03_target"],
+          "tags": ["role_loss", "self_worth"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        },
+        {
+          "id": "reader_probe_implicit_no_tag_03_distractor",
+          "kind": "tone_preference",
+          "text": "Keep health anxiety support short and steady.",
+          "confidence": 0.82,
+          "evidenceIds": ["evidence-reader_probe_implicit_no_tag_03_distractor"],
+          "tags": ["illness_fear", "tone"],
+          "createdAt": "2026-07-20T00:00:00.000Z",
+          "updatedAt": "2026-07-20T00:00:00.000Z",
+          "lastSeenAt": "2026-07-20T00:00:00.000Z",
+          "occurrences": 2,
+          "status": "active"
+        }
+      ]
+    },
+    "readerContext": {
+      "userText": "Since I stopped being needed in that role, it feels like I stopped mattering at all.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "relevance": {
+      "reader_probe_implicit_no_tag_03_target": 2
+    },
+    "expectedNoMatch": false,
+    "forbiddenMemoryIds": [],
+    "now": "2026-07-26T00:00:00.000Z"
+  }
+]

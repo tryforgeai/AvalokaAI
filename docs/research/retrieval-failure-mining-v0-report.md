@@ -60,6 +60,6 @@ No failed cases in the committed benchmark.
 
 ## Recommendations
 
-- Mine harder cases before changing retrieval architecture.
-- Do not add embeddings or graph memory yet; the committed benchmark does not show a deterministic-reader bottleneck.
-- Add adversarial paraphrase, hard-negative, temporal-conflict, and user-control cases next.
+- Keep the committed benchmark as the green regression gate.
+- Use the separate cross-lingual / no-tag probe to evaluate measured recall gaps without breaking the committed gate.
+- Do not add production embeddings or graph memory yet; first run a bounded embedding recall spike against the measured probe failures.
