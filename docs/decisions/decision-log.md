@@ -4,6 +4,58 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Add User-Facing Memory Controls V0
+
+Status: Accepted
+
+### Context
+
+R1 now has a developer-mode Memory Lifecycle Review Queue V0, sanitized memory
+projection helpers, memory write pause semantics, and memory-only clear support.
+The remaining trust gap is that ordinary users need a small local surface to see
+and control care notes without seeing developer memory diagnostics.
+
+### Decision
+
+Add User-Facing Memory Controls V0 as a small local user-mode surface for
+remembered care notes.
+
+The surface exposes only:
+
+- user-safe care note headings and display text
+- memory write status (`on` / `paused`)
+- pause / resume memory writes
+- export user-safe care notes
+- clear care notes only
+
+It does not expose single-note delete yet. Single-note delete remains deferred
+until the UI can support hidden handles without displaying raw memory IDs.
+
+### Rationale
+
+Avaloka memory should feel like a small local note about what kind of care helps,
+not a dossier about the user's life. A user-facing surface must therefore use the
+sanitized projection/export contract and avoid developer vocabulary as well as
+raw developer values.
+
+### Consequences
+
+- User mode must not expose memory IDs, evidence IDs, confidence scores,
+  internal tags, review queues, retrieval traces, claim-grounding internals,
+  guardian reasons, hidden prompts, or model/routing labels.
+- Care-note export must use plain user language and avoid naming hidden
+  diagnostic concepts as user-facing disclaimers.
+- `清空照顾笔记` must call the memory-only clear path, not broad local data clear.
+- Developer diagnostics may keep raw review and grounding details behind explicit
+  developer mode.
+
+### Affected Docs
+
+- `docs/product/version-roadmap.md`
+- `docs/research/user-facing-memory-controls-design.md`
+- `docs/reviews/2026-08-01-user-facing-memory-controls-post-implementation-audit.md`
+- `docs/reviews/2026-08-01-user-facing-memory-controls-browser-qa.md`
+
 ## 2026-07-28 — Add Developer-Mode Durable Memory Lifecycle Review Queue V0
 
 Status: Accepted

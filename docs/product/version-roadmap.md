@@ -55,6 +55,7 @@ The prior V0/V1 work remains useful because it supplies:
 - extraction, rejection, retrieval, response, and privacy evals
 - developer-mode diagnostics for memory experiments
 - developer-mode durable Memory Lifecycle Review Queue V0 for allowed/rejected/superseded/deleted decisions
+- user-facing local memory controls for sanitized care notes, pause/resume, user-safe export, and memory-only clear
 - local-first data storage and export/clear support
 - preserving current safety and response-quality gates
 
@@ -88,6 +89,7 @@ R1 passes if:
 - response evals show memory improves personalization without creepiness
 - existing crisis, guardian, prompt-injection, and response-quality gates still pass
 - no user-facing UI exposes hidden memory logic, scores, prompts, or private logs
+- ordinary users can inspect, pause, export, and clear remembered care notes without exposing developer diagnostics
 
 ## Previous Active Product Versions
 
