@@ -15,18 +15,23 @@ import { getVisibleBaifaResult } from "./lib/visibleDebug";
 import { isDeveloperMode } from "./lib/uiMode";
 import {
   clearAvalokaData,
+  clearCareMemories,
   deleteCareMemory,
+  loadMemoryWriteStatus,
   exportAvalokaData,
   hasConsent,
   loadCareCard,
   loadFeedback,
   loadMessages,
+  pauseMemoryWrites,
+  resumeMemoryWrites,
   saveConsent,
   saveFeedback,
   saveMemoryCandidates,
   saveMessages,
   supersedeCareMemory,
 } from "./lib/storage";
+import { exportUserFacingCareNotes, toUserFacingCareNotes } from "./lib/userFacingMemory";
 import type {
   BaifaMindState,
   ChatMessage,
@@ -44,15 +49,17 @@ function makeId(prefix: string): string {
 
 export default function App() {
   const developerMode = isDeveloperMode(window.location.search);
-  const [consented, setConsented] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [feedback, setFeedback] = useState<FeedbackEntry[]>([]);
+  const [consented, setConsented] = useState(() => hasConsent());
+  const [messages, setMessages] = useState<ChatMessage[]>(() => loadMessages());
+  const [feedback, setFeedback] = useState<FeedbackEntry[]>(() => loadFeedback());
   const [input, setInput] = useState("");
   const [activeMessageId, setActiveMessageId] = useState<string | null>(null);
   const [exportText, setExportText] = useState("");
   const [exportStatus, setExportStatus] = useState("");
+  const [exportTitle, setExportTitle] = useState("导出备用");
   const [memoryReportStatus, setMemoryReportStatus] = useState("");
   const [memoryRevision, setMemoryRevision] = useState(0);
+  const [memoryWriteStatus, setMemoryWriteStatus] = useState(() => loadMemoryWriteStatus());
 
   useEffect(() => {
     setConsented(hasConsent());
@@ -78,6 +85,7 @@ export default function App() {
     () => (developerMode ? buildMemoryInspectorReport({ careCard: loadCareCard(), messages }) : null),
     [developerMode, messages, memoryRevision],
   );
+  const userFacingCareNotes = useMemo(() => toUserFacingCareNotes(loadCareCard()), [memoryRevision]);
 
   function acceptConsent() {
     saveConsent();
@@ -225,12 +233,14 @@ export default function App() {
     link.click();
     URL.revokeObjectURL(url);
     setExportText(exportAvalokaData());
+    setExportTitle("导出备用");
     setExportStatus("如果浏览器没有下载文件，可以复制下面的 JSON。");
   }
 
   async function copyExportData() {
     const data = exportAvalokaData();
     setExportText(data);
+    setExportTitle("导出备用");
 
     try {
       await navigator.clipboard.writeText(data);
@@ -254,6 +264,38 @@ export default function App() {
 
   function refreshMemoryInspector() {
     setMemoryRevision((current) => current + 1);
+  }
+
+  function toggleMemoryWrites() {
+    if (memoryWriteStatus === "paused") {
+      resumeMemoryWrites();
+      setMemoryWriteStatus("on");
+      return;
+    }
+
+    pauseMemoryWrites();
+    setMemoryWriteStatus("paused");
+  }
+
+  function clearUserCareNotes() {
+    const confirmed = window.confirm("要清空所有照顾笔记吗？这不会删除聊天记录或反馈。");
+    if (!confirmed) return;
+
+    clearCareMemories();
+    refreshMemoryInspector();
+  }
+
+  async function exportUserCareNotes() {
+    const data = exportUserFacingCareNotes(loadCareCard(), memoryWriteStatus);
+    setExportText(data);
+    setExportTitle("照顾笔记导出");
+
+    try {
+      await navigator.clipboard.writeText(data);
+      setExportStatus("已复制照顾笔记摘要。");
+    } catch {
+      setExportStatus("当前浏览器不能自动复制，请手动复制下面的照顾笔记摘要。");
+    }
   }
 
   function deleteMemory(memoryId: string) {
@@ -453,6 +495,45 @@ export default function App() {
         <div className="privacy-card">
           <p className="eyebrow">隐私</p>
           <p className="soft-note">这些记录只保存在当前浏览器里。你可以随时导出，或在准备好时清空。</p>
+        </div>
+
+        <div className="care-notes-card" aria-label="Remembered care notes">
+          <div className="card-heading-row">
+            <div>
+              <p className="eyebrow">本机记忆</p>
+              <h2>照顾笔记</h2>
+            </div>
+            <span className="mode-pill">{memoryWriteStatus === "paused" ? "记忆已暂停" : "记忆已开启"}</span>
+          </div>
+          <p className="soft-note">
+            Avaloka 只保存少量和照顾方式有关的本机笔记。你可以暂停、导出或清空这些笔记。
+          </p>
+          {userFacingCareNotes.length > 0 ? (
+            <div className="care-note-list">
+              {userFacingCareNotes.map((note) => (
+                <article className="care-note-row" key={`${note.category}-${note.displayText}`}>
+                  <strong>{note.heading}</strong>
+                  <p>{note.displayText}</p>
+                  <small>{note.lastUpdatedLabel}</small>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="soft-note">
+              现在还没有保存的照顾笔记。当你明确反馈某种回答有帮助，或某种说法不适合你时，Avaloka 可能会在本机留下一条简短笔记。
+            </p>
+          )}
+          <div className="care-note-actions">
+            <button className="primary-button" onClick={toggleMemoryWrites}>
+              {memoryWriteStatus === "paused" ? "继续记住" : "暂停记忆"}
+            </button>
+            <button className="icon-button text-icon-button" onClick={exportUserCareNotes}>
+              导出照顾笔记
+            </button>
+            <button className="icon-button text-icon-button danger-button" onClick={clearUserCareNotes}>
+              清空照顾笔记
+            </button>
+          </div>
         </div>
 
         {developerMode ? (
@@ -764,7 +845,7 @@ export default function App() {
         {exportText ? (
           <div className="export-card" aria-label="Export JSON fallback">
             <p className="eyebrow">Export JSON</p>
-            <h2>导出备用</h2>
+            <h2>{exportTitle}</h2>
             <p className="soft-note">{exportStatus}</p>
             <textarea readOnly value={exportText} rows={8} aria-label="Exported Avaloka JSON" />
           </div>

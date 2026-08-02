@@ -275,6 +275,7 @@ select:focus {
 .orchestrator-card,
 .compassion-card,
 .baifa-card,
+.care-notes-card,
 .memory-card,
 .eval-card,
 .export-card {
@@ -289,6 +290,7 @@ select:focus {
 .orchestrator-card h2,
 .compassion-card h2,
 .baifa-card h2,
+.care-notes-card h2,
 .memory-card h2,
 .eval-card h2,
 .export-card h2 {
@@ -352,6 +354,47 @@ select:focus {
   width: 2.2rem;
   min-height: 2.2rem;
   flex: 0 0 auto;
+}
+
+.text-icon-button {
+  width: auto;
+  min-height: 2.4rem;
+  padding: 0 0.75rem;
+}
+
+.danger-button {
+  color: #ffe2dc;
+  border-color: rgba(217, 130, 116, 0.38);
+  background: rgba(217, 130, 116, 0.12);
+}
+
+.care-note-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.9rem 0;
+}
+
+.care-note-row {
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  background: rgba(239, 233, 221, 0.04);
+}
+
+.care-note-row p {
+  margin: 0.35rem 0;
+  font-size: 0.86rem;
+}
+
+.care-note-row small {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.care-note-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
 }
 
 .memory-list {
