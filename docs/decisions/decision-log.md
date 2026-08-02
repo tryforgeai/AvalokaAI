@@ -4,6 +4,54 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Add Retrieval Failure Mining V0 Before Heavier Memory Retrieval
+
+Status: Accepted
+
+### Context
+
+R1 now has a deterministic Memory Reader benchmark, RetrievalTraceV1, Claim
+Grounding V0, lifecycle review, and user-facing memory controls. The reader
+baseline is strong, so moving directly to embeddings, vector storage, graph
+memory, reranking, or a complex memory dashboard would add architecture before a
+measured failure demands it.
+
+### Decision
+
+Add Retrieval Failure Mining V0 as a lightweight benchmark analysis layer over
+the existing memory-reader benchmark.
+
+The miner reports:
+
+- aggregate retrieval metrics;
+- failed cases and failure taxonomy;
+- group-level pass/fail counts;
+- pressure signals, including low-rank-quality passed cases;
+- conservative next-step recommendations.
+
+### Rationale
+
+R1 should first learn where deterministic retrieval actually bends. A failing or
+pressure-case fixture is better evidence than an assumed need for graph/vector
+retrieval. If the committed benchmark still passes with no unsafe or stale leaks,
+the next slice should mine harder fixtures and inspect ranking traces before
+adding retrieval architecture.
+
+### Consequences
+
+- `npm run eval:memory:reader:failures` becomes the first diagnostic command
+  before proposing embeddings, graph memory, vector DB, reranking, or dashboard
+  work.
+- Embedding or graph spikes should require a concrete retrieval-failure class,
+  not just architectural appeal.
+- Current pressure is ranking quality in four passing cases, not recall, safety,
+  stale, deleted, or superseded retrieval failure.
+
+### Affected Docs
+
+- `docs/product/version-roadmap.md`
+- `docs/research/retrieval-failure-mining-v0-report.md`
+
 ## 2026-08-01 — Add User-Facing Memory Controls V0
 
 Status: Accepted

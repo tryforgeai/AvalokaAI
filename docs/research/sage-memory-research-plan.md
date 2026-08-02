@@ -331,7 +331,7 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - create a privacy-safe Memory Reader gold dataset
 - benchmark the unchanged deterministic reader with Recall@3, Recall@5, MRR, NDCG@5, no-match precision, forbidden retrieval counts, and latency
 - add a versioned retrieval trace without raw user text
-- classify failures before changing retrieval architecture
+- classify failures and ranking pressure with Retrieval Failure Mining V0 before changing retrieval architecture
 
 ### Phase 3: LLM Writer Shadow Test
 
