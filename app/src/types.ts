@@ -234,6 +234,7 @@ export type RetrievalTraceReason =
   | "missing_evidence"
   | "stale"
   | "no_tag_overlap"
+  | "semantic_recall"
   | "ranked_below_limit";
 
 export interface RetrievalTraceCandidateV1 {

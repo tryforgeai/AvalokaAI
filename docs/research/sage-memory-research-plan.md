@@ -337,6 +337,7 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - align risk-kind fixture relevance with avoid-response boost when the avoid memory directly matches an active risk tag and names a concrete response hazard
 - expand harder retrieval fixtures across adversarial paraphrase, hard-negative surface overlap, temporal conflict, and user-control lifecycle classes before proposing embeddings or graph memory
 - keep cross-lingual / no-tag recall-gap probe cases separate from the committed benchmark gate; use their `1/6` result as evidence for a bounded embedding recall spike rather than immediate production architecture
+- gate semantic recall behind `MemoryReaderOptions.semanticRecall`; current spike recovers the no-tag probe to `6/6` and keeps the committed benchmark at `48/48`, but production semantic retrieval still needs false-positive and lifecycle guard fixtures
 
 ### Phase 3: LLM Writer Shadow Test
 

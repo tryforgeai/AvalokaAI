@@ -15,7 +15,7 @@ export function loadMemoryReaderCases(path = resolve(repoRoot, "evals/memory-rea
   return JSON.parse(readFileSync(path, "utf8"));
 }
 
-export function runMemoryReaderBenchmark({ cases, limit = cases.length, reader = readCareFactsFromCardWithTrace } = {}) {
+export function runMemoryReaderBenchmark({ cases, limit = cases.length, reader = readCareFactsFromCardWithTrace, readerOptions = {} } = {}) {
   const selectedCases = (cases || []).slice(0, limit);
   const validationErrors = validateMemoryReaderCases(selectedCases);
   if (validationErrors.length > 0) {
@@ -38,16 +38,17 @@ export function runMemoryReaderBenchmark({ cases, limit = cases.length, reader =
     };
   }
 
-  const results = selectedCases.map((testCase) => evaluateMemoryReaderCase(testCase, { reader }));
+  const results = selectedCases.map((testCase) => evaluateMemoryReaderCase(testCase, { reader, readerOptions }));
   return summarizeBenchmarkResults(results);
 }
 
-export function evaluateMemoryReaderCase(testCase, { reader = readCareFactsFromCardWithTrace } = {}) {
+export function evaluateMemoryReaderCase(testCase, { reader = readCareFactsFromCardWithTrace, readerOptions = {} } = {}) {
   const startedAt = performanceNow();
   const readerOutput = reader(testCase.careCard, testCase.readerContext, {
     now: testCase.now,
     limit: 5,
     staleAfterDays: defaultStaleAfterDays,
+    ...readerOptions,
   });
   const retrieved = Array.isArray(readerOutput) ? readerOutput : readerOutput.facts;
   const trace = Array.isArray(readerOutput) ? undefined : readerOutput.trace;

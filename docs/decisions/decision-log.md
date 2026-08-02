@@ -4,6 +4,43 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Add Gated Semantic Recall Spike for No-Tag Retrieval Gaps
+
+Status: Accepted
+
+### Context
+
+Cross-Lingual / No-Tag Recall Gap Probe V0 measured a deterministic Memory Reader
+recall gap: the separate probe passed only `1/6` cases, with `5` failures classified
+as `missing_tag_or_alias`. The project needed to test whether semantic expansion
+could recover those misses without breaking the committed benchmark.
+
+### Decision
+
+Add a gated semantic recall spike behind `MemoryReaderOptions.semanticRecall` and
+the benchmark CLI flag `--semantic-recall`.
+
+This is not a production embedding system: it introduces no vector DB, external
+embedding model, stored vectors, or graph memory. It is an auditable local semantic
+tag-expansion prototype used to test the recall role an embedding layer might play.
+
+### Consequences
+
+- Normal reader behavior remains unchanged because `semanticRecall` defaults off.
+- The no-tag probe improves from `1/6` to `6/6` when `--semantic-recall` is enabled.
+- The committed benchmark remains `48/48` with semantic recall enabled.
+- Semantic selections carry `semantic_recall` in retrieval traces.
+- Production semantic retrieval remains deferred pending false-positive and lifecycle
+  guard fixtures.
+
+### Affected Docs
+
+- `docs/research/embedding-recall-spike-v0.md`
+- `docs/research/embedding-recall-spike-v0-baseline-summary.json`
+- `docs/research/embedding-recall-spike-v0-summary.json`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+
 ## 2026-08-01 — Record Cross-Lingual / No-Tag Memory Reader Recall Gap
 
 Status: Accepted

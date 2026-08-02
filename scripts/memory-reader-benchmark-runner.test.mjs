@@ -198,4 +198,18 @@ describe("memory reader fixture policy", () => {
       assert(Object.keys(testCase.relevance || {}).length > 0, `${testCase.id} must define expected recall target`);
     }
   });
+
+  it("can run a gated semantic recall spike against cross-lingual no-tag probe fixtures", () => {
+    const probeCases = loadMemoryReaderCases(new URL("../evals/memory-reader-cross-lingual-no-tag-probe-cases.json", import.meta.url));
+
+    const baseline = runMemoryReaderBenchmark({ cases: probeCases });
+    const spike = runMemoryReaderBenchmark({ cases: probeCases, readerOptions: { semanticRecall: true } });
+
+    assert.equal(baseline.passed, 1);
+    assert(spike.passed >= 5, `expected semantic recall spike to recover most probe cases, got ${spike.passed}/${spike.total}`);
+    assert.equal(spike.aggregates.unsafeRetrievalCount, 0);
+    assert.equal(spike.aggregates.staleRetrievalCount, 0);
+    assert.equal(spike.aggregates.deletedRetrievalCount, 0);
+    assert.equal(spike.aggregates.supersededRetrievalCount, 0);
+  });
 });

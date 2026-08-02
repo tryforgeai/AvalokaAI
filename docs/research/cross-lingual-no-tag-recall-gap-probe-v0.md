@@ -99,17 +99,28 @@ This is a measured recall gap, not a ranking problem and not a lifecycle/safety 
 
 Do not immediately ship embeddings, vector DB, reranking, or graph memory.
 
-The evidence does justify a bounded next slice:
+The follow-up slice was completed:
 
 ```text
 Embedding Recall Spike V0
 ```
 
-The spike should test whether a small semantic recall layer can recover these 5 missed probe cases without harming the committed benchmark or violating lifecycle controls.
+It added gated semantic recall behind `MemoryReaderOptions.semanticRecall` and the benchmark CLI flag `--semantic-recall`.
 
-## Acceptance Bar for a Future Embedding Recall Spike
+Results:
 
-A spike is only useful if it proves all of the following:
+```text
+baseline probe: 1/6 passed
+semanticRecall spike: 6/6 passed
+committed benchmark with semanticRecall: 48/48 passed
+```
+
+This remains a spike, not a production embedding system. Production semantic retrieval still needs false-positive and lifecycle guard fixtures before it can be promoted.
+
+
+## Acceptance Bar Used by Embedding Recall Spike V0
+
+The completed spike was only useful because it proved the following:
 
 - committed benchmark stays green at `48/48`;
 - probe recall improves materially from `1/6`;

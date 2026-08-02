@@ -1,0 +1,551 @@
+{
+  "total": 6,
+  "passed": 6,
+  "failed": 0,
+  "passRate": 1,
+  "aggregates": {
+    "recallAt3": 1,
+    "recallAt5": 1,
+    "mrr": 1,
+    "ndcgAt5": 1,
+    "noMatchPrecision": 1,
+    "unsafeRetrievalCount": 0,
+    "staleRetrievalCount": 0,
+    "deletedRetrievalCount": 0,
+    "supersededRetrievalCount": 0,
+    "p50LatencyMs": 0.031165999999998917,
+    "p95LatencyMs": 0.5854580000000027
+  },
+  "failureTaxonomy": {
+    "none": 6,
+    "missing_tag_or_alias": 0,
+    "semantic_paraphrase_miss": 0,
+    "hard_negative_false_hit": 0,
+    "correct_candidate_ranked_low": 0,
+    "no_match_false_positive": 0,
+    "stale_or_inactive_leak": 0,
+    "safety_priority_failure": 0,
+    "fixture_or_contract_error": 0
+  },
+  "results": [
+    {
+      "id": "reader_probe_cross_no_tag_01",
+      "group": "cross_lingual_no_tag",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 1,
+        "precisionAt5": 1,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 1,
+        "ndcgAt5": 1,
+        "noMatchCorrect": false,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.5854580000000027
+      },
+      "observed": {
+        "retrievedIds": [
+          "reader_probe_cross_no_tag_01_target"
+        ],
+        "expectedRelevance": {
+          "reader_probe_cross_no_tag_01_target": 2
+        }
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "ed2df4bc34ac0deced2df4bc34ac0deced2df4bc34ac0deced2df4bc34ac0dec",
+        "activeTags": [
+          "illness_fear"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [
+          "reader_probe_cross_no_tag_01_target"
+        ],
+        "rejected": [
+          {
+            "memoryId": "reader_probe_cross_no_tag_01_distractor",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_probe_cross_no_tag_01_target",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [
+              "illness_fear"
+            ],
+            "score": 110.7,
+            "decision": "selected",
+            "reasons": [
+              "tag_overlap"
+            ]
+          },
+          {
+            "memoryId": "reader_probe_cross_no_tag_01_distractor",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "work_stress"
+            ],
+            "matchedTags": [],
+            "score": 12.1,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.5092920000000021
+      }
+    },
+    {
+      "id": "reader_probe_cross_no_tag_02",
+      "group": "cross_lingual_no_tag",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 1,
+        "precisionAt5": 1,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 1,
+        "ndcgAt5": 1,
+        "noMatchCorrect": false,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.2567499999999967
+      },
+      "observed": {
+        "retrievedIds": [
+          "reader_probe_cross_no_tag_02_target"
+        ],
+        "expectedRelevance": {
+          "reader_probe_cross_no_tag_02_target": 2
+        }
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "a30111e9683c1064a30111e9683c1064a30111e9683c1064a30111e9683c1064",
+        "activeTags": [
+          "illness_fear"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [
+          "reader_probe_cross_no_tag_02_target"
+        ],
+        "rejected": [
+          {
+            "memoryId": "reader_probe_cross_no_tag_02_distractor",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_probe_cross_no_tag_02_target",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [
+              "illness_fear"
+            ],
+            "score": 110.8,
+            "decision": "selected",
+            "reasons": [
+              "semantic_recall"
+            ]
+          },
+          {
+            "memoryId": "reader_probe_cross_no_tag_02_distractor",
+            "kind": "tone_preference",
+            "status": "active",
+            "tags": [
+              "work_stress",
+              "tone"
+            ],
+            "matchedTags": [],
+            "score": 9.8,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.25162499999999
+      }
+    },
+    {
+      "id": "reader_probe_cross_no_tag_03",
+      "group": "cross_lingual_no_tag",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 1,
+        "precisionAt5": 1,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 1,
+        "ndcgAt5": 1,
+        "noMatchCorrect": false,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.031165999999998917
+      },
+      "observed": {
+        "retrievedIds": [
+          "reader_probe_cross_no_tag_03_target"
+        ],
+        "expectedRelevance": {
+          "reader_probe_cross_no_tag_03_target": 2
+        }
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "68a2282256fee50468a2282256fee50468a2282256fee50468a2282256fee504",
+        "activeTags": [
+          "illness_fear"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [
+          "reader_probe_cross_no_tag_03_target"
+        ],
+        "rejected": [
+          {
+            "memoryId": "reader_probe_cross_no_tag_03_distractor",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_probe_cross_no_tag_03_target",
+            "kind": "avoid_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [
+              "illness_fear"
+            ],
+            "score": 230.6,
+            "decision": "selected",
+            "reasons": [
+              "semantic_recall",
+              "risk_kind_boost"
+            ]
+          },
+          {
+            "memoryId": "reader_probe_cross_no_tag_03_distractor",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "work_stress"
+            ],
+            "matchedTags": [],
+            "score": 12,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.029375000000001705
+      }
+    },
+    {
+      "id": "reader_probe_implicit_no_tag_01",
+      "group": "implicit_no_tag",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 1,
+        "precisionAt5": 1,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 1,
+        "ndcgAt5": 1,
+        "noMatchCorrect": false,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.0217089999999871
+      },
+      "observed": {
+        "retrievedIds": [
+          "reader_probe_implicit_no_tag_01_target"
+        ],
+        "expectedRelevance": {
+          "reader_probe_implicit_no_tag_01_target": 2
+        }
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "32306ee87e46829e32306ee87e46829e32306ee87e46829e32306ee87e46829e",
+        "activeTags": [
+          "self_blame"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [
+          "reader_probe_implicit_no_tag_01_target"
+        ],
+        "rejected": [
+          {
+            "memoryId": "reader_probe_implicit_no_tag_01_distractor",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_probe_implicit_no_tag_01_target",
+            "kind": "safety_note",
+            "status": "active",
+            "tags": [
+              "self_blame"
+            ],
+            "matchedTags": [
+              "self_blame"
+            ],
+            "score": 311,
+            "decision": "selected",
+            "reasons": [
+              "semantic_recall",
+              "risk_kind_boost"
+            ]
+          },
+          {
+            "memoryId": "reader_probe_implicit_no_tag_01_distractor",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "role_loss",
+              "self_worth"
+            ],
+            "matchedTags": [],
+            "score": 10.6,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.020291999999997756
+      }
+    },
+    {
+      "id": "reader_probe_implicit_no_tag_02",
+      "group": "implicit_no_tag",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 1,
+        "precisionAt5": 1,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 1,
+        "ndcgAt5": 1,
+        "noMatchCorrect": false,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.2585420000000056
+      },
+      "observed": {
+        "retrievedIds": [
+          "reader_probe_implicit_no_tag_02_target"
+        ],
+        "expectedRelevance": {
+          "reader_probe_implicit_no_tag_02_target": 2
+        }
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "3d8d8fc164e969163d8d8fc164e969163d8d8fc164e969163d8d8fc164e96916",
+        "activeTags": [
+          "role_loss",
+          "self_worth"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [
+          "reader_probe_implicit_no_tag_02_target"
+        ],
+        "rejected": [
+          {
+            "memoryId": "reader_probe_implicit_no_tag_02_distractor",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_probe_implicit_no_tag_02_target",
+            "kind": "recurring_pain_pattern",
+            "status": "active",
+            "tags": [
+              "role_loss"
+            ],
+            "matchedTags": [
+              "role_loss"
+            ],
+            "score": 110.7,
+            "decision": "selected",
+            "reasons": [
+              "semantic_recall"
+            ]
+          },
+          {
+            "memoryId": "reader_probe_implicit_no_tag_02_distractor",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [],
+            "score": 11,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.2565000000000026
+      }
+    },
+    {
+      "id": "reader_probe_implicit_no_tag_03",
+      "group": "implicit_no_tag",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 1,
+        "precisionAt5": 1,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 1,
+        "ndcgAt5": 1,
+        "noMatchCorrect": false,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.02291599999999505
+      },
+      "observed": {
+        "retrievedIds": [
+          "reader_probe_implicit_no_tag_03_target"
+        ],
+        "expectedRelevance": {
+          "reader_probe_implicit_no_tag_03_target": 2
+        }
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "747c00da7e5a9af8747c00da7e5a9af8747c00da7e5a9af8747c00da7e5a9af8",
+        "activeTags": [
+          "role_loss",
+          "self_worth"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [
+          "reader_probe_implicit_no_tag_03_target"
+        ],
+        "rejected": [
+          {
+            "memoryId": "reader_probe_implicit_no_tag_03_distractor",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_probe_implicit_no_tag_03_target",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "role_loss",
+              "self_worth"
+            ],
+            "matchedTags": [
+              "role_loss",
+              "self_worth"
+            ],
+            "score": 210.8,
+            "decision": "selected",
+            "reasons": [
+              "semantic_recall"
+            ]
+          },
+          {
+            "memoryId": "reader_probe_implicit_no_tag_03_distractor",
+            "kind": "tone_preference",
+            "status": "active",
+            "tags": [
+              "illness_fear",
+              "tone"
+            ],
+            "matchedTags": [],
+            "score": 10.2,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.020207999999996673
+      }
+    }
+  ]
+}

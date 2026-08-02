@@ -46,6 +46,7 @@ export interface MemoryReaderOptions {
   minConfidence?: number;
   now?: string;
   staleAfterDays?: number;
+  semanticRecall?: boolean;
 }
 
 export interface MemoryReaderTraceResult {
@@ -150,6 +151,27 @@ const textTagRules: Array<{ tag: string; patterns: RegExp[] }> = [
   },
 ];
 
+const semanticRecallTagRules: Array<{ tag: string; patterns: RegExp[] }> = [
+  {
+    tag: "illness_fear",
+    patterns: [
+      /\b(lab result|test result|scan|medical result|biopsy|pending result|worst-case|worst case|seriously wrong|spiraling)\b/i,
+    ],
+  },
+  {
+    tag: "self_blame",
+    patterns: [/\b(deserve this|deserved pain|did something wrong|all my fault|my fault|proof that i did)\b/i],
+  },
+  {
+    tag: "role_loss",
+    patterns: [/\b(stopped being needed|stopped mattering|no longer needed|retired|retirement|lost my role)\b/i, /退休|没有位置|沒用了|没用了|不再有位置/],
+  },
+  {
+    tag: "self_worth",
+    patterns: [/\b(stopped mattering|matter at all|worth|whole-person worth)\b/i, /没用了|沒用了|不再有价值|不重要/],
+  },
+];
+
 function expandScenarioTags(scenarioId: string): string[] {
   const tags = [scenarioId, ...(scenarioTagAliases[scenarioId] || [])];
   const [, responseMove] = scenarioId.split(":");
@@ -182,6 +204,12 @@ function deriveTextTags(userText: string): string[] {
     .map((rule) => rule.tag);
 }
 
+function deriveSemanticRecallTags(userText: string): string[] {
+  return semanticRecallTagRules
+    .filter((rule) => rule.patterns.some((pattern) => pattern.test(userText)))
+    .map((rule) => rule.tag);
+}
+
 function isStaleMemory(memory: CareMemory, now: string, staleAfterDays: number): boolean {
   const nowMs = Date.parse(now);
   const lastSeenMs = Date.parse(memory.lastSeenAt || memory.updatedAt || memory.createdAt);
@@ -210,17 +238,24 @@ export function readCareFactsFromCardWithTrace(
   const now = options.now ?? new Date().toISOString();
   const staleAfterDays = options.staleAfterDays ?? 180;
   const activeTags = deriveReaderTags(context);
-  const activeTagSet = new Set(activeTags);
-  const riskContext = activeTags.some((tag) => riskTags.has(tag));
+  const semanticRecallTags = options.semanticRecall ? deriveSemanticRecallTags(context.userText || "") : [];
+  const retrievalTags = unique([...activeTags, ...semanticRecallTags]);
+  const activeTagSet = new Set(retrievalTags);
+  const deterministicTagSet = new Set(activeTags);
+  const semanticTagSet = new Set(semanticRecallTags);
+  const riskContext = retrievalTags.some((tag) => riskTags.has(tag));
 
   const candidates = card.memories.map((memory) => {
     const memoryTags = unique(memory.tags);
     const matchedTags = memoryTags.filter((tag) => activeTagSet.has(tag));
+    const deterministicMatchedTags = matchedTags.filter((tag) => deterministicTagSet.has(tag));
+    const semanticMatchedTags = matchedTags.filter((tag) => semanticTagSet.has(tag) && !deterministicTagSet.has(tag));
     const relevance = matchedTags.length;
     const reasons: RetrievalTraceReason[] = [];
     const status = memory.status || "active";
 
-    if (relevance > 0) reasons.push("tag_overlap");
+    if (deterministicMatchedTags.length > 0) reasons.push("tag_overlap");
+    if (semanticMatchedTags.length > 0) reasons.push("semantic_recall");
     if (riskContext && (memory.kind === "safety_note" || memory.kind === "avoid_response_move")) reasons.push("risk_kind_boost");
     if (memory.confidence < minConfidence) reasons.push("low_confidence");
     if (status !== "active") reasons.push("inactive_or_superseded");
@@ -239,7 +274,7 @@ export function readCareFactsFromCardWithTrace(
     return { memory, memoryTags, matchedTags, reasons: unique(reasons) as RetrievalTraceReason[], score };
   });
 
-  const eligible = activeTags.length === 0 || limit <= 0
+  const eligible = retrievalTags.length === 0 || limit <= 0
     ? []
     : candidates
         .filter(({ reasons }) => !reasons.includes("low_confidence"))
@@ -276,7 +311,7 @@ export function readCareFactsFromCardWithTrace(
       readerVersion: "deterministic_memory_reader_v0",
       policyVersion: "retrieval_policy_v1",
       inputHash: hashTraceInput(context),
-      activeTags,
+      activeTags: retrievalTags,
       requestedLimit: limit,
       minConfidence,
       staleAfterDays,
