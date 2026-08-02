@@ -45,6 +45,7 @@ The current local app still provides the V1 chat surface and developer diagnosti
 
 - User mode: `http://127.0.0.1:5173/`
 - Developer mode: `http://127.0.0.1:5173/?dev=1`
+- User-facing memory controls demo: [docs/engineering/user-facing-memory-controls-demo-runbook.md](docs/engineering/user-facing-memory-controls-demo-runbook.md)
 
 Run the local app from `app/`:
 
