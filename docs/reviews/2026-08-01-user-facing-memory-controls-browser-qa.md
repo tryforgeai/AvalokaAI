@@ -82,7 +82,7 @@ total_errors: 0
 
 ### QA-1: Care-note export copy mentioned internal concepts
 
-Severity: Low  
+Severity: Low
 Category: UX / Trust Boundary
 
 Observed during browser QA: the care-note export body originally said it did not include:
