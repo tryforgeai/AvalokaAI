@@ -108,6 +108,11 @@ describe("toUserFacingCareNotes", () => {
     expect(exported).not.toContain("memory-helpful-1");
     expect(exported).not.toContain("turn-private-1");
     expect(exported).not.toContain("confidence");
+    expect(exported).not.toContain("internal IDs");
+    expect(exported).not.toContain("scores");
+    expect(exported).not.toContain("evidence");
+    expect(exported).not.toContain("tags");
+    expect(exported).not.toContain("developer review data");
     expect(exported).not.toContain("lifecycleReviewQueue");
   });
 });

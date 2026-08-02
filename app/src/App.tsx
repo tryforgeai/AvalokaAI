@@ -844,7 +844,7 @@ export default function App() {
 
         {exportText ? (
           <div className="export-card" aria-label="Export JSON fallback">
-            <p className="eyebrow">Export JSON</p>
+            <p className="eyebrow">{exportTitle === "照顾笔记导出" ? "Care notes" : "Export JSON"}</p>
             <h2>{exportTitle}</h2>
             <p className="soft-note">{exportStatus}</p>
             <textarea readOnly value={exportText} rows={8} aria-label="Exported Avaloka JSON" />

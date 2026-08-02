@@ -44,7 +44,7 @@ export function exportUserFacingCareNotes(careCard: CareCard, status: UserFacing
     "",
     `Memory status: ${status}`,
     "",
-    "These notes are a user-safe summary of local care preferences. They do not include internal IDs, scores, evidence, tags, or developer review data.",
+    "These are the short care notes Avaloka uses on this device to remember what kind of support may feel helpful.",
   ];
 
   if (notes.length === 0) {
