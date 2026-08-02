@@ -686,8 +686,8 @@
       ]
     },
     "relevance": {
-      "reader_semantic_01_target": 2,
-      "reader_semantic_01_secondary": 1
+      "reader_semantic_01_target": 1,
+      "reader_semantic_01_secondary": 2
     },
     "expectedNoMatch": false,
     "forbiddenMemoryIds": [],
@@ -764,8 +764,8 @@
       ]
     },
     "relevance": {
-      "reader_semantic_02_target": 2,
-      "reader_semantic_02_secondary": 1
+      "reader_semantic_02_target": 1,
+      "reader_semantic_02_secondary": 2
     },
     "expectedNoMatch": false,
     "forbiddenMemoryIds": [],

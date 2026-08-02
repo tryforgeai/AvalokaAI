@@ -334,6 +334,7 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - classify failures and ranking pressure with Retrieval Failure Mining V0 before changing retrieval architecture
 - inspect low-rank-quality passing cases with Ranking Trace Inspection V0 before changing reader scoring, fixture relevance, reranking, embeddings, or graph memory
 - normalize duplicate memory tags before scoring so repeated tags do not create false relevance
+- align risk-kind fixture relevance with avoid-response boost when the avoid memory directly matches an active risk tag and names a concrete response hazard
 
 ### Phase 3: LLM Writer Shadow Test
 

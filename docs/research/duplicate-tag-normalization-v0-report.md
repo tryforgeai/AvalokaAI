@@ -129,10 +129,10 @@ These are risk-kind boost / fixture relevance policy cases, not duplicate-tag bu
 
 Do not add reranking, embeddings, vector DB, or graph memory for this issue.
 
-The next slice should be:
+The immediate follow-up slice was:
 
 ```text
 Risk-Kind Boost Fixture Policy Review V0
 ```
 
-That review should decide whether `avoid_response_move` should intentionally outrank `helpful_response_move` in `illness_fear` and `self_blame` risk contexts. If yes, update fixture relevance. If no, write a RED test and adjust deterministic scoring.
+That review decided `avoid_response_move` should intentionally outrank generic `helpful_response_move` entries in `illness_fear` and `self_blame` contexts when it directly matches the active risk tag and names a concrete response hazard. Fixture relevance was updated without changing reader scoring.

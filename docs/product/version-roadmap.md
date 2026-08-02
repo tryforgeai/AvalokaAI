@@ -50,6 +50,7 @@ The prior V0/V1 work remains useful because it supplies:
 - Retrieval Failure Mining V0 over the deterministic Memory Reader benchmark before heavier graph/vector/reranker retrieval work
 - Ranking Trace Inspection V0 for low-rank-quality passing cases before changing reader scoring or fixture relevance
 - duplicate tag normalization before Memory Reader scoring so repeated memory tags do not inflate relevance
+- risk-kind fixture policy alignment so matching avoid-response memories outrank generic helpful moves in risk contexts without changing reader scoring
 - versioned, redacted retrieval traces for developer diagnosis
 - optional LLM Memory Writer shadow test
 - response injection with 3-5 care facts
@@ -89,6 +90,7 @@ R1 passes if:
 - retrieval failure mining can report failed cases, pressure signals, group pass/fail counts, and conservative next-step recommendations before heavier retrieval architecture is proposed
 - ranking trace inspection can explain low-NDCG passing cases with trace evidence before reranking, embeddings, graph memory, or scoring changes are proposed
 - duplicate memory tags do not inflate reader score, matched tag count, or redacted trace matchedTags
+- risk-kind fixture relevance agrees with the safety policy that concrete avoid-response hazards can outrank generic helpful moves in active risk contexts
 - personal-memory and health/safety claims can be checked against permitted evidence without treating ordinary compassion as a factual claim
 - unsupported personal-memory claims cannot reach user-visible output without fallback or an approved rewrite policy
 - memory lifecycle decisions are reviewable in developer exports/diagnostics before any user-facing memory surface

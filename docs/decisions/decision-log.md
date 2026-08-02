@@ -4,6 +4,52 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Align Risk-Kind Fixture Relevance With Avoid-Response Boost
+
+Status: Accepted
+
+### Context
+
+After Duplicate Tag Normalization V0, the only remaining low-rank-quality
+passing cases were `reader_semantic_01` and `reader_semantic_02`. Ranking Trace
+Inspection V0 showed the reader ranking `avoid_response_move` ahead of a generic
+`helpful_response_move` because `risk_kind_boost` applies in `illness_fear` and
+`self_blame` contexts.
+
+### Decision
+
+Keep the current deterministic reader scoring. Update the benchmark fixture
+relevance grades so matching `avoid_response_move` memories are grade `2` and
+generic helpful moves are grade `1` in these two risk-kind semantic cases.
+
+### Rationale
+
+In risk-kind care contexts, avoiding a harmful response pattern is not merely a
+secondary preference. It is part of the safety posture: avoid harm first, then
+offer the helpful move. The two reviewed avoid-response memories directly match
+the active risk tag and name a concrete hazard (`over-explaining`) while the
+competing helpful memories are generic.
+
+### Consequences
+
+- No reader scoring change is required.
+- No reranker, embeddings, vector DB, or graph memory is justified by these
+  cases.
+- Reader benchmark remains `40/40` with zero unsafe, stale, deleted, or
+  superseded retrieval leaks.
+- Aggregate `ndcg@5` improves from `0.989` to `0.999`.
+- Failure mining reports no current pressure signals in the committed benchmark.
+- Ranking trace inspection reports zero low-rank-quality passing cases at the
+  configured threshold.
+
+### Affected Docs
+
+- `docs/research/risk-kind-boost-fixture-policy-review-v0.md`
+- `docs/research/ranking-trace-inspection-v0-report.md`
+- `docs/research/retrieval-failure-mining-v0-report.md`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+
 ## 2026-08-01 — Normalize Duplicate Memory Tags Before Reader Scoring
 
 Status: Accepted

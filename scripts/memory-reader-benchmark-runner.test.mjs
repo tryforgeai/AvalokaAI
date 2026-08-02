@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   evaluateMemoryReaderCase,
+  loadMemoryReaderCases,
   runMemoryReaderBenchmark,
   validateMemoryReaderCases,
 } from "./memory-reader-benchmark-runner.mjs";
@@ -131,5 +132,23 @@ describe("runMemoryReaderBenchmark", () => {
     assert.equal(summary.failureTaxonomy.none, 2);
     assert(Number.isFinite(summary.aggregates.p50LatencyMs));
     assert(Number.isFinite(summary.aggregates.p95LatencyMs));
+  });
+});
+
+describe("memory reader fixture policy", () => {
+  it("grades avoid-response moves above generic helpful moves in risk-kind semantic cases", () => {
+    const cases = loadMemoryReaderCases();
+    const riskKindCases = ["reader_semantic_01", "reader_semantic_02"].map((id) => cases.find((testCase) => testCase.id === id));
+
+    assert(riskKindCases.every(Boolean));
+    for (const testCase of riskKindCases) {
+      const avoidMemory = testCase.careCard.memories.find((memory) => memory.kind === "avoid_response_move");
+      const helpfulMemory = testCase.careCard.memories.find((memory) => memory.kind === "helpful_response_move");
+
+      assert(avoidMemory, `${testCase.id} must include an avoid-response memory`);
+      assert(helpfulMemory, `${testCase.id} must include a helpful-response memory`);
+      assert.equal(testCase.relevance[avoidMemory.id], 2);
+      assert.equal(testCase.relevance[helpfulMemory.id], 1);
+    }
   });
 });

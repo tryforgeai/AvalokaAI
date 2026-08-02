@@ -1,11 +1,11 @@
 # Retrieval Failure Mining V0 Report
 
-Date: 2026-08-01 18:39 PDT
+Date: 2026-08-01 19:29 PDT
 Status: Active R1 research artifact
 
 ## Verdict
 
-Retrieval pressure was found. Investigate the listed cases before changing retrieval architecture.
+No current deterministic Memory Reader failure was found in the committed benchmark. Continue mining harder cases before adding embeddings or graph memory.
 
 ## Benchmark Command
 
@@ -22,7 +22,7 @@ failed: 0
 recall@3: 1.000
 recall@5: 1.000
 mrr: 0.875
-ndcg@5: 0.989
+ndcg@5: 0.999
 no-match precision: 1.000
 unsafe retrieval count: 0
 stale retrieval count: 0
@@ -48,7 +48,7 @@ superseded retrieval count: 0
 
 ## Pressure Signals
 
-- passed_cases_with_low_rank_quality: observed=2.000, cases=reader_semantic_01, reader_semantic_02
+No pressure signals found in the committed benchmark.
 
 ## Failure Cases
 
@@ -56,5 +56,6 @@ No failed cases in the committed benchmark.
 
 ## Recommendations
 
-- Do not add embeddings or graph memory yet; first classify the concrete retrieval failures and add targeted fixtures.
-- Inspect ranking traces before adding a reranker; current candidates may only need deterministic scoring adjustments.
+- Mine harder cases before changing retrieval architecture.
+- Do not add embeddings or graph memory yet; the committed benchmark does not show a deterministic-reader bottleneck.
+- Add adversarial paraphrase, hard-negative, temporal-conflict, and user-control cases next.
