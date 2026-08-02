@@ -225,6 +225,48 @@ describe("SAGE Lite memory core", () => {
     expect(facts.map((fact) => fact.id)).toEqual(["safety-self-blame", "avoid-self-blame", "tone-short"]);
   });
 
+  it("does not let duplicate memory tags inflate reader score", () => {
+    const card = {
+      version: "care_card_v1" as const,
+      createdAt: "2026-05-26T10:00:00.000Z",
+      updatedAt: "2026-05-26T10:05:00.000Z",
+      memories: [
+        {
+          id: "target-tone",
+          kind: "tone_preference" as const,
+          text: "Short, direct care is most helpful when tone is the only active signal.",
+          confidence: 0.88,
+          evidenceIds: ["feedback-target"],
+          tags: ["tone"],
+          createdAt: "2026-05-26T10:01:00.000Z",
+          updatedAt: "2026-05-26T10:01:00.000Z",
+          lastSeenAt: "2026-05-26T10:01:00.000Z",
+          occurrences: 2,
+        },
+        {
+          id: "duplicate-tone-secondary",
+          kind: "tone_preference" as const,
+          text: "A weaker tone note should not outrank just because tone appears twice.",
+          confidence: 0.72,
+          evidenceIds: ["feedback-secondary"],
+          tags: ["tone", "tone"],
+          createdAt: "2026-05-26T10:02:00.000Z",
+          updatedAt: "2026-05-26T10:02:00.000Z",
+          lastSeenAt: "2026-05-26T10:02:00.000Z",
+          occurrences: 2,
+        },
+      ],
+    };
+
+    const result = readCareFactsFromCardWithTrace(card, { tags: ["tone"] }, { now: "2026-05-26T10:10:00.000Z" });
+
+    expect(result.facts.map((fact) => fact.id)).toEqual(["target-tone", "duplicate-tone-secondary"]);
+    expect(result.trace.candidates.find((candidate) => candidate.memoryId === "duplicate-tone-secondary")).toMatchObject({
+      matchedTags: ["tone"],
+      score: 109.2,
+    });
+  });
+
   it("excludes stale and low-confidence care memories", () => {
     const card = {
       version: "care_card_v1" as const,

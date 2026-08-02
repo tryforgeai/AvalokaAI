@@ -1,6 +1,6 @@
 # Retrieval Failure Mining V0 Report
 
-Date: 2026-08-01 18:05 PDT
+Date: 2026-08-01 18:39 PDT
 Status: Active R1 research artifact
 
 ## Verdict
@@ -22,7 +22,7 @@ failed: 0
 recall@3: 1.000
 recall@5: 1.000
 mrr: 0.875
-ndcg@5: 0.979
+ndcg@5: 0.989
 no-match precision: 1.000
 unsafe retrieval count: 0
 stale retrieval count: 0
@@ -48,7 +48,7 @@ superseded retrieval count: 0
 
 ## Pressure Signals
 
-- passed_cases_with_low_rank_quality: observed=4.000, cases=reader_exact_03, reader_semantic_01, reader_semantic_02, reader_semantic_03
+- passed_cases_with_low_rank_quality: observed=2.000, cases=reader_semantic_01, reader_semantic_02
 
 ## Failure Cases
 

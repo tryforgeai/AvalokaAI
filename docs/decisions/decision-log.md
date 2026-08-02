@@ -4,6 +4,58 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Normalize Duplicate Memory Tags Before Reader Scoring
+
+Status: Accepted
+
+### Context
+
+Ranking Trace Inspection V0 found two low-rank-quality passing cases caused by
+duplicate tag score inflation: `reader_exact_03` and `reader_semantic_03`.
+In both cases, a weaker secondary memory contained duplicate `tone` tags. The
+deterministic reader counted both duplicates as independent tag overlap, which
+made repeated data look like stronger relevance.
+
+### Decision
+
+Normalize per-memory tags inside `readCareFactsFromCardWithTrace(...)` before
+matching, scoring, and emitting redacted retrieval traces.
+
+The reader now uses `unique(memory.tags)` for:
+
+- matched tag overlap;
+- relevance count;
+- score calculation;
+- trace `tags`;
+- trace `matchedTags`.
+
+It does not rewrite the stored Care Card memory object during read.
+
+### Rationale
+
+Duplicate tags are data noise, not stronger evidence. They should not increase
+retrieval score or make a lower-relevance memory outrank a better care fact.
+This is a deterministic hygiene fix, not a reason to add reranking, embeddings,
+vector storage, or graph memory.
+
+### Consequences
+
+- `reader_exact_03` and `reader_semantic_03` no longer show duplicate-tag ranking
+  pressure.
+- Reader benchmark remains `40/40` with zero unsafe, stale, deleted, or
+  superseded retrieval leaks.
+- Aggregate `ndcg@5` improves from `0.979` to `0.989`.
+- Remaining low-rank pressure is limited to risk-kind boost versus fixture
+  relevance policy in `reader_semantic_01` and `reader_semantic_02`.
+
+### Affected Docs
+
+- `docs/research/duplicate-tag-normalization-v0-report.md`
+- `docs/research/ranking-trace-inspection-v0-report.md`
+- `docs/research/retrieval-failure-mining-v0-report.md`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+
 ## 2026-08-01 — Add Ranking Trace Inspection V0 For Reader Pressure Cases
 
 Status: Accepted

@@ -214,7 +214,8 @@ export function readCareFactsFromCardWithTrace(
   const riskContext = activeTags.some((tag) => riskTags.has(tag));
 
   const candidates = card.memories.map((memory) => {
-    const matchedTags = memory.tags.filter((tag) => activeTagSet.has(tag));
+    const memoryTags = unique(memory.tags);
+    const matchedTags = memoryTags.filter((tag) => activeTagSet.has(tag));
     const relevance = matchedTags.length;
     const reasons: RetrievalTraceReason[] = [];
     const status = memory.status || "active";
@@ -235,7 +236,7 @@ export function readCareFactsFromCardWithTrace(
             : 0;
       const score = relevance * 100 + riskBoost + memory.confidence * 10 + Math.min(memory.occurrences, 5);
 
-    return { memory, matchedTags, reasons: unique(reasons) as RetrievalTraceReason[], score };
+    return { memory, memoryTags, matchedTags, reasons: unique(reasons) as RetrievalTraceReason[], score };
   });
 
   const eligible = activeTags.length === 0 || limit <= 0
@@ -249,7 +250,7 @@ export function readCareFactsFromCardWithTrace(
         .sort((a, b) => b.score - a.score || b.memory.updatedAt.localeCompare(a.memory.updatedAt));
   const selectedMemoryIds = eligible.slice(0, limit).map(({ memory }) => memory.id);
   const selectedMemoryIdSet = new Set(selectedMemoryIds);
-  const traceCandidates: RetrievalTraceCandidateV1[] = candidates.map(({ memory, matchedTags, reasons, score }) => {
+  const traceCandidates: RetrievalTraceCandidateV1[] = candidates.map(({ memory, memoryTags, matchedTags, reasons, score }) => {
     const selected = selectedMemoryIdSet.has(memory.id);
     const finalReasons = selected || reasons.some((reason) => reason !== "tag_overlap" && reason !== "risk_kind_boost")
       ? reasons
@@ -259,7 +260,7 @@ export function readCareFactsFromCardWithTrace(
       memoryId: memory.id,
       kind: memory.kind,
       status: memory.status || "active",
-      tags: memory.tags,
+      tags: memoryTags,
       matchedTags,
       score,
       decision: selected ? "selected" : "rejected",
