@@ -4,6 +4,57 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Add Ranking Trace Inspection V0 For Reader Pressure Cases
+
+Status: Accepted
+
+### Context
+
+Retrieval Failure Mining V0 found no failed deterministic Memory Reader cases and
+no unsafe, stale, deleted, or superseded retrieval leaks. It did find four
+passing cases with lower rank quality (`ndcg@5 = 0.797`), so the next step is to
+inspect trace evidence rather than add a reranker, embeddings, graph memory, or
+vector storage.
+
+### Decision
+
+Add Ranking Trace Inspection V0 as a lightweight analysis layer over the existing
+memory-reader benchmark trace output.
+
+The inspector reports:
+
+- low-NDCG passing cases;
+- retrieved order versus expected relevance grades;
+- top selected memory versus best expected memory;
+- matched tags, score, kind, and retrieval reasons;
+- root-cause classes for ranking pressure.
+
+### Rationale
+
+Trace evidence shows current ranking pressure is explainable without heavier
+retrieval architecture. Two cases are duplicate-tag score inflation, and two
+cases are risk-kind boost outranking fixture relevance. These are deterministic
+scoring/fixture questions, not evidence that semantic retrieval or graph memory
+is required.
+
+### Consequences
+
+- `npm run eval:memory:reader:ranking` becomes the diagnostic command for
+  ranking-pressure cases.
+- Duplicate memory tags should be normalized or fixture tags corrected before
+  changing the reader scoring model.
+- Risk-kind boost should be treated as a policy decision: either accept it and
+  update fixture relevance, or change deterministic scoring with a targeted RED
+  test.
+- Do not add reranking, embeddings, vector DB, or graph memory for the current
+  pressure signal.
+
+### Affected Docs
+
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+- `docs/research/ranking-trace-inspection-v0-report.md`
+
 ## 2026-08-01 — Add Retrieval Failure Mining V0 Before Heavier Memory Retrieval
 
 Status: Accepted

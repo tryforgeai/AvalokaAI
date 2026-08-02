@@ -48,6 +48,7 @@ The prior V0/V1 work remains useful because it supplies:
 - deterministic Memory Reader prototype
 - formal Memory Reader retrieval baseline with Recall@k, MRR, NDCG@k, no-match, privacy, stale-memory, and latency measures
 - Retrieval Failure Mining V0 over the deterministic Memory Reader benchmark before heavier graph/vector/reranker retrieval work
+- Ranking Trace Inspection V0 for low-rank-quality passing cases before changing reader scoring or fixture relevance
 - versioned, redacted retrieval traces for developer diagnosis
 - optional LLM Memory Writer shadow test
 - response injection with 3-5 care facts
@@ -85,6 +86,7 @@ R1 passes if:
 - retrieval can select relevant care facts for a future turn
 - the deterministic reader has a reproducible gold-set baseline and returns zero private, deleted, superseded, or stale memories
 - retrieval failure mining can report failed cases, pressure signals, group pass/fail counts, and conservative next-step recommendations before heavier retrieval architecture is proposed
+- ranking trace inspection can explain low-NDCG passing cases with trace evidence before reranking, embeddings, graph memory, or scoring changes are proposed
 - personal-memory and health/safety claims can be checked against permitted evidence without treating ordinary compassion as a factual claim
 - unsupported personal-memory claims cannot reach user-visible output without fallback or an approved rewrite policy
 - memory lifecycle decisions are reviewable in developer exports/diagnostics before any user-facing memory surface

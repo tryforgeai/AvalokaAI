@@ -16,6 +16,7 @@
     "eval:memory:claim-grounding": "node ../scripts/run-memory-claim-grounding.mjs",
     "eval:memory:reader": "node ../scripts/run-memory-reader-benchmark.mjs",
     "eval:memory:reader:failures": "node ../scripts/retrieval-failure-miner.mjs",
+    "eval:memory:reader:ranking": "node ../scripts/ranking-trace-inspector.mjs",
     "eval:sage": "vitest run src/lib/sageMemoryEndToEndEval.test.ts",
     "eval:sage:writer": "node ../scripts/run-sage-memory-writer-eval.mjs"
   },
