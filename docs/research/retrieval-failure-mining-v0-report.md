@@ -1,6 +1,6 @@
 # Retrieval Failure Mining V0 Report
 
-Date: 2026-08-01 19:34 PDT
+Date: 2026-08-01 20:08 PDT
 Status: Active R1 research artifact
 
 ## Verdict
@@ -60,6 +60,6 @@ No failed cases in the committed benchmark.
 
 ## Recommendations
 
-- Keep the committed benchmark as the green regression gate.
-- Use the separate cross-lingual / no-tag probe to evaluate measured recall gaps without breaking the committed gate.
-- Do not add production embeddings or graph memory yet; first run a bounded embedding recall spike against the measured probe failures.
+- Keep the committed benchmark as the normal-mode regression gate.
+- Keep the separate semantic recall probe and guard benchmarks as non-gating spike evidence.
+- Do not promote semantic recall to production retrieval until broader lifecycle stress cases are green.

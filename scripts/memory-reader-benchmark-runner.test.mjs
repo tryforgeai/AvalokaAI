@@ -212,4 +212,21 @@ describe("memory reader fixture policy", () => {
     assert.equal(spike.aggregates.deletedRetrievalCount, 0);
     assert.equal(spike.aggregates.supersededRetrievalCount, 0);
   });
+
+  it("guards semantic recall false positives and keeps highest-relevance candidates ranked first", () => {
+    const guardCases = loadMemoryReaderCases(new URL("../evals/memory-reader-semantic-recall-guard-cases.json", import.meta.url));
+    const summary = runMemoryReaderBenchmark({ cases: guardCases, readerOptions: { semanticRecall: true } });
+
+    assert.equal(summary.passed, summary.total, `semantic recall guard failures: ${summary.failed}/${summary.total}`);
+    assert.equal(summary.aggregates.noMatchPrecision, 1);
+    assert.equal(summary.aggregates.unsafeRetrievalCount, 0);
+    assert.equal(summary.aggregates.staleRetrievalCount, 0);
+    assert.equal(summary.aggregates.deletedRetrievalCount, 0);
+    assert.equal(summary.aggregates.supersededRetrievalCount, 0);
+
+    for (const result of summary.results.filter((testCase) => testCase.group === "semantic_recall_reranking")) {
+      const expectedFirst = Object.entries(result.observed.expectedRelevance).find(([, grade]) => grade === 2)?.[0];
+      assert.equal(result.observed.retrievedIds[0], expectedFirst, `${result.id} should rank the highest-relevance memory first`);
+    }
+  });
 });

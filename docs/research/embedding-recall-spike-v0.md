@@ -144,15 +144,20 @@ It does not prove that a production embedding system is safe. Before shipping an
 
 ## Next Step
 
-Recommended next slice:
+The recommended follow-up slice was completed:
 
 ```text
 Semantic Recall False-Positive Guard V0
 ```
 
-Acceptance bar:
+It added a separate guard benchmark for false-positive no-match cases, lifecycle filtering, and highest-weight-first reranking.
 
-- committed benchmark remains `48/48`;
-- probe remains `6/6` with semantic recall enabled;
-- add no-match / hard-negative untagged cases that should stay unretrieved;
-- verify semantic recall does not retrieve stale, deleted, superseded, or missing-evidence memories.
+Results:
+
+```text
+guard benchmark: 6/6 passed
+no-match precision: 1.000
+cross-lingual no-tag probe with semanticRecall: 6/6 passed
+```
+
+Production semantic retrieval is still not promoted. The next risk is broader lifecycle stress across deleted, superseded, low-confidence, and missing-evidence semantic matches.

@@ -54,6 +54,7 @@ The prior V0/V1 work remains useful because it supplies:
 - harder retrieval fixture expansion for adversarial paraphrase, surface-overlap hard negatives, temporal conflicts, and user-control lifecycle cases
 - separate cross-lingual / no-tag recall-gap probe showing measured deterministic misses before embedding work
 - gated semantic recall spike, off by default, proving no-tag probe recovery without committing to production embeddings or vector DB
+- semantic recall false-positive and reranking guard fixtures proving no-match precision and highest-weight-first ordering under the semantic spike
 - versioned, redacted retrieval traces for developer diagnosis
 - optional LLM Memory Writer shadow test
 - response injection with 3-5 care facts
@@ -97,6 +98,7 @@ R1 passes if:
 - the deterministic Memory Reader benchmark includes at least 48 cases and harder fixture classes before heavier retrieval architecture is proposed
 - the cross-lingual / no-tag probe remains separate from the committed benchmark gate and records current `1/6` probe recall as evidence for a bounded embedding recall spike
 - semantic recall spike mode improves the no-tag probe from `1/6` to `6/6` while the committed benchmark remains `48/48`
+- semantic recall guard benchmark passes `6/6`, keeps no-match precision at `1.000`, and asserts grade-2/highest-weight memories rank first
 - personal-memory and health/safety claims can be checked against permitted evidence without treating ordinary compassion as a factual claim
 - unsupported personal-memory claims cannot reach user-visible output without fallback or an approved rewrite policy
 - memory lifecycle decisions are reviewable in developer exports/diagnostics before any user-facing memory surface

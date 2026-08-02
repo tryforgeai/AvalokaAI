@@ -1,0 +1,346 @@
+[
+  {
+    "id": "reader_semantic_guard_no_match_01",
+    "group": "semantic_recall_false_positive",
+    "description": "Repository scanning and CI worst-case language must not retrieve illness-fear care memory.",
+    "now": "2026-08-01T19:55:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "I need to scan the repository before standup; worst case the CI cache is slow.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "userId": "reader-semantic-guard-user",
+      "memories": [
+        {
+          "id": "reader_semantic_guard_no_match_01_illness",
+          "kind": "helpful_response_move",
+          "text": "When health results are pending, avoid certainty and steady the fear.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.9,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader-semantic-guard-no-match-01-illness-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        },
+        {
+          "id": "reader_semantic_guard_no_match_01_work",
+          "kind": "tone_preference",
+          "text": "For ordinary build stress, keep the answer practical and brief.",
+          "status": "active",
+          "tags": [
+            "work_stress"
+          ],
+          "confidence": 0.9,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader-semantic-guard-no-match-01-work-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_guard_no_match_01_illness"
+    ]
+  },
+  {
+    "id": "reader_semantic_guard_no_match_02",
+    "group": "semantic_recall_false_positive",
+    "description": "Retiring a flaky test must not retrieve role-loss care memory.",
+    "now": "2026-08-01T19:55:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "We retired the flaky test after it stopped being useful; nothing emotional here.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "userId": "reader-semantic-guard-user",
+      "memories": [
+        {
+          "id": "reader_semantic_guard_no_match_02_role",
+          "kind": "recurring_pain_pattern",
+          "text": "Retirement can trigger a feeling of having no role or place.",
+          "status": "active",
+          "tags": [
+            "role_loss"
+          ],
+          "confidence": 0.9,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader-semantic-guard-no-match-02-role-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        },
+        {
+          "id": "reader_semantic_guard_no_match_02_work",
+          "kind": "helpful_response_move",
+          "text": "Treat flaky-test cleanup as routine engineering work.",
+          "status": "active",
+          "tags": [
+            "work_stress"
+          ],
+          "confidence": 0.9,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader-semantic-guard-no-match-02-work-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_guard_no_match_02_role"
+    ]
+  },
+  {
+    "id": "reader_semantic_guard_no_match_03",
+    "group": "semantic_recall_false_positive",
+    "description": "A mathematical proof phrase must not retrieve self-blame care memory.",
+    "now": "2026-08-01T19:55:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "The proof that I did something wrong is just in the failed calculation; help me debug the algebra.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "userId": "reader-semantic-guard-user",
+      "memories": [
+        {
+          "id": "reader_semantic_guard_no_match_03_blame",
+          "kind": "safety_note",
+          "text": "When the user frames pain as deserved punishment, reject the punishment frame.",
+          "status": "active",
+          "tags": [
+            "self_blame"
+          ],
+          "confidence": 0.9,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader-semantic-guard-no-match-03-blame-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        },
+        {
+          "id": "reader_semantic_guard_no_match_03_work",
+          "kind": "helpful_response_move",
+          "text": "For debugging, isolate assumptions and check the calculation step by step.",
+          "status": "active",
+          "tags": [
+            "work_stress"
+          ],
+          "confidence": 0.9,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader-semantic-guard-no-match-03-work-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_guard_no_match_03_blame"
+    ]
+  },
+  {
+    "id": "reader_semantic_guard_lifecycle_01",
+    "group": "semantic_recall_lifecycle_guard",
+    "description": "Semantic recall must not retrieve a stale illness-fear memory even when the untagged text matches.",
+    "now": "2026-08-01T19:55:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "The lab result is pending and I am spiraling into worst-case scenarios.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "userId": "reader-semantic-guard-user",
+      "memories": [
+        {
+          "id": "reader_semantic_guard_lifecycle_01_stale",
+          "kind": "helpful_response_move",
+          "text": "Old illness-fear note that should now be stale.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.94,
+          "occurrences": 4,
+          "evidenceIds": [
+            "reader-semantic-guard-lifecycle-01-stale-evidence"
+          ],
+          "createdAt": "2025-01-01T00:00:00.000Z",
+          "updatedAt": "2025-01-01T00:00:00.000Z",
+          "lastSeenAt": "2025-01-01T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_guard_lifecycle_01_stale"
+    ]
+  },
+  {
+    "id": "reader_semantic_guard_rerank_01",
+    "group": "semantic_recall_reranking",
+    "description": "When semantic recall matches role_loss and self_worth, the memory with both tags should rank before weaker single-tag memories.",
+    "now": "2026-08-01T19:55:00.000Z",
+    "expectedNoMatch": false,
+    "readerContext": {
+      "userText": "After retirement I stopped being needed, and I am not sure I matter at all.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "userId": "reader-semantic-guard-user",
+      "memories": [
+        {
+          "id": "reader_semantic_guard_rerank_01_target",
+          "kind": "helpful_response_move",
+          "text": "Hold both truths: losing a role hurts, and whole-person worth is not erased.",
+          "status": "active",
+          "tags": [
+            "role_loss",
+            "self_worth"
+          ],
+          "confidence": 0.86,
+          "occurrences": 1,
+          "evidenceIds": [
+            "reader-semantic-guard-rerank-01-target-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        },
+        {
+          "id": "reader_semantic_guard_rerank_01_single_worth",
+          "kind": "tone_preference",
+          "text": "Use a warm tone when self-worth is fragile.",
+          "status": "active",
+          "tags": [
+            "self_worth"
+          ],
+          "confidence": 0.99,
+          "occurrences": 5,
+          "evidenceIds": [
+            "reader-semantic-guard-rerank-01-single-worth-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        },
+        {
+          "id": "reader_semantic_guard_rerank_01_single_role",
+          "kind": "recurring_pain_pattern",
+          "text": "Role loss can surface after retirement.",
+          "status": "active",
+          "tags": [
+            "role_loss"
+          ],
+          "confidence": 0.97,
+          "occurrences": 5,
+          "evidenceIds": [
+            "reader-semantic-guard-rerank-01-single-role-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {
+      "reader_semantic_guard_rerank_01_target": 2,
+      "reader_semantic_guard_rerank_01_single_worth": 1,
+      "reader_semantic_guard_rerank_01_single_role": 1
+    }
+  },
+  {
+    "id": "reader_semantic_guard_rerank_02",
+    "group": "semantic_recall_reranking",
+    "description": "Risk-sensitive semantic recall should rank the self-blame safety note ahead of a generic illness-fear response.",
+    "now": "2026-08-01T19:55:00.000Z",
+    "expectedNoMatch": false,
+    "readerContext": {
+      "userText": "The scan is pending, I keep imagining the worst case, and part of me thinks I deserve this pain.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "userId": "reader-semantic-guard-user",
+      "memories": [
+        {
+          "id": "reader_semantic_guard_rerank_02_target",
+          "kind": "safety_note",
+          "text": "Do not validate deserved-pain framing; separate pain from punishment.",
+          "status": "active",
+          "tags": [
+            "self_blame"
+          ],
+          "confidence": 0.9,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader-semantic-guard-rerank-02-target-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        },
+        {
+          "id": "reader_semantic_guard_rerank_02_illness",
+          "kind": "helpful_response_move",
+          "text": "Health uncertainty needs calm pacing and no false certainty.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.99,
+          "occurrences": 5,
+          "evidenceIds": [
+            "reader-semantic-guard-rerank-02-illness-evidence"
+          ],
+          "createdAt": "2026-08-01T19:55:00.000Z",
+          "updatedAt": "2026-08-01T19:55:00.000Z",
+          "lastSeenAt": "2026-08-01T19:55:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {
+      "reader_semantic_guard_rerank_02_target": 2,
+      "reader_semantic_guard_rerank_02_illness": 1
+    }
+  }
+]

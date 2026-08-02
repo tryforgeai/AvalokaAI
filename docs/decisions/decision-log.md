@@ -4,6 +4,47 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-01 — Guard Semantic Recall Against False Positives and Low-Weight Ranking
+
+Status: Accepted
+
+### Context
+
+Embedding Recall Spike V0 recovered the cross-lingual / no-tag probe from `1/6`
+to `6/6`, but that only proved recall. It did not prove semantic recall would avoid
+surface-word false positives or keep the highest-relevance memory first.
+
+### Decision
+
+Add a separate semantic recall guard fixture file and regression test for:
+
+- false-positive no-match cases involving engineering/math uses of words such as
+  `scan`, `worst case`, `retired`, and `did something wrong`;
+- lifecycle filtering for semantic matches;
+- reranking evidence that grade-2 / higher-weight semantic memories rank before
+  weaker grade-1 candidates.
+
+Tighten semantic recall rules with contextual illness patterns and domain blockers
+for engineering/math phrases. Keep semantic recall gated behind `semanticRecall`.
+
+### Consequences
+
+- Guard benchmark passes `6/6` with semantic recall enabled.
+- No-match precision remains `1.000` in the guard benchmark.
+- Cross-lingual / no-tag probe remains `6/6` with semantic recall enabled.
+- The ranking policy remains explicit and auditable:
+  `relevance * 100 + riskBoost + confidence * 10 + min(occurrences, 5)`.
+- Production semantic retrieval remains deferred until broader lifecycle stress cases
+  are added.
+
+### Affected Docs
+
+- `docs/research/semantic-recall-false-positive-guard-v0.md`
+- `docs/research/semantic-recall-false-positive-guard-v0-summary.json`
+- `docs/research/embedding-recall-spike-v0.md`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+
 ## 2026-08-01 — Add Gated Semantic Recall Spike for No-Tag Retrieval Gaps
 
 Status: Accepted

@@ -155,7 +155,9 @@ const semanticRecallTagRules: Array<{ tag: string; patterns: RegExp[] }> = [
   {
     tag: "illness_fear",
     patterns: [
-      /\b(lab result|test result|scan|medical result|biopsy|pending result|worst-case|worst case|seriously wrong|spiraling)\b/i,
+      /\b(lab result|test result|medical result|biopsy|pending result)\b.*\b(worst-case|worst case|seriously wrong|spiraling)\b/i,
+      /\b(worst-case|worst case|seriously wrong|spiraling)\b.*\b(lab result|test result|medical result|biopsy|pending result)\b/i,
+      /\bscan\b.*\b(pending|result|doctor|medical|biopsy|health|seriously wrong)\b/i,
     ],
   },
   {
@@ -171,6 +173,12 @@ const semanticRecallTagRules: Array<{ tag: string; patterns: RegExp[] }> = [
     patterns: [/\b(stopped mattering|matter at all|worth|whole-person worth)\b/i, /没用了|沒用了|不再有价值|不重要/],
   },
 ];
+
+const semanticRecallBlockers: Record<string, RegExp[]> = {
+  self_blame: [/\b(calculation|algebra|debug|debugging)\b/i],
+  role_loss: [/\b(flaky test|unit test|repository|code|ci cache)\b/i],
+  self_worth: [/\b(flaky test|unit test|repository|code|ci cache)\b/i],
+};
 
 function expandScenarioTags(scenarioId: string): string[] {
   const tags = [scenarioId, ...(scenarioTagAliases[scenarioId] || [])];
@@ -207,6 +215,7 @@ function deriveTextTags(userText: string): string[] {
 function deriveSemanticRecallTags(userText: string): string[] {
   return semanticRecallTagRules
     .filter((rule) => rule.patterns.some((pattern) => pattern.test(userText)))
+    .filter((rule) => !(semanticRecallBlockers[rule.tag] || []).some((pattern) => pattern.test(userText)))
     .map((rule) => rule.tag);
 }
 

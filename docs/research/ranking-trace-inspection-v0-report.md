@@ -1,6 +1,6 @@
 # Ranking Trace Inspection V0 Report
 
-Date: 2026-08-01 19:34 PDT
+Date: 2026-08-01 20:08 PDT
 Status: Active R1 research artifact
 
 ## Verdict
@@ -31,5 +31,6 @@ No low-rank-quality passed cases found.
 
 ## Recommendations
 
-- Mine harder ranking fixtures before changing retrieval architecture.
-- Do not add reranking, embeddings, or graph memory without a concrete low-rank or missed-recall failure class.
+- Keep the committed benchmark as the normal-mode ranking gate.
+- Keep the separate semantic recall guard benchmark as the highest-weight-first reranking gate for semantic recall.
+- Do not introduce a production reranker until guard fixtures expose a ranking failure that the current transparent score cannot explain.

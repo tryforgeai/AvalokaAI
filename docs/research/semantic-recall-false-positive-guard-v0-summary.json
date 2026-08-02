@@ -6,15 +6,15 @@
   "aggregates": {
     "recallAt3": 1,
     "recallAt5": 1,
-    "mrr": 1,
+    "mrr": 0.3333333333333333,
     "ndcgAt5": 1,
     "noMatchPrecision": 1,
     "unsafeRetrievalCount": 0,
     "staleRetrievalCount": 0,
     "deletedRetrievalCount": 0,
     "supersededRetrievalCount": 0,
-    "p50LatencyMs": 0.13566699999999798,
-    "p95LatencyMs": 0.788125000000008
+    "p50LatencyMs": 0.06737499999999841,
+    "p95LatencyMs": 0.7352910000000037
   },
   "failureTaxonomy": {
     "none": 6,
@@ -29,50 +29,48 @@
   },
   "results": [
     {
-      "id": "reader_probe_cross_no_tag_01",
-      "group": "cross_lingual_no_tag",
+      "id": "reader_semantic_guard_no_match_01",
+      "group": "semantic_recall_false_positive",
       "verdict": "passed",
       "failureReason": "none",
       "checks": [],
       "metrics": {
-        "precisionAt3": 1,
-        "precisionAt5": 1,
+        "precisionAt3": 0,
+        "precisionAt5": 0,
         "recallAt3": 1,
         "recallAt5": 1,
-        "reciprocalRank": 1,
+        "reciprocalRank": 0,
         "ndcgAt5": 1,
-        "noMatchCorrect": false,
+        "noMatchCorrect": true,
         "unsafeRetrievalCount": 0,
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.788125000000008
+        "latencyMs": 0.7352910000000037
       },
       "observed": {
-        "retrievedIds": [
-          "reader_probe_cross_no_tag_01_target"
-        ],
-        "expectedRelevance": {
-          "reader_probe_cross_no_tag_01_target": 2
-        }
+        "retrievedIds": [],
+        "expectedRelevance": {}
       },
       "trace": {
         "version": "retrieval_trace_v1",
         "readerVersion": "deterministic_memory_reader_v0",
         "policyVersion": "retrieval_policy_v1",
-        "inputHash": "ed2df4bc34ac0deced2df4bc34ac0deced2df4bc34ac0deced2df4bc34ac0dec",
-        "activeTags": [
-          "illness_fear"
-        ],
+        "inputHash": "60c2a860691859c360c2a860691859c360c2a860691859c360c2a860691859c3",
+        "activeTags": [],
         "requestedLimit": 5,
         "minConfidence": 0.5,
         "staleAfterDays": 180,
-        "selectedMemoryIds": [
-          "reader_probe_cross_no_tag_01_target"
-        ],
+        "selectedMemoryIds": [],
         "rejected": [
           {
-            "memoryId": "reader_probe_cross_no_tag_01_distractor",
+            "memoryId": "reader_semantic_guard_no_match_01_illness",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_guard_no_match_01_work",
             "reasons": [
               "no_tag_overlap"
             ]
@@ -80,42 +78,269 @@
         ],
         "candidates": [
           {
-            "memoryId": "reader_probe_cross_no_tag_01_target",
+            "memoryId": "reader_semantic_guard_no_match_01_illness",
             "kind": "helpful_response_move",
             "status": "active",
             "tags": [
               "illness_fear"
             ],
-            "matchedTags": [
-              "illness_fear"
-            ],
-            "score": 110.7,
-            "decision": "selected",
+            "matchedTags": [],
+            "score": 11,
+            "decision": "rejected",
             "reasons": [
-              "tag_overlap"
+              "no_tag_overlap"
             ]
           },
           {
-            "memoryId": "reader_probe_cross_no_tag_01_distractor",
-            "kind": "helpful_response_move",
+            "memoryId": "reader_semantic_guard_no_match_01_work",
+            "kind": "tone_preference",
             "status": "active",
             "tags": [
               "work_stress"
             ],
             "matchedTags": [],
-            "score": 12.1,
+            "score": 11,
             "decision": "rejected",
             "reasons": [
               "no_tag_overlap"
             ]
           }
         ],
-        "latencyMs": 0.7135829999999999
+        "latencyMs": 0.6577910000000031
       }
     },
     {
-      "id": "reader_probe_cross_no_tag_02",
-      "group": "cross_lingual_no_tag",
+      "id": "reader_semantic_guard_no_match_02",
+      "group": "semantic_recall_false_positive",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.4040409999999923
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "fc1d208802d3aff0fc1d208802d3aff0fc1d208802d3aff0fc1d208802d3aff0",
+        "activeTags": [],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_guard_no_match_02_role",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_guard_no_match_02_work",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_guard_no_match_02_role",
+            "kind": "recurring_pain_pattern",
+            "status": "active",
+            "tags": [
+              "role_loss"
+            ],
+            "matchedTags": [],
+            "score": 11,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_guard_no_match_02_work",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "work_stress"
+            ],
+            "matchedTags": [],
+            "score": 11,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.40141699999999503
+      }
+    },
+    {
+      "id": "reader_semantic_guard_no_match_03",
+      "group": "semantic_recall_false_positive",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.06737499999999841
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "bf08208fad8cea98bf08208fad8cea98bf08208fad8cea98bf08208fad8cea98",
+        "activeTags": [],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_guard_no_match_03_blame",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_guard_no_match_03_work",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_guard_no_match_03_blame",
+            "kind": "safety_note",
+            "status": "active",
+            "tags": [
+              "self_blame"
+            ],
+            "matchedTags": [],
+            "score": 11,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_guard_no_match_03_work",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "work_stress"
+            ],
+            "matchedTags": [],
+            "score": 11,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.06541700000001072
+      }
+    },
+    {
+      "id": "reader_semantic_guard_lifecycle_01",
+      "group": "semantic_recall_lifecycle_guard",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.049915999999996075
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "5dcb7e2af0baffd45dcb7e2af0baffd45dcb7e2af0baffd45dcb7e2af0baffd4",
+        "activeTags": [
+          "illness_fear"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_guard_lifecycle_01_stale",
+            "reasons": [
+              "semantic_recall",
+              "stale"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_guard_lifecycle_01_stale",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [
+              "illness_fear"
+            ],
+            "score": 113.4,
+            "decision": "rejected",
+            "reasons": [
+              "semantic_recall",
+              "stale"
+            ]
+          }
+        ],
+        "latencyMs": 0.0480840000000029
+      }
+    },
+    {
+      "id": "reader_semantic_guard_rerank_01",
+      "group": "semantic_recall_reranking",
       "verdict": "passed",
       "failureReason": "none",
       "checks": [],
@@ -131,163 +356,96 @@
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.23358399999999335
+        "latencyMs": 0.1696669999999898
       },
       "observed": {
         "retrievedIds": [
-          "reader_probe_cross_no_tag_02_target"
+          "reader_semantic_guard_rerank_01_target",
+          "reader_semantic_guard_rerank_01_single_worth",
+          "reader_semantic_guard_rerank_01_single_role"
         ],
         "expectedRelevance": {
-          "reader_probe_cross_no_tag_02_target": 2
+          "reader_semantic_guard_rerank_01_target": 2,
+          "reader_semantic_guard_rerank_01_single_worth": 1,
+          "reader_semantic_guard_rerank_01_single_role": 1
         }
       },
       "trace": {
         "version": "retrieval_trace_v1",
         "readerVersion": "deterministic_memory_reader_v0",
         "policyVersion": "retrieval_policy_v1",
-        "inputHash": "a30111e9683c1064a30111e9683c1064a30111e9683c1064a30111e9683c1064",
+        "inputHash": "5c6da273f058d5bb5c6da273f058d5bb5c6da273f058d5bb5c6da273f058d5bb",
         "activeTags": [
-          "illness_fear"
+          "role_loss",
+          "self_worth"
         ],
         "requestedLimit": 5,
         "minConfidence": 0.5,
         "staleAfterDays": 180,
         "selectedMemoryIds": [
-          "reader_probe_cross_no_tag_02_target"
+          "reader_semantic_guard_rerank_01_target",
+          "reader_semantic_guard_rerank_01_single_worth",
+          "reader_semantic_guard_rerank_01_single_role"
         ],
-        "rejected": [
-          {
-            "memoryId": "reader_probe_cross_no_tag_02_distractor",
-            "reasons": [
-              "no_tag_overlap"
-            ]
-          }
-        ],
+        "rejected": [],
         "candidates": [
           {
-            "memoryId": "reader_probe_cross_no_tag_02_target",
+            "memoryId": "reader_semantic_guard_rerank_01_target",
             "kind": "helpful_response_move",
             "status": "active",
             "tags": [
-              "illness_fear"
+              "role_loss",
+              "self_worth"
             ],
             "matchedTags": [
-              "illness_fear"
+              "role_loss",
+              "self_worth"
             ],
-            "score": 110.8,
+            "score": 209.6,
             "decision": "selected",
             "reasons": [
               "semantic_recall"
             ]
           },
           {
-            "memoryId": "reader_probe_cross_no_tag_02_distractor",
+            "memoryId": "reader_semantic_guard_rerank_01_single_worth",
             "kind": "tone_preference",
             "status": "active",
             "tags": [
-              "work_stress",
-              "tone"
-            ],
-            "matchedTags": [],
-            "score": 9.8,
-            "decision": "rejected",
-            "reasons": [
-              "no_tag_overlap"
-            ]
-          }
-        ],
-        "latencyMs": 0.23129199999999628
-      }
-    },
-    {
-      "id": "reader_probe_cross_no_tag_03",
-      "group": "cross_lingual_no_tag",
-      "verdict": "passed",
-      "failureReason": "none",
-      "checks": [],
-      "metrics": {
-        "precisionAt3": 1,
-        "precisionAt5": 1,
-        "recallAt3": 1,
-        "recallAt5": 1,
-        "reciprocalRank": 1,
-        "ndcgAt5": 1,
-        "noMatchCorrect": false,
-        "unsafeRetrievalCount": 0,
-        "staleRetrievalCount": 0,
-        "deletedRetrievalCount": 0,
-        "supersededRetrievalCount": 0,
-        "latencyMs": 0.13566699999999798
-      },
-      "observed": {
-        "retrievedIds": [
-          "reader_probe_cross_no_tag_03_target"
-        ],
-        "expectedRelevance": {
-          "reader_probe_cross_no_tag_03_target": 2
-        }
-      },
-      "trace": {
-        "version": "retrieval_trace_v1",
-        "readerVersion": "deterministic_memory_reader_v0",
-        "policyVersion": "retrieval_policy_v1",
-        "inputHash": "68a2282256fee50468a2282256fee50468a2282256fee50468a2282256fee504",
-        "activeTags": [
-          "illness_fear"
-        ],
-        "requestedLimit": 5,
-        "minConfidence": 0.5,
-        "staleAfterDays": 180,
-        "selectedMemoryIds": [
-          "reader_probe_cross_no_tag_03_target"
-        ],
-        "rejected": [
-          {
-            "memoryId": "reader_probe_cross_no_tag_03_distractor",
-            "reasons": [
-              "no_tag_overlap"
-            ]
-          }
-        ],
-        "candidates": [
-          {
-            "memoryId": "reader_probe_cross_no_tag_03_target",
-            "kind": "avoid_response_move",
-            "status": "active",
-            "tags": [
-              "illness_fear"
+              "self_worth"
             ],
             "matchedTags": [
-              "illness_fear"
+              "self_worth"
             ],
-            "score": 230.6,
+            "score": 114.9,
             "decision": "selected",
             "reasons": [
-              "semantic_recall",
-              "risk_kind_boost"
+              "semantic_recall"
             ]
           },
           {
-            "memoryId": "reader_probe_cross_no_tag_03_distractor",
-            "kind": "helpful_response_move",
+            "memoryId": "reader_semantic_guard_rerank_01_single_role",
+            "kind": "recurring_pain_pattern",
             "status": "active",
             "tags": [
-              "work_stress"
+              "role_loss"
             ],
-            "matchedTags": [],
-            "score": 12,
-            "decision": "rejected",
+            "matchedTags": [
+              "role_loss"
+            ],
+            "score": 114.7,
+            "decision": "selected",
             "reasons": [
-              "no_tag_overlap"
+              "semantic_recall"
             ]
           }
         ],
-        "latencyMs": 0.13383299999999565
+        "latencyMs": 0.13800000000000523
       }
     },
     {
-      "id": "reader_probe_implicit_no_tag_01",
-      "group": "implicit_no_tag",
+      "id": "reader_semantic_guard_rerank_02",
+      "group": "semantic_recall_reranking",
       "verdict": "passed",
       "failureReason": "none",
       "checks": [],
@@ -303,41 +461,38 @@
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.0594159999999988
+        "latencyMs": 0.05108299999999133
       },
       "observed": {
         "retrievedIds": [
-          "reader_probe_implicit_no_tag_01_target"
+          "reader_semantic_guard_rerank_02_target",
+          "reader_semantic_guard_rerank_02_illness"
         ],
         "expectedRelevance": {
-          "reader_probe_implicit_no_tag_01_target": 2
+          "reader_semantic_guard_rerank_02_target": 2,
+          "reader_semantic_guard_rerank_02_illness": 1
         }
       },
       "trace": {
         "version": "retrieval_trace_v1",
         "readerVersion": "deterministic_memory_reader_v0",
         "policyVersion": "retrieval_policy_v1",
-        "inputHash": "32306ee87e46829e32306ee87e46829e32306ee87e46829e32306ee87e46829e",
+        "inputHash": "4a2d8e5dc80f25674a2d8e5dc80f25674a2d8e5dc80f25674a2d8e5dc80f2567",
         "activeTags": [
+          "illness_fear",
           "self_blame"
         ],
         "requestedLimit": 5,
         "minConfidence": 0.5,
         "staleAfterDays": 180,
         "selectedMemoryIds": [
-          "reader_probe_implicit_no_tag_01_target"
+          "reader_semantic_guard_rerank_02_target",
+          "reader_semantic_guard_rerank_02_illness"
         ],
-        "rejected": [
-          {
-            "memoryId": "reader_probe_implicit_no_tag_01_distractor",
-            "reasons": [
-              "no_tag_overlap"
-            ]
-          }
-        ],
+        "rejected": [],
         "candidates": [
           {
-            "memoryId": "reader_probe_implicit_no_tag_01_target",
+            "memoryId": "reader_semantic_guard_rerank_02_target",
             "kind": "safety_note",
             "status": "active",
             "tags": [
@@ -354,197 +509,23 @@
             ]
           },
           {
-            "memoryId": "reader_probe_implicit_no_tag_01_distractor",
-            "kind": "helpful_response_move",
-            "status": "active",
-            "tags": [
-              "role_loss",
-              "self_worth"
-            ],
-            "matchedTags": [],
-            "score": 10.6,
-            "decision": "rejected",
-            "reasons": [
-              "no_tag_overlap"
-            ]
-          }
-        ],
-        "latencyMs": 0.05791700000000333
-      }
-    },
-    {
-      "id": "reader_probe_implicit_no_tag_02",
-      "group": "implicit_no_tag",
-      "verdict": "passed",
-      "failureReason": "none",
-      "checks": [],
-      "metrics": {
-        "precisionAt3": 1,
-        "precisionAt5": 1,
-        "recallAt3": 1,
-        "recallAt5": 1,
-        "reciprocalRank": 1,
-        "ndcgAt5": 1,
-        "noMatchCorrect": false,
-        "unsafeRetrievalCount": 0,
-        "staleRetrievalCount": 0,
-        "deletedRetrievalCount": 0,
-        "supersededRetrievalCount": 0,
-        "latencyMs": 0.4849579999999918
-      },
-      "observed": {
-        "retrievedIds": [
-          "reader_probe_implicit_no_tag_02_target"
-        ],
-        "expectedRelevance": {
-          "reader_probe_implicit_no_tag_02_target": 2
-        }
-      },
-      "trace": {
-        "version": "retrieval_trace_v1",
-        "readerVersion": "deterministic_memory_reader_v0",
-        "policyVersion": "retrieval_policy_v1",
-        "inputHash": "3d8d8fc164e969163d8d8fc164e969163d8d8fc164e969163d8d8fc164e96916",
-        "activeTags": [
-          "role_loss",
-          "self_worth"
-        ],
-        "requestedLimit": 5,
-        "minConfidence": 0.5,
-        "staleAfterDays": 180,
-        "selectedMemoryIds": [
-          "reader_probe_implicit_no_tag_02_target"
-        ],
-        "rejected": [
-          {
-            "memoryId": "reader_probe_implicit_no_tag_02_distractor",
-            "reasons": [
-              "no_tag_overlap"
-            ]
-          }
-        ],
-        "candidates": [
-          {
-            "memoryId": "reader_probe_implicit_no_tag_02_target",
-            "kind": "recurring_pain_pattern",
-            "status": "active",
-            "tags": [
-              "role_loss"
-            ],
-            "matchedTags": [
-              "role_loss"
-            ],
-            "score": 110.7,
-            "decision": "selected",
-            "reasons": [
-              "semantic_recall"
-            ]
-          },
-          {
-            "memoryId": "reader_probe_implicit_no_tag_02_distractor",
+            "memoryId": "reader_semantic_guard_rerank_02_illness",
             "kind": "helpful_response_move",
             "status": "active",
             "tags": [
               "illness_fear"
             ],
-            "matchedTags": [],
-            "score": 11,
-            "decision": "rejected",
-            "reasons": [
-              "no_tag_overlap"
-            ]
-          }
-        ],
-        "latencyMs": 0.4827499999999958
-      }
-    },
-    {
-      "id": "reader_probe_implicit_no_tag_03",
-      "group": "implicit_no_tag",
-      "verdict": "passed",
-      "failureReason": "none",
-      "checks": [],
-      "metrics": {
-        "precisionAt3": 1,
-        "precisionAt5": 1,
-        "recallAt3": 1,
-        "recallAt5": 1,
-        "reciprocalRank": 1,
-        "ndcgAt5": 1,
-        "noMatchCorrect": false,
-        "unsafeRetrievalCount": 0,
-        "staleRetrievalCount": 0,
-        "deletedRetrievalCount": 0,
-        "supersededRetrievalCount": 0,
-        "latencyMs": 0.053832999999997355
-      },
-      "observed": {
-        "retrievedIds": [
-          "reader_probe_implicit_no_tag_03_target"
-        ],
-        "expectedRelevance": {
-          "reader_probe_implicit_no_tag_03_target": 2
-        }
-      },
-      "trace": {
-        "version": "retrieval_trace_v1",
-        "readerVersion": "deterministic_memory_reader_v0",
-        "policyVersion": "retrieval_policy_v1",
-        "inputHash": "747c00da7e5a9af8747c00da7e5a9af8747c00da7e5a9af8747c00da7e5a9af8",
-        "activeTags": [
-          "role_loss",
-          "self_worth"
-        ],
-        "requestedLimit": 5,
-        "minConfidence": 0.5,
-        "staleAfterDays": 180,
-        "selectedMemoryIds": [
-          "reader_probe_implicit_no_tag_03_target"
-        ],
-        "rejected": [
-          {
-            "memoryId": "reader_probe_implicit_no_tag_03_distractor",
-            "reasons": [
-              "no_tag_overlap"
-            ]
-          }
-        ],
-        "candidates": [
-          {
-            "memoryId": "reader_probe_implicit_no_tag_03_target",
-            "kind": "helpful_response_move",
-            "status": "active",
-            "tags": [
-              "role_loss",
-              "self_worth"
-            ],
             "matchedTags": [
-              "role_loss",
-              "self_worth"
+              "illness_fear"
             ],
-            "score": 210.8,
+            "score": 114.9,
             "decision": "selected",
             "reasons": [
               "semantic_recall"
             ]
-          },
-          {
-            "memoryId": "reader_probe_implicit_no_tag_03_distractor",
-            "kind": "tone_preference",
-            "status": "active",
-            "tags": [
-              "illness_fear",
-              "tone"
-            ],
-            "matchedTags": [],
-            "score": 10.2,
-            "decision": "rejected",
-            "reasons": [
-              "no_tag_overlap"
-            ]
           }
         ],
-        "latencyMs": 0.05212500000000375
+        "latencyMs": 0.04941700000000537
       }
     }
   ]
