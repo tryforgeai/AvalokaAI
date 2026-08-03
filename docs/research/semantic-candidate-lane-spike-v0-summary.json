@@ -1,0 +1,353 @@
+{
+  "total": 4,
+  "passed": 4,
+  "failed": 0,
+  "passRate": 1,
+  "aggregates": {
+    "recallAt3": 1,
+    "recallAt5": 1,
+    "mrr": 0.5,
+    "ndcgAt5": 1,
+    "noMatchPrecision": 1,
+    "unsafeRetrievalCount": 0,
+    "staleRetrievalCount": 0,
+    "deletedRetrievalCount": 0,
+    "supersededRetrievalCount": 0,
+    "p50LatencyMs": 0.09074999999999989,
+    "p95LatencyMs": 0.9891659999999973
+  },
+  "failureTaxonomy": {
+    "none": 4,
+    "missing_tag_or_alias": 0,
+    "semantic_paraphrase_miss": 0,
+    "hard_negative_false_hit": 0,
+    "correct_candidate_ranked_low": 0,
+    "no_match_false_positive": 0,
+    "stale_or_inactive_leak": 0,
+    "safety_priority_failure": 0,
+    "fixture_or_contract_error": 0
+  },
+  "results": [
+    {
+      "id": "reader_semantic_candidate_lane_01",
+      "group": "semantic_candidate_lane_recall",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 1,
+        "precisionAt5": 1,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 1,
+        "ndcgAt5": 1,
+        "noMatchCorrect": false,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.9891659999999973
+      },
+      "observed": {
+        "retrievedIds": [
+          "reader_semantic_candidate_lane_01_target"
+        ],
+        "expectedRelevance": {
+          "reader_semantic_candidate_lane_01_target": 2
+        }
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "d9540d40efef21dad9540d40efef21dad9540d40efef21dad9540d40efef21da",
+        "activeTags": [
+          "illness_fear"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [
+          "reader_semantic_candidate_lane_01_target"
+        ],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_candidate_lane_01_distractor",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_candidate_lane_01_target",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [
+              "illness_fear"
+            ],
+            "score": 113.2,
+            "decision": "selected",
+            "reasons": [
+              "semantic_candidate_lane"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_candidate_lane_01_distractor",
+            "kind": "tone_preference",
+            "status": "active",
+            "tags": [
+              "role_loss"
+            ],
+            "matchedTags": [],
+            "score": 14.5,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.9036250000000052
+      }
+    },
+    {
+      "id": "reader_semantic_candidate_lane_02",
+      "group": "semantic_candidate_lane_recall",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 1,
+        "precisionAt5": 1,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 1,
+        "ndcgAt5": 1,
+        "noMatchCorrect": false,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.573291999999995
+      },
+      "observed": {
+        "retrievedIds": [
+          "reader_semantic_candidate_lane_02_target"
+        ],
+        "expectedRelevance": {
+          "reader_semantic_candidate_lane_02_target": 2
+        }
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "c1498e8d452c55bfc1498e8d452c55bfc1498e8d452c55bfc1498e8d452c55bf",
+        "activeTags": [
+          "role_loss",
+          "self_worth"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [
+          "reader_semantic_candidate_lane_02_target"
+        ],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_candidate_lane_02_distractor",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_candidate_lane_02_target",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "role_loss",
+              "self_worth"
+            ],
+            "matchedTags": [
+              "role_loss",
+              "self_worth"
+            ],
+            "score": 213.1,
+            "decision": "selected",
+            "reasons": [
+              "semantic_candidate_lane"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_candidate_lane_02_distractor",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [],
+            "score": 14.5,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.5698340000000002
+      }
+    },
+    {
+      "id": "reader_semantic_candidate_lane_no_match_01",
+      "group": "semantic_candidate_lane_false_positive",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.09074999999999989
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "04f7f6adbdcc0ee104f7f6adbdcc0ee104f7f6adbdcc0ee104f7f6adbdcc0ee1",
+        "activeTags": [],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_candidate_lane_no_match_01_illness",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_candidate_lane_no_match_01_role",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_candidate_lane_no_match_01_illness",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [],
+            "score": 14.6,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          },
+          {
+            "memoryId": "reader_semantic_candidate_lane_no_match_01_role",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "role_loss"
+            ],
+            "matchedTags": [],
+            "score": 13.399999999999999,
+            "decision": "rejected",
+            "reasons": [
+              "no_tag_overlap"
+            ]
+          }
+        ],
+        "latencyMs": 0.0886250000000075
+      }
+    },
+    {
+      "id": "reader_semantic_candidate_lane_lifecycle_01",
+      "group": "semantic_candidate_lane_lifecycle",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.0691669999999931
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "d9540d40efef21dad9540d40efef21dad9540d40efef21dad9540d40efef21da",
+        "activeTags": [
+          "illness_fear"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_candidate_lane_lifecycle_01_deleted",
+            "reasons": [
+              "semantic_candidate_lane",
+              "inactive_or_superseded"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_candidate_lane_lifecycle_01_deleted",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [
+              "illness_fear"
+            ],
+            "score": 113.3,
+            "decision": "rejected",
+            "reasons": [
+              "semantic_candidate_lane",
+              "inactive_or_superseded"
+            ]
+          }
+        ],
+        "latencyMs": 0.06758299999999906
+      }
+    }
+  ]
+}

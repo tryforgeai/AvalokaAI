@@ -1,0 +1,224 @@
+[
+  {
+    "id": "reader_semantic_candidate_lane_01",
+    "group": "semantic_candidate_lane_recall",
+    "description": "Candidate lane should recover diagnosis/specialist anxiety as illness_fear without explicit tags.",
+    "now": "2026-08-03T11:51:00.000Z",
+    "expectedNoMatch": false,
+    "readerContext": {
+      "userText": "The specialist has not explained the diagnosis yet, and I keep picturing a catastrophic result.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-30T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_candidate_lane_01_target",
+          "kind": "helpful_response_move",
+          "text": "When diagnosis uncertainty turns catastrophic, slow down and name uncertainty before reassurance.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.92,
+          "occurrences": 4,
+          "evidenceIds": [
+            "reader_semantic_candidate_lane_01_target-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        },
+        {
+          "id": "reader_semantic_candidate_lane_01_distractor",
+          "kind": "tone_preference",
+          "text": "Prefers concrete wording about role transitions.",
+          "status": "active",
+          "tags": [
+            "role_loss"
+          ],
+          "confidence": 0.95,
+          "occurrences": 5,
+          "evidenceIds": [
+            "reader_semantic_candidate_lane_01_distractor-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {
+      "reader_semantic_candidate_lane_01_target": 2
+    },
+    "forbiddenMemoryIds": []
+  },
+  {
+    "id": "reader_semantic_candidate_lane_02",
+    "group": "semantic_candidate_lane_recall",
+    "description": "Candidate lane should recover role usefulness / disposable language as role_loss and self_worth.",
+    "now": "2026-08-03T11:51:00.000Z",
+    "expectedNoMatch": false,
+    "readerContext": {
+      "userText": "After they moved me out of the one role where I felt useful, I feel disposable.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-30T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_candidate_lane_02_target",
+          "kind": "helpful_response_move",
+          "text": "When a role loss becomes a worth judgment, separate role change from whole-person worth.",
+          "status": "active",
+          "tags": [
+            "role_loss",
+            "self_worth"
+          ],
+          "confidence": 0.91,
+          "occurrences": 4,
+          "evidenceIds": [
+            "reader_semantic_candidate_lane_02_target-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        },
+        {
+          "id": "reader_semantic_candidate_lane_02_distractor",
+          "kind": "helpful_response_move",
+          "text": "Steady health-anxiety grounding.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.95,
+          "occurrences": 5,
+          "evidenceIds": [
+            "reader_semantic_candidate_lane_02_distractor-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {
+      "reader_semantic_candidate_lane_02_target": 2
+    },
+    "forbiddenMemoryIds": []
+  },
+  {
+    "id": "reader_semantic_candidate_lane_no_match_01",
+    "group": "semantic_candidate_lane_false_positive",
+    "description": "Candidate lane must not treat diagnosis/problem-solving language in code review as health fear.",
+    "now": "2026-08-03T11:51:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "The reviewer asked for a diagnosis of the production incident, but this is just code and incident analysis.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-30T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_candidate_lane_no_match_01_illness",
+          "kind": "helpful_response_move",
+          "text": "Health uncertainty care note.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.96,
+          "occurrences": 5,
+          "evidenceIds": [
+            "reader_semantic_candidate_lane_no_match_01_illness-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        },
+        {
+          "id": "reader_semantic_candidate_lane_no_match_01_role",
+          "kind": "helpful_response_move",
+          "text": "Role-loss care note.",
+          "status": "active",
+          "tags": [
+            "role_loss"
+          ],
+          "confidence": 0.94,
+          "occurrences": 4,
+          "evidenceIds": [
+            "reader_semantic_candidate_lane_no_match_01_role-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": []
+  },
+  {
+    "id": "reader_semantic_candidate_lane_lifecycle_01",
+    "group": "semantic_candidate_lane_lifecycle",
+    "description": "Candidate lane must not retrieve deleted semantic matches.",
+    "now": "2026-08-03T11:51:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "The specialist has not explained the diagnosis yet, and I keep picturing a catastrophic result.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-30T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_candidate_lane_lifecycle_01_deleted",
+          "kind": "helpful_response_move",
+          "text": "Deleted diagnosis uncertainty note.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.93,
+          "occurrences": 4,
+          "evidenceIds": [
+            "reader_semantic_candidate_lane_lifecycle_01_deleted-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": [
+        {
+          "type": "delete",
+          "memoryId": "reader_semantic_candidate_lane_lifecycle_01_deleted",
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "memoryKind": "helpful_response_move",
+          "memoryText": "Deleted diagnosis uncertainty note."
+        }
+      ]
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_candidate_lane_lifecycle_01_deleted"
+    ]
+  }
+]

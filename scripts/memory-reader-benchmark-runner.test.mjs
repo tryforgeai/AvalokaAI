@@ -245,4 +245,23 @@ describe("memory reader fixture policy", () => {
       assert.deepEqual(result.observed.retrievedIds, [], `${result.id} should not retrieve lifecycle-blocked memories`);
     }
   });
+
+  it("compares an eval-only semantic candidate lane against the current semantic recall spike", () => {
+    const candidateLaneCases = loadMemoryReaderCases(new URL("../evals/memory-reader-semantic-candidate-lane-cases.json", import.meta.url));
+
+    const currentSpike = runMemoryReaderBenchmark({ cases: candidateLaneCases, readerOptions: { semanticRecall: true } });
+    const candidateLane = runMemoryReaderBenchmark({ cases: candidateLaneCases, readerOptions: { semanticRecall: true, semanticCandidateLane: true } });
+
+    assert(currentSpike.passed < candidateLane.total, `current semantic recall should not already cover the candidate lane probe: ${currentSpike.passed}/${currentSpike.total}`);
+    assert.equal(candidateLane.passed, candidateLane.total, `semantic candidate lane failures: ${candidateLane.failed}/${candidateLane.total}`);
+    assert.equal(candidateLane.aggregates.noMatchPrecision, 1);
+    assert.equal(candidateLane.aggregates.unsafeRetrievalCount, 0);
+    assert.equal(candidateLane.aggregates.staleRetrievalCount, 0);
+    assert.equal(candidateLane.aggregates.deletedRetrievalCount, 0);
+    assert.equal(candidateLane.aggregates.supersededRetrievalCount, 0);
+
+    for (const result of candidateLane.results.filter((testCase) => testCase.group === "semantic_candidate_lane_recall")) {
+      assert(result.trace.candidates.some((candidate) => candidate.reasons.includes("semantic_candidate_lane")), `${result.id} should expose candidate-lane trace evidence`);
+    }
+  });
 });

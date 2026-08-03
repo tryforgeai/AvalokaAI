@@ -12,7 +12,7 @@ const cases = loadMemoryReaderCases(casesPath);
 const summary = runMemoryReaderBenchmark({
   cases,
   limit: Number.isFinite(limit) ? limit : cases.length,
-  readerOptions: { semanticRecall: Boolean(args["semantic-recall"]) },
+  readerOptions: { semanticRecall: Boolean(args["semantic-recall"]), semanticCandidateLane: Boolean(args["semantic-candidate-lane"]) },
 });
 
 if (args.output) {
@@ -40,7 +40,7 @@ function parseArgs(values) {
       parsed.json = true;
       continue;
     }
-    if (key === "semantic-recall") {
+    if (key === "semantic-recall" || key === "semantic-candidate-lane") {
       parsed[key] = true;
       continue;
     }

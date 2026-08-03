@@ -341,6 +341,7 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - guard semantic recall with separate false-positive and reranking fixtures; current guard passes `6/6`, keeps no-match precision at `1.000`, and verifies highest-relevance memories rank first under the semantic spike
 - keep semantic recall behind lifecycle gates; current lifecycle stress benchmark passes `4/4` across low-confidence, superseded, deleted, and missing-evidence semantic matches
 - keep semantic recall default-off after promotion readiness review; production promotion is rejected until privacy, lifecycle, export/delete, trace explainability, and response-quality gates are proven
+- compare an eval-only semantic candidate lane against current semantic tag expansion; current candidate-lane spike improves its separate probe from `2/4` to `4/4` without production vector DB, stored vectors, graph memory, or user-facing retrieval
 
 ### Phase 3: LLM Writer Shadow Test
 

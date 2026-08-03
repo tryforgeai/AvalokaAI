@@ -47,6 +47,7 @@ export interface MemoryReaderOptions {
   now?: string;
   staleAfterDays?: number;
   semanticRecall?: boolean;
+  semanticCandidateLane?: boolean;
 }
 
 export interface MemoryReaderTraceResult {
@@ -180,6 +181,30 @@ const semanticRecallBlockers: Record<string, RegExp[]> = {
   self_worth: [/\b(flaky test|unit test|repository|code|ci cache)\b/i],
 };
 
+const semanticCandidateLaneTagRules: Array<{ tag: string; patterns: RegExp[] }> = [
+  {
+    tag: "illness_fear",
+    patterns: [
+      /\b(diagnosis|specialist|catastrophic result|catastrophic diagnosis)\b/i,
+      /\b(specialist|diagnosis)\b.*\b(catastrophic|terrible|serious)\b/i,
+    ],
+  },
+  {
+    tag: "role_loss",
+    patterns: [/\b(moved me out|removed me from|reassigned me from)\b.*\b(role|useful|needed)\b/i],
+  },
+  {
+    tag: "self_worth",
+    patterns: [/\b(disposable|replaceable|not useful anymore)\b/i, /\buseful\b.*\b(disposable|replaceable)\b/i],
+  },
+];
+
+const semanticCandidateLaneBlockers: Record<string, RegExp[]> = {
+  illness_fear: [/\b(code|incident|production incident|reviewer|repository|debug|debugging)\b/i],
+  role_loss: [/\b(code|repository|unit test|flaky test|ci cache)\b/i],
+  self_worth: [/\b(code|repository|unit test|flaky test|ci cache)\b/i],
+};
+
 function expandScenarioTags(scenarioId: string): string[] {
   const tags = [scenarioId, ...(scenarioTagAliases[scenarioId] || [])];
   const [, responseMove] = scenarioId.split(":");
@@ -219,6 +244,13 @@ function deriveSemanticRecallTags(userText: string): string[] {
     .map((rule) => rule.tag);
 }
 
+function deriveSemanticCandidateLaneTags(userText: string): string[] {
+  return semanticCandidateLaneTagRules
+    .filter((rule) => rule.patterns.some((pattern) => pattern.test(userText)))
+    .filter((rule) => !(semanticCandidateLaneBlockers[rule.tag] || []).some((pattern) => pattern.test(userText)))
+    .map((rule) => rule.tag);
+}
+
 function isStaleMemory(memory: CareMemory, now: string, staleAfterDays: number): boolean {
   const nowMs = Date.parse(now);
   const lastSeenMs = Date.parse(memory.lastSeenAt || memory.updatedAt || memory.createdAt);
@@ -248,10 +280,12 @@ export function readCareFactsFromCardWithTrace(
   const staleAfterDays = options.staleAfterDays ?? 180;
   const activeTags = deriveReaderTags(context);
   const semanticRecallTags = options.semanticRecall ? deriveSemanticRecallTags(context.userText || "") : [];
-  const retrievalTags = unique([...activeTags, ...semanticRecallTags]);
+  const semanticCandidateLaneTags = options.semanticCandidateLane ? deriveSemanticCandidateLaneTags(context.userText || "") : [];
+  const retrievalTags = unique([...activeTags, ...semanticRecallTags, ...semanticCandidateLaneTags]);
   const activeTagSet = new Set(retrievalTags);
   const deterministicTagSet = new Set(activeTags);
   const semanticTagSet = new Set(semanticRecallTags);
+  const semanticCandidateLaneTagSet = new Set(semanticCandidateLaneTags);
   const deletedMemoryIdSet = new Set((card.lifecycleEvents || []).filter((event) => event.type === "delete").map((event) => event.memoryId));
   const riskContext = retrievalTags.some((tag) => riskTags.has(tag));
 
@@ -260,12 +294,14 @@ export function readCareFactsFromCardWithTrace(
     const matchedTags = memoryTags.filter((tag) => activeTagSet.has(tag));
     const deterministicMatchedTags = matchedTags.filter((tag) => deterministicTagSet.has(tag));
     const semanticMatchedTags = matchedTags.filter((tag) => semanticTagSet.has(tag) && !deterministicTagSet.has(tag));
+    const semanticCandidateLaneMatchedTags = matchedTags.filter((tag) => semanticCandidateLaneTagSet.has(tag) && !deterministicTagSet.has(tag) && !semanticTagSet.has(tag));
     const relevance = matchedTags.length;
     const reasons: RetrievalTraceReason[] = [];
     const status = memory.status || "active";
 
     if (deterministicMatchedTags.length > 0) reasons.push("tag_overlap");
     if (semanticMatchedTags.length > 0) reasons.push("semantic_recall");
+    if (semanticCandidateLaneMatchedTags.length > 0) reasons.push("semantic_candidate_lane");
     if (riskContext && (memory.kind === "safety_note" || memory.kind === "avoid_response_move")) reasons.push("risk_kind_boost");
     if (memory.confidence < minConfidence) reasons.push("low_confidence");
     if (status !== "active" || deletedMemoryIdSet.has(memory.id)) reasons.push("inactive_or_superseded");

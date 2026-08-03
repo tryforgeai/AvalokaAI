@@ -130,13 +130,23 @@ Continue with:
 Semantic Candidate Lane Spike V0
 ```
 
-Acceptance bar for that next slice:
+The recommended follow-up slice was completed:
 
-- add a separate eval-only candidate-lane fixture/runner path;
-- compare it against current semantic tag expansion;
-- keep committed benchmark `48/48`;
-- keep cross-lingual/no-tag semantic probe `6/6`;
-- keep false-positive/reranking guard `6/6`;
-- keep lifecycle stress `4/4`;
-- prove no user-facing UI or stored memory state changes;
-- document whether the candidate lane is better enough to justify further work.
+```text
+Semantic Candidate Lane Spike V0
+```
+
+It added a separate eval-only `semanticCandidateLane` option and `--semantic-candidate-lane` CLI flag.
+
+Results:
+
+```text
+current semanticRecall on candidate-lane probe: 2/4
+semanticRecall + semanticCandidateLane: 4/4
+committed benchmark with both semantic flags: 48/48
+cross-lingual/no-tag probe with both semantic flags: 6/6
+false-positive/reranking guard with both semantic flags: 6/6
+lifecycle stress with both semantic flags: 4/4
+```
+
+The production decision is unchanged: keep all semantic paths default-off and research-only until harder negative coverage, privacy/export/delete semantics, and response-quality impact are proven.

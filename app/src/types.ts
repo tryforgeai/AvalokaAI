@@ -235,6 +235,7 @@ export type RetrievalTraceReason =
   | "stale"
   | "no_tag_overlap"
   | "semantic_recall"
+  | "semantic_candidate_lane"
   | "ranked_below_limit";
 
 export interface RetrievalTraceCandidateV1 {

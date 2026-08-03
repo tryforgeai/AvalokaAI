@@ -4,6 +4,45 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-03 — Add Eval-Only Semantic Candidate Lane Spike
+
+Status: Accepted
+
+### Context
+
+Promotion Readiness Review V0 rejected production semantic recall, but allowed one bounded eval-only candidate-lane experiment to compare against the current hand-authored semantic tag expansion.
+
+### Decision
+
+Add `semanticCandidateLane` as a default-off, eval-only reader option and benchmark CLI flag:
+
+```bash
+node ../scripts/run-memory-reader-benchmark.mjs --semantic-recall --semantic-candidate-lane
+```
+
+The lane adds trace reason `semantic_candidate_lane` and a separate candidate-lane fixture file:
+
+```text
+evals/memory-reader-semantic-candidate-lane-cases.json
+```
+
+### Consequences
+
+- Current semantic recall passes the candidate-lane probe `2/4`.
+- `semanticRecall + semanticCandidateLane` passes the candidate-lane probe `4/4`.
+- The committed benchmark remains `48/48` with both semantic flags enabled.
+- Cross-lingual/no-tag probe, false-positive/reranking guard, and lifecycle stress remain green.
+- This is still not production retrieval: no vector DB, no stored vectors, no graph memory, no user-facing semantic retrieval, and no memory-state writes.
+
+### Affected Docs
+
+- `docs/research/semantic-candidate-lane-spike-v0.md`
+- `docs/research/semantic-candidate-lane-spike-v0-summary.json`
+- `docs/research/semantic-candidate-lane-spike-v0-current-summary.json`
+- `docs/research/semantic-recall-promotion-readiness-review-v0.md`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+
 ## 2026-08-03 — Keep Semantic Recall Default-Off After Promotion Readiness Review
 
 Status: Accepted
