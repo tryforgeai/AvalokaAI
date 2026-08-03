@@ -110,14 +110,18 @@ committed benchmark green
 
 ## Next Step
 
-Recommended next slice:
+The recommended follow-up slice was completed:
 
 ```text
 Semantic Recall Promotion Readiness Review V0
 ```
 
-Acceptance bar:
+The review decision is conservative:
 
-- summarize all semantic recall evidence so far;
-- decide whether to keep as gated spike, expand fixtures, or begin a real embedding/vector search spike;
-- explicitly reject production promotion unless privacy, lifecycle, export/delete, and trace explainability requirements are met.
+```text
+production promotion: rejected for now
+semanticRecall: keep default-off gated research spike
+next allowed work: eval-only Semantic Candidate Lane Spike V0
+```
+
+The blocking conditions remain privacy, lifecycle/export/delete semantics, redacted trace explainability, response-quality impact, and proof that semantic retrieval does not create hidden user profiles or dossiers.

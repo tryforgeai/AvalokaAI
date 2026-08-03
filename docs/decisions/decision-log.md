@@ -4,6 +4,40 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-03 — Keep Semantic Recall Default-Off After Promotion Readiness Review
+
+Status: Accepted
+
+### Context
+
+Semantic recall now has evidence for recall recovery, false-positive protection, highest-weight-first ranking, and lifecycle stress. The remaining question is whether to promote it beyond a gated spike.
+
+### Decision
+
+Do not promote semantic recall to production retrieval.
+
+Keep `semanticRecall` as a default-off, gated research spike. It may justify one bounded eval-only follow-up, `Semantic Candidate Lane Spike V0`, but that follow-up must not introduce production vector DB, graph memory, stored user vectors, or user-facing semantic retrieval.
+
+### Rationale
+
+- The implementation is still a local semantic tag expansion spike, not a general semantic retrieval layer.
+- Fixture coverage is promising but still small.
+- No response-quality eval yet proves semantic recall improves user-visible personalization without creepiness.
+- Privacy, export/delete, trace, and lifecycle semantics are not yet complete for a production semantic metadata path.
+
+### Consequences
+
+- Production semantic recall remains rejected for now.
+- The current spike remains useful for research because committed benchmark, no-tag probe, false-positive/reranking guard, and lifecycle stress remain green.
+- The next approved direction is an eval-only candidate-lane comparison, not a production architecture rollout.
+
+### Affected Docs
+
+- `docs/research/semantic-recall-promotion-readiness-review-v0.md`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+- `docs/research/semantic-recall-lifecycle-stress-v0.md`
+
 ## 2026-08-03 — Keep Semantic Recall Behind Lifecycle Gates
 
 Status: Accepted

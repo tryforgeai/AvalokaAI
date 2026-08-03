@@ -56,6 +56,7 @@ The prior V0/V1 work remains useful because it supplies:
 - gated semantic recall spike, off by default, proving no-tag probe recovery without committing to production embeddings or vector DB
 - semantic recall false-positive and reranking guard fixtures proving no-match precision and highest-weight-first ordering under the semantic spike
 - semantic recall lifecycle stress fixtures proving low-confidence, superseded, deleted, and missing-evidence semantic matches remain blocked
+- semantic recall promotion readiness review keeping semantic recall default-off and rejecting production promotion until privacy, lifecycle, export/delete, and response-quality gates are proven
 - versioned, redacted retrieval traces for developer diagnosis
 - optional LLM Memory Writer shadow test
 - response injection with 3-5 care facts
@@ -101,6 +102,7 @@ R1 passes if:
 - semantic recall spike mode improves the no-tag probe from `1/6` to `6/6` while the committed benchmark remains `48/48`
 - semantic recall guard benchmark passes `6/6`, keeps no-match precision at `1.000`, and asserts grade-2/highest-weight memories rank first
 - semantic recall lifecycle stress benchmark passes `4/4` and verifies lifecycle-blocked semantic matches retrieve nothing
+- semantic recall promotion readiness review rejects production promotion and limits the next step to an eval-only candidate-lane spike
 - personal-memory and health/safety claims can be checked against permitted evidence without treating ordinary compassion as a factual claim
 - unsupported personal-memory claims cannot reach user-visible output without fallback or an approved rewrite policy
 - memory lifecycle decisions are reviewable in developer exports/diagnostics before any user-facing memory surface
