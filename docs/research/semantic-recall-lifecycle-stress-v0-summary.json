@@ -1,0 +1,307 @@
+{
+  "total": 4,
+  "passed": 4,
+  "failed": 0,
+  "passRate": 1,
+  "aggregates": {
+    "recallAt3": 1,
+    "recallAt5": 1,
+    "mrr": 0,
+    "ndcgAt5": 1,
+    "noMatchPrecision": 1,
+    "unsafeRetrievalCount": 0,
+    "staleRetrievalCount": 0,
+    "deletedRetrievalCount": 0,
+    "supersededRetrievalCount": 0,
+    "p50LatencyMs": 0.16004199999999003,
+    "p95LatencyMs": 0.6179169999999914
+  },
+  "failureTaxonomy": {
+    "none": 4,
+    "missing_tag_or_alias": 0,
+    "semantic_paraphrase_miss": 0,
+    "hard_negative_false_hit": 0,
+    "correct_candidate_ranked_low": 0,
+    "no_match_false_positive": 0,
+    "stale_or_inactive_leak": 0,
+    "safety_priority_failure": 0,
+    "fixture_or_contract_error": 0
+  },
+  "results": [
+    {
+      "id": "reader_semantic_lifecycle_low_confidence_01",
+      "group": "semantic_recall_lifecycle_stress",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.6179169999999914
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "2133ead5628cb5cf2133ead5628cb5cf2133ead5628cb5cf2133ead5628cb5cf",
+        "activeTags": [
+          "illness_fear"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_lifecycle_low_confidence_01_memory",
+            "reasons": [
+              "semantic_recall",
+              "low_confidence"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_lifecycle_low_confidence_01_memory",
+            "kind": "helpful_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [
+              "illness_fear"
+            ],
+            "score": 106.1,
+            "decision": "rejected",
+            "reasons": [
+              "semantic_recall",
+              "low_confidence"
+            ]
+          }
+        ],
+        "latencyMs": 0.5361659999999944
+      }
+    },
+    {
+      "id": "reader_semantic_lifecycle_superseded_01",
+      "group": "semantic_recall_lifecycle_stress",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.40183299999999633
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "747c00da7e5a9af8747c00da7e5a9af8747c00da7e5a9af8747c00da7e5a9af8",
+        "activeTags": [
+          "role_loss",
+          "self_worth"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_lifecycle_superseded_01_memory",
+            "reasons": [
+              "semantic_recall",
+              "inactive_or_superseded"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_lifecycle_superseded_01_memory",
+            "kind": "helpful_response_move",
+            "status": "superseded",
+            "tags": [
+              "role_loss",
+              "self_worth"
+            ],
+            "matchedTags": [
+              "role_loss",
+              "self_worth"
+            ],
+            "score": 211.2,
+            "decision": "rejected",
+            "reasons": [
+              "semantic_recall",
+              "inactive_or_superseded"
+            ]
+          }
+        ],
+        "latencyMs": 0.39962500000000034
+      }
+    },
+    {
+      "id": "reader_semantic_lifecycle_deleted_01",
+      "group": "semantic_recall_lifecycle_stress",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.16004199999999003
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "32306ee87e46829e32306ee87e46829e32306ee87e46829e32306ee87e46829e",
+        "activeTags": [
+          "self_blame"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_lifecycle_deleted_01_memory",
+            "reasons": [
+              "semantic_recall",
+              "risk_kind_boost",
+              "inactive_or_superseded"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_lifecycle_deleted_01_memory",
+            "kind": "safety_note",
+            "status": "active",
+            "tags": [
+              "self_blame"
+            ],
+            "matchedTags": [
+              "self_blame"
+            ],
+            "score": 311.2,
+            "decision": "rejected",
+            "reasons": [
+              "semantic_recall",
+              "risk_kind_boost",
+              "inactive_or_superseded"
+            ]
+          }
+        ],
+        "latencyMs": 0.1582080000000019
+      }
+    },
+    {
+      "id": "reader_semantic_lifecycle_missing_evidence_01",
+      "group": "semantic_recall_lifecycle_stress",
+      "verdict": "passed",
+      "failureReason": "none",
+      "checks": [],
+      "metrics": {
+        "precisionAt3": 0,
+        "precisionAt5": 0,
+        "recallAt3": 1,
+        "recallAt5": 1,
+        "reciprocalRank": 0,
+        "ndcgAt5": 1,
+        "noMatchCorrect": true,
+        "unsafeRetrievalCount": 0,
+        "staleRetrievalCount": 0,
+        "deletedRetrievalCount": 0,
+        "supersededRetrievalCount": 0,
+        "latencyMs": 0.02462500000000034
+      },
+      "observed": {
+        "retrievedIds": [],
+        "expectedRelevance": {}
+      },
+      "trace": {
+        "version": "retrieval_trace_v1",
+        "readerVersion": "deterministic_memory_reader_v0",
+        "policyVersion": "retrieval_policy_v1",
+        "inputHash": "c32133a6f9247003c32133a6f9247003c32133a6f9247003c32133a6f9247003",
+        "activeTags": [
+          "illness_fear"
+        ],
+        "requestedLimit": 5,
+        "minConfidence": 0.5,
+        "staleAfterDays": 180,
+        "selectedMemoryIds": [],
+        "rejected": [
+          {
+            "memoryId": "reader_semantic_lifecycle_missing_evidence_01_memory",
+            "reasons": [
+              "semantic_recall",
+              "risk_kind_boost",
+              "missing_evidence"
+            ]
+          }
+        ],
+        "candidates": [
+          {
+            "memoryId": "reader_semantic_lifecycle_missing_evidence_01_memory",
+            "kind": "avoid_response_move",
+            "status": "active",
+            "tags": [
+              "illness_fear"
+            ],
+            "matchedTags": [
+              "illness_fear"
+            ],
+            "score": 231.2,
+            "decision": "rejected",
+            "reasons": [
+              "semantic_recall",
+              "risk_kind_boost",
+              "missing_evidence"
+            ]
+          }
+        ],
+        "latencyMs": 0.023167000000000826
+      }
+    }
+  ]
+}

@@ -4,6 +4,41 @@ Status: Active source of truth
 
 If active documents conflict, follow the newest accepted decision here, then update affected docs.
 
+## 2026-08-03 — Keep Semantic Recall Behind Lifecycle Gates
+
+Status: Accepted
+
+### Context
+
+Semantic Recall False-Positive Guard V0 proved no-match precision and highest-weight-first ranking, but the semantic path still needed direct stress coverage for lifecycle-blocked memories.
+
+### Decision
+
+Add a separate semantic recall lifecycle stress fixture file and regression test for semantic matches that must not be retrieved when memories are:
+
+- low confidence;
+- superseded;
+- deleted by lifecycle event;
+- missing evidence.
+
+The reader now treats memory IDs with `delete` lifecycle events as ineligible, and the benchmark validator permits missing-evidence memories only when they are intentionally listed as forbidden test targets.
+
+### Consequences
+
+- Lifecycle stress benchmark passes `4/4` with semantic recall enabled.
+- Semantic false-positive/reranking guard remains `6/6`.
+- Cross-lingual/no-tag probe remains `6/6` with semantic recall enabled.
+- The committed benchmark remains the normal-mode regression gate.
+- Semantic recall remains default-off and not promoted to production retrieval.
+
+### Affected Docs
+
+- `docs/research/semantic-recall-lifecycle-stress-v0.md`
+- `docs/research/semantic-recall-lifecycle-stress-v0-summary.json`
+- `docs/research/semantic-recall-false-positive-guard-v0.md`
+- `docs/product/version-roadmap.md`
+- `docs/research/sage-memory-research-plan.md`
+
 ## 2026-08-01 — Guard Semantic Recall Against False Positives and Low-Weight Ranking
 
 Status: Accepted

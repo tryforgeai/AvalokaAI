@@ -1,6 +1,6 @@
 # Retrieval Failure Mining V0 Report
 
-Date: 2026-08-01 20:08 PDT
+Date: 2026-08-03 10:32 PDT
 Status: Active R1 research artifact
 
 ## Verdict
@@ -61,5 +61,5 @@ No failed cases in the committed benchmark.
 ## Recommendations
 
 - Keep the committed benchmark as the normal-mode regression gate.
-- Keep the separate semantic recall probe and guard benchmarks as non-gating spike evidence.
-- Do not promote semantic recall to production retrieval until broader lifecycle stress cases are green.
+- Keep the separate semantic recall probe, guard, and lifecycle stress benchmarks as non-gating spike evidence.
+- Do not promote semantic recall to production retrieval until readiness review resolves privacy, lifecycle, export/delete, and trace explainability requirements.

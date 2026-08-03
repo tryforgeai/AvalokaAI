@@ -116,15 +116,20 @@ This remains a gated spike path, not production embeddings:
 
 ## Next Step
 
-Recommended next slice:
+The recommended follow-up slice was completed:
 
 ```text
 Semantic Recall Lifecycle Stress V0
 ```
 
-Acceptance bar:
+It added a separate lifecycle stress benchmark for low-confidence, superseded, deleted, and missing-evidence semantic matches.
 
-- add deleted / superseded / low-confidence / missing-evidence semantic-match cases;
-- keep guard benchmark green;
-- keep cross-lingual no-tag probe green under semantic recall;
-- keep committed benchmark green in normal and semantic modes.
+Results:
+
+```text
+lifecycle stress: 4/4 passed
+semantic false-positive/reranking guard: 6/6 passed
+cross-lingual/no-tag semantic probe: 6/6 passed
+```
+
+Production semantic retrieval is still not promoted. The next step is a readiness review that weighs all semantic recall evidence against privacy, lifecycle, export/delete, and trace explainability requirements.

@@ -252,6 +252,7 @@ export function readCareFactsFromCardWithTrace(
   const activeTagSet = new Set(retrievalTags);
   const deterministicTagSet = new Set(activeTags);
   const semanticTagSet = new Set(semanticRecallTags);
+  const deletedMemoryIdSet = new Set((card.lifecycleEvents || []).filter((event) => event.type === "delete").map((event) => event.memoryId));
   const riskContext = retrievalTags.some((tag) => riskTags.has(tag));
 
   const candidates = card.memories.map((memory) => {
@@ -267,7 +268,7 @@ export function readCareFactsFromCardWithTrace(
     if (semanticMatchedTags.length > 0) reasons.push("semantic_recall");
     if (riskContext && (memory.kind === "safety_note" || memory.kind === "avoid_response_move")) reasons.push("risk_kind_boost");
     if (memory.confidence < minConfidence) reasons.push("low_confidence");
-    if (status !== "active") reasons.push("inactive_or_superseded");
+    if (status !== "active" || deletedMemoryIdSet.has(memory.id)) reasons.push("inactive_or_superseded");
     if (memory.evidenceIds.length === 0) reasons.push("missing_evidence");
     if (isStaleMemory(memory, now, staleAfterDays)) reasons.push("stale");
     if (relevance === 0) reasons.push("no_tag_overlap");

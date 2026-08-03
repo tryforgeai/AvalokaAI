@@ -13,8 +13,8 @@
     "staleRetrievalCount": 0,
     "deletedRetrievalCount": 0,
     "supersededRetrievalCount": 0,
-    "p50LatencyMs": 0.13566699999999798,
-    "p95LatencyMs": 0.788125000000008
+    "p50LatencyMs": 0.2207910000000055,
+    "p95LatencyMs": 0.7440419999999932
   },
   "failureTaxonomy": {
     "none": 6,
@@ -46,7 +46,7 @@
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.788125000000008
+        "latencyMs": 0.7440419999999932
       },
       "observed": {
         "retrievedIds": [
@@ -110,7 +110,7 @@
             ]
           }
         ],
-        "latencyMs": 0.7135829999999999
+        "latencyMs": 0.6651670000000109
       }
     },
     {
@@ -131,7 +131,7 @@
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.23358399999999335
+        "latencyMs": 0.2207910000000055
       },
       "observed": {
         "retrievedIds": [
@@ -196,7 +196,7 @@
             ]
           }
         ],
-        "latencyMs": 0.23129199999999628
+        "latencyMs": 0.21862500000000296
       }
     },
     {
@@ -217,7 +217,7 @@
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.13566699999999798
+        "latencyMs": 0.14158299999999713
       },
       "observed": {
         "retrievedIds": [
@@ -282,7 +282,7 @@
             ]
           }
         ],
-        "latencyMs": 0.13383299999999565
+        "latencyMs": 0.13991699999999696
       }
     },
     {
@@ -303,7 +303,7 @@
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.0594159999999988
+        "latencyMs": 0.610874999999993
       },
       "observed": {
         "retrievedIds": [
@@ -369,7 +369,7 @@
             ]
           }
         ],
-        "latencyMs": 0.05791700000000333
+        "latencyMs": 0.609334000000004
       }
     },
     {
@@ -390,7 +390,7 @@
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.4849579999999918
+        "latencyMs": 0.47066700000000594
       },
       "observed": {
         "retrievedIds": [
@@ -455,7 +455,7 @@
             ]
           }
         ],
-        "latencyMs": 0.4827499999999958
+        "latencyMs": 0.4683339999999987
       }
     },
     {
@@ -476,7 +476,7 @@
         "staleRetrievalCount": 0,
         "deletedRetrievalCount": 0,
         "supersededRetrievalCount": 0,
-        "latencyMs": 0.053832999999997355
+        "latencyMs": 0.04979099999999903
       },
       "observed": {
         "retrievedIds": [
@@ -544,7 +544,7 @@
             ]
           }
         ],
-        "latencyMs": 0.05212500000000375
+        "latencyMs": 0.04837499999999295
       }
     }
   ]

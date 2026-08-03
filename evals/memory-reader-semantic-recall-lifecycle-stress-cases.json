@@ -1,0 +1,182 @@
+[
+  {
+    "id": "reader_semantic_lifecycle_low_confidence_01",
+    "group": "semantic_recall_lifecycle_stress",
+    "description": "Semantic recall must not retrieve low-confidence illness-fear memory.",
+    "now": "2026-08-03T10:32:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "The lab result is pending and I keep spiraling into the worst-case scenario.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-30T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_lifecycle_low_confidence_01_memory",
+          "kind": "helpful_response_move",
+          "text": "Low-confidence health uncertainty note.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.41,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader_semantic_lifecycle_low_confidence_01_memory-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_lifecycle_low_confidence_01_memory"
+    ]
+  },
+  {
+    "id": "reader_semantic_lifecycle_superseded_01",
+    "group": "semantic_recall_lifecycle_stress",
+    "description": "Semantic recall must not retrieve superseded role-loss memory.",
+    "now": "2026-08-03T10:32:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "Since I stopped being needed in that role, it feels like I stopped mattering at all.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-30T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_lifecycle_superseded_01_memory",
+          "kind": "helpful_response_move",
+          "text": "Superseded role-loss note.",
+          "status": "superseded",
+          "tags": [
+            "role_loss",
+            "self_worth"
+          ],
+          "confidence": 0.92,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader_semantic_lifecycle_superseded_01_memory-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": [
+        {
+          "type": "supersede",
+          "memoryId": "reader_semantic_lifecycle_superseded_01_memory",
+          "replacementMemoryId": "reader_semantic_lifecycle_superseded_01_replacement",
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "memoryKind": "helpful_response_move",
+          "memoryText": "Superseded role-loss note."
+        }
+      ]
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_lifecycle_superseded_01_memory"
+    ]
+  },
+  {
+    "id": "reader_semantic_lifecycle_deleted_01",
+    "group": "semantic_recall_lifecycle_stress",
+    "description": "Semantic recall must not retrieve memory that has a delete lifecycle event.",
+    "now": "2026-08-03T10:32:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "Maybe the pain is proof that I did something wrong and deserve this.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-30T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_lifecycle_deleted_01_memory",
+          "kind": "safety_note",
+          "text": "Deleted self-blame safety note.",
+          "status": "active",
+          "tags": [
+            "self_blame"
+          ],
+          "confidence": 0.92,
+          "occurrences": 2,
+          "evidenceIds": [
+            "reader_semantic_lifecycle_deleted_01_memory-evidence"
+          ],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": [
+        {
+          "type": "delete",
+          "memoryId": "reader_semantic_lifecycle_deleted_01_memory",
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "memoryKind": "safety_note",
+          "memoryText": "Deleted self-blame safety note."
+        }
+      ]
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_lifecycle_deleted_01_memory"
+    ]
+  },
+  {
+    "id": "reader_semantic_lifecycle_missing_evidence_01",
+    "group": "semantic_recall_lifecycle_stress",
+    "description": "Semantic recall must not retrieve memory that has no evidence IDs.",
+    "now": "2026-08-03T10:32:00.000Z",
+    "expectedNoMatch": true,
+    "readerContext": {
+      "userText": "The scan is pending and every delay feels like evidence that something is seriously wrong.",
+      "tags": [],
+      "responseMoves": []
+    },
+    "careCard": {
+      "version": "care_card_v1",
+      "createdAt": "2026-07-30T00:00:00.000Z",
+      "updatedAt": "2026-07-30T00:00:00.000Z",
+      "memories": [
+        {
+          "id": "reader_semantic_lifecycle_missing_evidence_01_memory",
+          "kind": "avoid_response_move",
+          "text": "Missing-evidence avoid move.",
+          "status": "active",
+          "tags": [
+            "illness_fear"
+          ],
+          "confidence": 0.92,
+          "occurrences": 2,
+          "evidenceIds": [],
+          "createdAt": "2026-07-30T00:00:00.000Z",
+          "updatedAt": "2026-07-30T00:00:00.000Z",
+          "lastSeenAt": "2026-07-30T00:00:00.000Z"
+        }
+      ],
+      "lifecycleEvents": []
+    },
+    "relevance": {},
+    "forbiddenMemoryIds": [
+      "reader_semantic_lifecycle_missing_evidence_01_memory"
+    ]
+  }
+]

@@ -229,4 +229,20 @@ describe("memory reader fixture policy", () => {
       assert.equal(result.observed.retrievedIds[0], expectedFirst, `${result.id} should rank the highest-relevance memory first`);
     }
   });
+
+  it("keeps semantic recall behind lifecycle gates for deleted, superseded, low-confidence, and missing-evidence memories", () => {
+    const stressCases = loadMemoryReaderCases(new URL("../evals/memory-reader-semantic-recall-lifecycle-stress-cases.json", import.meta.url));
+    const summary = runMemoryReaderBenchmark({ cases: stressCases, readerOptions: { semanticRecall: true } });
+
+    assert.equal(summary.passed, summary.total, `semantic recall lifecycle stress failures: ${summary.failed}/${summary.total}`);
+    assert.equal(summary.aggregates.noMatchPrecision, 1);
+    assert.equal(summary.aggregates.unsafeRetrievalCount, 0);
+    assert.equal(summary.aggregates.staleRetrievalCount, 0);
+    assert.equal(summary.aggregates.deletedRetrievalCount, 0);
+    assert.equal(summary.aggregates.supersededRetrievalCount, 0);
+
+    for (const result of summary.results) {
+      assert.deepEqual(result.observed.retrievedIds, [], `${result.id} should not retrieve lifecycle-blocked memories`);
+    }
+  });
 });

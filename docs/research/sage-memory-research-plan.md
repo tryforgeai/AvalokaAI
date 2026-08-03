@@ -339,6 +339,7 @@ R1 developer mode should keep memory behavior inspectable before any user-facing
 - keep cross-lingual / no-tag recall-gap probe cases separate from the committed benchmark gate; use their `1/6` result as evidence for a bounded embedding recall spike rather than immediate production architecture
 - gate semantic recall behind `MemoryReaderOptions.semanticRecall`; current spike recovers the no-tag probe to `6/6` and keeps the committed benchmark at `48/48`, but production semantic retrieval still needs false-positive and lifecycle guard fixtures
 - guard semantic recall with separate false-positive and reranking fixtures; current guard passes `6/6`, keeps no-match precision at `1.000`, and verifies highest-relevance memories rank first under the semantic spike
+- keep semantic recall behind lifecycle gates; current lifecycle stress benchmark passes `4/4` across low-confidence, superseded, deleted, and missing-evidence semantic matches
 
 ### Phase 3: LLM Writer Shadow Test
 

@@ -149,7 +149,8 @@ export function validateMemoryReaderCases(cases) {
       if (!Number.isFinite(memory.confidence)) errors.push(`Memory reader retrieval case ${id} memory ${memory.id} must include confidence.`);
       if (!Number.isFinite(memory.occurrences)) errors.push(`Memory reader retrieval case ${id} memory ${memory.id} must include occurrences.`);
       if (!Array.isArray(memory.evidenceIds) || memory.evidenceIds.length === 0) {
-        errors.push(`Memory reader retrieval case ${id} memory ${memory.id} is missing evidence IDs.`);
+        const intentionallyForbidden = (testCase?.forbiddenMemoryIds || []).includes(memory.id);
+        if (!intentionallyForbidden) errors.push(`Memory reader retrieval case ${id} memory ${memory.id} is missing evidence IDs.`);
       }
       if (!Array.isArray(memory.tags)) errors.push(`Memory reader retrieval case ${id} memory ${memory.id} must include tags.`);
     }
